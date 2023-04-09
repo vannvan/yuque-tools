@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "CommonJS",
+    "strict": true,
+    "importHelpers": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    "baseUrl": "./src",
+    "outDir": "./dist",
+    "types": ["node"],
+    "declaration": true, // 是否生成声明文件
+    "declarationDir": "dist/type", // 声明文件打包的位置
+    "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
+  },
+  "include": ["./src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}

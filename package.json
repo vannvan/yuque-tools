@@ -1,0 +1,41 @@
+{
+  "name": "yuque-tools",
+  "version": "0.0.1",
+  "description": "语雀知识库内容批量导出和二次处理工具",
+  "main": "dist/app.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "tsc": "tsc",
+    "yuque": "ts-node src/app.ts",
+    "start": "nodemon -e ts --exec ts-node src/app.ts",
+    "clean": "ts-node src/clean.ts"
+  },
+  "keywords": [
+    "yuque",
+    "语雀"
+  ],
+  "author": "vannvan",
+  "license": "MIT",
+  "dependencies": {
+    "@types/inquirer": "^9.0.3",
+    "@types/jsdom": "^21.1.1",
+    "@types/node": "^18.15.11",
+    "@types/shelljs": "^0.8.11",
+    "axios": "^1.3.4",
+    "chalk": "4.1.2",
+    "inquirer": "8",
+    "jsdom": "^21.1.1",
+    "jsencrypt-node": "^1.0.4",
+    "nodemon": "^2.0.22",
+    "ora": "4",
+    "shelljs": "^0.8.5",
+    "tslib": "^2.5.0",
+    "typescript": "^5.0.3"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.1"
+  }
+}

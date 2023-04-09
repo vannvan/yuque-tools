@@ -7,10 +7,10 @@
 
 1. 语雀目前非会员用户取消了token授权功能  
 2. [yuque-exporter](https://github.com/yuque/yuque-exporter/tree/cli)采用读取原始文档方式，部分html节点无法处理  
-  具体情况如下
-![](https://p.ipic.vip/xgq0vl.png)
-![](https://p.ipic.vip/7gurgh.png)
-以上导出经转义后的md文档仍有多余的a标签(a标签可以采用正则匹配去除掉，但如果文档本身就有类似标签就无法区分了)，可能后面语雀会优化此问题吧，但他眼下没有。
+    具体情况如下
+    ![](https://p.ipic.vip/xgq0vl.png)
+    ![](https://p.ipic.vip/7gurgh.png)
+    以上导出经转义后的md文档仍有多余的a标签(a标签可以采用正则匹配去除掉，但如果文档本身就有类似标签就无法区分了)，可能后面语雀会优化此问题吧，但他眼下没有。
 3. 支持对文档的再加工(可配置)，以适配其他平台的md格式  
 
 - 例如hexo的title需要这样的
@@ -38,12 +38,13 @@ draft: true
 
 ## 实现过程
 
-[] 登录语雀获取cookie  
-[] 获取到知识库列表，存储slug username id
-[] 交互式选择需要导出到知识库  
-[] 根据上一步获取到的id，再获取某个知识库下的文档列表  
-[] 可选择保留原目录结构或导出为扁平结构  
-[] 生成md文档到本地
+1. 登录语雀获取cookie  
+
+2. 获取到知识库列表，存储slug username id
+3. 交互式选择需要导出到知识库  
+4. 根据上一步获取到的id，再获取某个知识库下的文档列表  
+5. 可选择保留原目录结构或导出为扁平结构  
+6. 生成md文档到本地
 
 ## APIs
 
@@ -90,4 +91,5 @@ yuque-docs/yuque.config.json
 
 ## TODO
 
-[]
+- [ ] 导出到本地
+- [ ] 

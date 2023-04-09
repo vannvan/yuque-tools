@@ -49,31 +49,29 @@ import { IAccountInfo } from './lib/type.js'
   }
 
   const ask = async () => {
-    try {
-      const localBook = F.read(CONFIG.bookInfoFile)
-      const { expired, booksInfo: bookList } = JSON.parse(localBook)
-      if (!expired || expired < Date.now()) {
-        Log.info('开始获取知识库信息')
-        await getBook()
+    if (!(await F.isExit(CONFIG.bookInfoFile))) {
+      await getBook()
+    }
+    const localBook = F.read(CONFIG.bookInfoFile)
+    const { expired, booksInfo: bookList } = JSON.parse(localBook)
+    if (!expired || expired < Date.now()) {
+      Log.info('开始获取知识库信息')
+      await getBook()
+    } else {
+      const books = (await inquireBooks()) as string[]
+      if (books.length === 0) {
+        Log.error('未选择知识库，程序中断')
+        process.exit(0)
       } else {
-        const books = (await inquireBooks()) as string[]
-        if (books.length === 0) {
-          Log.error('未选择知识库，程序中断')
-          process.exit(0)
-        } else {
-          const filterBookList = books.includes('all')
-            ? bookList
-            : bookList.filter((item: any) => books.includes(item.slug))
+        const filterBookList = books.includes('all')
+          ? bookList
+          : bookList.filter((item: any) => books.includes(item.slug))
 
-          // 提前准备好文件夹
-          delayedDownloadDoc(filterBookList, 1000, (_item) => {
-            // TODO这里可以执行导出并存储到本地的动作
-          })
-        }
+        // 提前准备好文件夹
+        delayedDownloadDoc(filterBookList, 1000, (_item) => {
+          // TODO这里可以执行导出并存储到本地的动作
+        })
       }
-    } catch (error) {
-      // console.log(error)
-      getBook()
     }
   }
 

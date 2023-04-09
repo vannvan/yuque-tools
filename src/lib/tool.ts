@@ -173,15 +173,7 @@ export const inquireBooks = async (): Promise<string[]> => {
 const genFlatDocList = (bookList: any[]) => {
   const ans: any[] = []
   bookList.map((item) => {
-    item.docs.map((doc: any) => {
-      const repos = item.user + '/' + item.slug + '/' + doc.slug
-      ans.push({
-        repos,
-        dirName: item.name, // 目录名称
-        slug: doc.slug,
-        name: doc.name,
-      })
-    })
+    item.map((subItem: { children: any }) => ans.push(subItem.children))
   })
   return ans
 }
@@ -196,14 +188,13 @@ const genFlatDocList = (bookList: any[]) => {
 const mkTreeTocDir = (items: any[], id: string = null, pName: string) => {
   return items
     .filter((item) => item['parent_uuid'] === id)
-    .map((item) => {
+    .map(async (item) => {
       const fullPath = pName + '/' + item.title
-      // TODO待处理特殊字符
       item.type == 'TITLE' && F.mkdir(CONFIG.outputDir + '/' + fullPath)
       return {
         ...item,
         fullPath: fullPath,
-        children: mkTreeTocDir(items, item.uuid, item.title),
+        children: await mkTreeTocDir(items, item.uuid, fullPath),
       }
     })
 }
@@ -224,9 +215,13 @@ export const delayedDownloadDoc = (
     process.exit(0)
   }
 
-  const newInfo = bookList.map((item) => {
-    return mkTreeTocDir(item.docs, '', '')
+  const newInfo = bookList.map(async (item) => {
+    return mkTreeTocDir(item.docs, '', item.name)
   })
+
+  // let flat = genFlatDocList(newInfo)
+
+  // console.log(flat)
 
   // const content = setJSONString({ booksInfo: newInfo, expired: Date.now() + 3600000 })
   // F.touch2(CONFIG.bookInfoFile, content)

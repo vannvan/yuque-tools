@@ -1,7 +1,7 @@
 import axios from 'axios'
-import F from './file'
-import { Log, getLocalCookies, setJSONString } from './tool'
-import { config as CONFIG } from '../config'
+import F from './file.js'
+import { Log, getLocalCookies, setJSONString } from './tool.js'
+import { config as CONFIG } from '../config.js'
 
 export const get = <T>(url: string): Promise<{ data: T }> => {
   const cookie = getLocalCookies()?.data

@@ -1,12 +1,12 @@
 import inquirer from 'inquirer'
-const log = console.log
 import chalk from 'chalk'
-import F from './file'
-import { config as CONFIG } from '../config'
-import { ICookies } from './type'
+import F from './file.js'
+import { config as CONFIG } from '../config.js'
+import { ICookies } from './type.js'
 import ora from 'ora'
-import { crawlYuqueBookPage, getDocsOfBooks } from './yuque'
-const JSEncrypt = require('jsencrypt-node')
+import { crawlYuqueBookPage, getDocsOfBooks } from './yuque.js'
+import JSEncrypt from 'jsencrypt-node'
+const log = console.log
 
 const oneDay = 86400000
 
@@ -102,7 +102,7 @@ export const genPassword = (password: string) => {
  */
 export const delayedGetDocCommands = (
   bookList: any[],
-  duration: number = 1000,
+  duration: number,
   type: 'api' | 'crawl',
   finishCallBack: (booklist: any) => void
 ) => {
@@ -127,7 +127,9 @@ export const delayedGetDocCommands = (
     const docs =
       type == 'api' ? await getDocsOfBooks(id) : await crawlYuqueBookPage(`/${user}/${slug}`)
     spinner.text = `【${index}】${name}的文档数据获取成功`
-    if (docs) bookList[index].docs = docs as any
+    if (docs && bookList[index]) {
+      bookList[index].docs = docs as any
+    }
     index++
   }, duration)
 }
@@ -136,7 +138,7 @@ export const delayedGetDocCommands = (
  * 询问需要的知识库
  * @returns
  */
-export const inquireBooks = async () => {
+export const inquireBooks = async (): Promise<string[]> => {
   const book = F.read(CONFIG.bookInfoFile)
   if (book) {
     const { booksInfo } = JSON.parse(book)
@@ -164,6 +166,7 @@ export const inquireBooks = async () => {
     })
   } else {
     Log.error('知识库数据获取失败')
+    return []
   }
 }
 
@@ -182,39 +185,49 @@ const genFlatDocList = (bookList: any[]) => {
   })
   return ans
 }
+
+/**
+ * 初始化树形目录并返回加工后的数据
+ * @param items
+ * @param id
+ * @param pName
+ * @returns
+ */
+const mkTreeTocDir = (items: any[], id: string = null, pName: string) => {
+  return items
+    .filter((item) => item['parent_uuid'] === id)
+    .map((item) => {
+      const fullPath = pName + '/' + item.title
+      // TODO待处理特殊字符
+      item.type == 'TITLE' && F.mkdir(CONFIG.outputDir + '/' + fullPath)
+      return {
+        ...item,
+        fullPath: fullPath,
+        children: mkTreeTocDir(items, item.uuid, item.title),
+      }
+    })
+}
+
 /**
  * 定时获取文档数据
  * @param bookList
- * @param duration
- * @param finishCallBack
+ * @param _duration
+ * @param _finishCallBack
  */
 export const delayedDownloadDoc = (
   bookList: any[],
-  duration: number = 1000,
-  finishCallBack: (markdown: string) => void
+  _duration: number = 1000,
+  _finishCallBack: (markdown: string) => void
 ) => {
   if (!bookList || bookList.length === 0) {
-    Log.error('知识库选项错误')
+    Log.error('知识库选项无效')
     process.exit(0)
   }
 
-  // 提前初始化知识库目录
-  bookList.map((book) => {
-    // 处理特殊字符
-    const match = book.name.match(/\W+/g)
-    let targetName: string = book.name
-    if (match) {
-      console.log('match', match)
-      targetName = targetName.replace(/\W+/g, `'${match[0]}'`)
-    }
-    // 这里存在一个问题，当名称存在特殊字符时touch命令可能创建不了相应的文件
-    console.log('targetName', targetName)
-    // F.mkdir(CONFIG.metaDir + '/' + (book.name))
+  const newInfo = bookList.map((item) => {
+    return mkTreeTocDir(item.docs, '', '')
   })
 
-  const flatList = genFlatDocList(bookList)
-
-  let index = 0
-
-  //
+  // const content = setJSONString({ booksInfo: newInfo, expired: Date.now() + 3600000 })
+  // F.touch2(CONFIG.bookInfoFile, content)
 }

@@ -14,6 +14,11 @@ export const config = {
   duration: 500,
 
   /**
+   * 用户本地配置
+   */
+  localConfig: './yuque.config.json',
+
+  /**
    * 输出目录
    */
   outputDir: './docs',

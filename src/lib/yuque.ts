@@ -1,10 +1,10 @@
 import jsdom from 'jsdom'
-import { afterOneDay, genPassword, Log, setJSONString } from './tool'
-import { config as CONFIG } from '../config'
-import { get, post } from './request'
+import { afterOneDay, genPassword, Log, setJSONString } from './tool.js'
+import { config as CONFIG } from '../config.js'
+import { get, post } from './request.js'
 import { IAccountInfo, ILoginResponse, TBookItem, TBookStackItem, TDocItem } from './type'
-import F from './file'
-import YUQUE_API from './apis'
+import F from './file.js'
+import YUQUE_API from './apis.js'
 const { JSDOM } = jsdom
 
 /**
@@ -70,7 +70,7 @@ export const getBookStacks = async () => {
  * @param bookId
  * @returns 文档列表
  */
-export const getDocsOfBooks = async (bookId: string) => {
+export const getDocsOfBooks = async (bookId: string): Promise<any> => {
   const { data } = await get<TDocItem[]>(YUQUE_API.yuqueDocsOfBook(bookId))
   if (data) {
     const list = data.map((item) => {
@@ -92,7 +92,7 @@ export const getDocsOfBooks = async (bookId: string) => {
  * @param linebreak 是否保留换行
  * @returns md内容
  */
-export const exportMarkdown = async (repos: string, linebreak: boolean = false) => {
+export const exportMarkdown = async (repos: string, linebreak: boolean = false): Promise<any> => {
   const markdownContent = await get(YUQUE_API.yuqueExportMarkdown(repos, linebreak))
   if (markdownContent) {
     return markdownContent
@@ -116,6 +116,7 @@ export const crawlYuqueBookPage = (repos: string) => {
         const { book } = window.appData
         resolve(book.toc)
       } catch (error) {
+        reject(0)
         Log.error(`知识库${repos}页面数据爬取失败`)
       }
     })

@@ -1,20 +1,14 @@
 {
+  "extends": "@artus/tsconfig",
   "compilerOptions": {
-    "target": "esnext",
-    "module": "CommonJS",
-    "strict": true,
-    "importHelpers": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "sourceMap": true,
-    "baseUrl": "./src",
-    "outDir": "./dist",
-    "types": ["node"],
-    "declaration": true, // 是否生成声明文件
-    "declarationDir": "dist/type", // 声明文件打包的位置
-    "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
+    "module": "ES2022",
+    "target": "ES2022",
+    "outDir": "dist",
+    "sourceMap": false,
+    "inlineSourceMap": true,
+    "noUnusedLocals": false,
+    "moduleResolution": "node",
+    "skipLibCheck": true
   },
-  "include": ["./src/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["./src/**/*"]
 }

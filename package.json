@@ -2,30 +2,41 @@
   "name": "yuque-tools",
   "version": "0.0.1",
   "description": "语雀知识库内容批量导出和二次处理工具",
-  "main": "dist/app.js",
-  "directories": {
-    "lib": "lib"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "tsc": "tsc",
-    "yuque": "ts-node src/app.ts",
-    "start": "nodemon -e ts --exec ts-node src/app.ts",
-    "clean": "ts-node src/clean.ts"
-  },
   "keywords": [
     "yuque",
-    "语雀"
+    "语雀",
+    "yuque export",
+    "语雀 导出"
   ],
-  "author": "vannvan",
+  "homepage": "https://github.com/vannvan/yuque-tools#readme",
   "license": "MIT",
+  "author": "vannvan",
+  "type": "module",
+  "main": "dist/cli",
+  "bin": {
+    "ytool": "dist/bin/index.js"
+  },
+  "files": [
+    "package.json",
+    "dist"
+  ],
+  "scripts": {
+    "bin": "ts-node-esm -T src/cli/index.ts",
+    "clean": "ts-node-esm src/clean.ts",
+    "start": "node dist/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "tsc": "tsc",
+    "yuque": "ts-node-esm -T src/app.ts"
+  },
   "dependencies": {
+    "@artus/tsconfig": "^1.0.1",
     "@types/inquirer": "^9.0.3",
     "@types/jsdom": "^21.1.1",
     "@types/node": "^18.15.11",
     "@types/shelljs": "^0.8.11",
     "axios": "^1.3.4",
     "chalk": "4.1.2",
+    "commander": "^10.0.0",
     "inquirer": "8",
     "jsdom": "^21.1.1",
     "jsencrypt-node": "^1.0.4",

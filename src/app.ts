@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import {
   delayedDownloadDoc,
   delayedGetDocCommands,
@@ -6,27 +7,28 @@ import {
   inquireBooks,
   Log,
   setJSONString,
-} from './lib/tool'
-import { config as CONFIG } from './config'
-import F from './lib/file'
+} from './lib/tool.js'
+import { config as CONFIG } from './config.js'
+import F from './lib/file.js'
 import path from 'path'
-import { getBookStacks, loginYuque } from './lib/yuque'
-import { IAccountInfo } from './lib/type'
+import { getBookStacks, loginYuque } from './lib/yuque.js'
+import { IAccountInfo } from './lib/type.js'
 ;(async () => {
   Log.info('开始登录语雀')
   // load account info from argv
   const [userName, password] = [process.argv[2], process.argv[3]]
   let accountInfo: IAccountInfo = {
-    userName: userName,
-    password: password,
+    userName,
+    password,
   }
 
-  // load account info from .yuquerc.js
-  const isExitConfig = await F.isExit(path.resolve('./.yuquerc.js'))
+  // load account info from yuque.config.json
+  const isExitConfig = await F.isExit(path.resolve(CONFIG.localConfig))
   if (isExitConfig) {
-    const userInfo = require(path.resolve('./.yuquerc.js'))
-    accountInfo.userName = userInfo.userName
-    accountInfo.password = userInfo.password
+    const configUserInfo = JSON.parse(F.read(path.resolve(CONFIG.localConfig)))
+    accountInfo = {
+      ...configUserInfo,
+    }
   }
 
   // exit docs dir?
@@ -63,7 +65,8 @@ import { IAccountInfo } from './lib/type'
             ? bookList
             : bookList.filter((item: any) => books.includes(item.slug))
 
-          delayedDownloadDoc(filterBookList, 1000, (item) => {
+          // 提前准备好文件夹
+          delayedDownloadDoc(filterBookList, 1000, (_item) => {
             // TODO这里可以执行导出并存储到本地的动作
           })
         }

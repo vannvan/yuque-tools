@@ -8,7 +8,7 @@
 1. 语雀目前非会员用户取消了token授权功能  
 2. [yuque-exporter](https://github.com/yuque/yuque-exporter/tree/cli)采用读取原始文档方式，部分html节点无法处理  
   具体情况如下
-![](https://p.ipic.vip/f1jjmu.png)
+![](https://p.ipic.vip/xgq0vl.png)
 ![](https://p.ipic.vip/7gurgh.png)
 以上导出经转义后的md文档仍有多余的a标签(a标签可以采用正则匹配去除掉，但如果文档本身就有类似标签就无法区分了)，可能后面语雀会优化此问题吧，但他眼下没有。
 3. 支持对文档的再加工(可配置)，以适配其他平台的md格式  
@@ -71,12 +71,12 @@ draft: true
 > ytool userName password  
 
 账号信息支持配置化,适合长期使用  
-yuque-docs/.yuquerc.js
+yuque-docs/yuque.config.json
 
-```js
-module.exports = {
-  userName: 'XXX',
-  password: 'XXX',
+```json
+{
+  "userName": "XXX",
+  "password": "XXX",
 }
 ```
 

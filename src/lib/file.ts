@@ -13,8 +13,9 @@
 import fs from 'fs'
 const log = console.log
 import chalk from 'chalk'
-import { exec, exit } from 'shelljs'
+// import { exec, exit } from 'shelljs'
 import path from 'path'
+import { exec } from 'child_process'
 
 class File {
   /**
@@ -26,7 +27,8 @@ class File {
     if (isExit) {
       // console.log(`${absolutePath}文件夹已存在`)
     } else {
-      exec(`mkdir ${absolutePath}`)
+      fs.mkdirSync(`${absolutePath}`)
+      // exec(`mkdir ${absolutePath}`)
     }
   }
 
@@ -116,7 +118,7 @@ class File {
     return new Promise((resolve) => {
       const list: any[] = []
       const each = (pathName: string) => {
-        fs.readdirSync(pathName).forEach((item, index) => {
+        fs.readdirSync(pathName).forEach((item, _index) => {
           let stat = fs.lstatSync(path.join(pathName, item))
           if (stat.isDirectory()) {
             each(path.join(pathName, item))

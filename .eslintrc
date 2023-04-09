@@ -1,0 +1,9 @@
+{
+  "parserOptions": {
+    "sourceType": "module"
+  },
+  "rules": {
+    "no-else-return": "off",
+    "@typescript-eslint/no-unused-vars": "off"
+  }
+}

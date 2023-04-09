@@ -22,13 +22,15 @@ class File {
    * 创建文件夹
    * @param {*} absolutePath
    */
-  async mkdir(absolutePath: fs.PathLike) {
-    const isExit = fs.existsSync(absolutePath)
-    if (isExit) {
-      // console.log(`${absolutePath}文件夹已存在`)
+  async mkdir(absolutePath) {
+    if (fs.existsSync(absolutePath)) {
+      return true
     } else {
-      fs.mkdirSync(`${absolutePath}`)
-      // exec(`mkdir ${absolutePath}`)
+      //如果父级目录已经创建，然后才能创建子级目录
+      if (this.mkdir(path.dirname(absolutePath))) {
+        fs.mkdirSync(absolutePath)
+        return true
+      }
     }
   }
 

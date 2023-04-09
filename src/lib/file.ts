@@ -13,16 +13,14 @@
 import fs from 'fs'
 const log = console.log
 import chalk from 'chalk'
-// import { exec, exit } from 'shelljs'
 import path from 'path'
-import { exec } from 'child_process'
 
 class File {
   /**
    * 创建文件夹
    * @param {*} absolutePath
    */
-  async mkdir(absolutePath) {
+  async mkdir(absolutePath: any): Promise<boolean> {
     if (fs.existsSync(absolutePath)) {
       return true
     } else {
@@ -31,6 +29,7 @@ class File {
         fs.mkdirSync(absolutePath)
         return true
       }
+      return true
     }
   }
 

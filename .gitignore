@@ -1,0 +1,30 @@
+.DS_Store
+node_modules
+/dist
+/dist-bak
+/bak
+/directories
+.vscode/
+/docs/*
+.yuquerc.js
+pnpm-lock.yaml
+
+
+# local env files
+.env.local
+.env.*.local
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

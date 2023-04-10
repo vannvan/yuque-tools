@@ -51,6 +51,7 @@ import { IAccountInfo } from './lib/type.js'
   const ask = async () => {
     if (!(await F.isExit(CONFIG.bookInfoFile))) {
       await getBook()
+      return
     }
     const localBook = F.read(CONFIG.bookInfoFile)
     const { expired, booksInfo: bookList } = JSON.parse(localBook)
@@ -63,14 +64,13 @@ import { IAccountInfo } from './lib/type.js'
         Log.error('未选择知识库，程序中断')
         process.exit(0)
       } else {
+        // 所有的或者具体的
         const filterBookList = books.includes('all')
           ? bookList
           : bookList.filter((item: any) => books.includes(item.slug))
 
-        // 提前准备好文件夹
-        delayedDownloadDoc(filterBookList, 1000, (_item) => {
-          // TODO这里可以执行导出并存储到本地的动作
-        })
+        // 执行导出任务
+        await delayedDownloadDoc(filterBookList)
       }
     }
   }

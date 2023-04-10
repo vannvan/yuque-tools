@@ -8,6 +8,12 @@ export const config = {
   q70sevcmc8SsBNoaMQtyF/gETPBSsyWv3ccBJFrzZ5hxFdlVUfg6tXARtEI8rbIH
   su6TBkVjk+n1Pw/ihQIDAQAB
   -----END PUBLIC KEY-----`,
+
+  /**
+   * 本地过期信息时间
+   */
+  localExpire: 86400000,
+
   /**
    * 请求yuque的间隔
    */

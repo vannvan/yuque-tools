@@ -42,7 +42,7 @@ class File {
   async touch(absolutePath: any, fileName: any, content: string | NodeJS.ArrayBufferView) {
     this.mkdir(absolutePath)
     const _fileName = `${absolutePath}/${fileName}`
-    fs.writeFile(`${_fileName}`, content, (error) => {
+    fs.writeFile(_fileName, content, (error) => {
       if (error) return console.log(`${_fileName}写入文件失败,原因是` + error.message)
       // log(chalk.green(`${_fileName}创建成功`))
     })
@@ -54,7 +54,8 @@ class File {
    * @param content
    */
   async touch2(fileNameAbsolutePath: fs.PathLike, content: string) {
-    fs.writeFile(`${fileNameAbsolutePath}`, content, (error) => {
+    if (!content) log(chalk.red('内容为空'))
+    fs.writeFile(fileNameAbsolutePath, content, (error) => {
       if (error) return console.log(`${fileNameAbsolutePath}写入文件失败,原因是` + error.message)
     })
   }

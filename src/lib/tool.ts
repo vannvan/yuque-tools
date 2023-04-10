@@ -4,17 +4,21 @@ import F from './file.js'
 import { config as CONFIG } from '../config.js'
 import { ICookies } from './type.js'
 import ora from 'ora'
-import { crawlYuqueBookPage, getDocsOfBooks } from './yuque.js'
+import { crawlYuqueBookPage, exportMarkdown, getDocsOfBooks } from './yuque.js'
 import JSEncrypt from 'jsencrypt-node'
 const log = console.log
 
-const oneDay = 86400000
-
 /**
- * 一天之后过期
+ * 设置过期时间
  * @returns
  */
-export const afterOneDay = () => Date.now() + oneDay
+export const setExpireTime = () => Date.now() + CONFIG.localExpire
+
+/**
+ * 生成YYY-MM-DD HH:mm:ss格式的时间
+ * @returns
+ */
+export const getTime = () => new Date().toJSON().replace('T', ' ').substring(0, 19)
 
 /**
  * 打印日志
@@ -117,7 +121,7 @@ export const delayedGetDocCommands = (
   let timer = setInterval(async () => {
     if (index >= MAX) {
       spinner.stop()
-      Log.success('文档数据获取完成')
+      Log.success('文档数据获取完成,共导出')
       typeof finishCallBack === 'function' && finishCallBack(bookList)
       clearInterval(timer)
       return
@@ -142,7 +146,6 @@ export const inquireBooks = async (): Promise<string[]> => {
   const book = F.read(CONFIG.bookInfoFile)
   if (book) {
     const { booksInfo } = JSON.parse(book)
-    const all = [{ name: '所有', value: 'all' }]
     const options = booksInfo.map((item: any, index: number) => {
       return {
         name: `[${index + 1}]` + item.name,
@@ -157,7 +160,7 @@ export const inquireBooks = async (): Promise<string[]> => {
             type: 'checkbox',
             message: '请选择知识库(空格选中)',
             name: 'books',
-            choices: options.concat(all),
+            choices: options,
           },
         ])
         .then(async (answer) => {
@@ -170,31 +173,60 @@ export const inquireBooks = async (): Promise<string[]> => {
   }
 }
 
-const genFlatDocList = (bookList: any[]) => {
+/**
+ * 生成扁平的文档列表
+ * @param bookList
+ * @returns
+ */
+const genFlatDocList = async (bookList: any[]) => {
   const ans: any[] = []
+
+  const each = (list: any[]) => {
+    if (list) {
+      list.map((doc) => {
+        // 过滤非文档
+        if (doc.type === 'DOC' && doc.visible === 1) {
+          ans.push(doc)
+        }
+        if (doc.children) {
+          each(doc.children)
+        }
+      })
+    }
+  }
+
   bookList.map((item) => {
-    item.map((subItem: { children: any }) => ans.push(subItem.children))
+    item &&
+      item.map((subItem: { children: any }) => {
+        each(subItem.children)
+      })
   })
   return ans
 }
 
 /**
- * 初始化树形目录并返回加工后的数据
+ * 初始化树形目录并返回加工后的数据,目的是生成同样结构的本地文件夹，和准备对应文档的(文件夹/文件名称）
  * @param items
  * @param id
  * @param pName
  * @returns
  */
-const mkTreeTocDir = (items: any[], id: string = null, pName: string) => {
+const mkTreeTocDir = (
+  items: any[],
+  id: string = null,
+  pItem: { name: string; slug: string; user: string }
+) => {
   return items
     .filter((item) => item['parent_uuid'] === id)
-    .map(async (item) => {
-      const fullPath = pName + '/' + item.title
+    .map((item) => {
+      const fullPath = pItem.name + '/' + item.title
       item.type == 'TITLE' && F.mkdir(CONFIG.outputDir + '/' + fullPath)
       return {
         ...item,
+        pslug: pItem.slug, // 上一级的slug
+        user: pItem.user, // 上一级的user
         fullPath: fullPath,
-        children: await mkTreeTocDir(items, item.uuid, fullPath),
+        children: mkTreeTocDir(items, item.uuid, { ...pItem, name: fullPath }),
       }
     })
 }
@@ -205,24 +237,49 @@ const mkTreeTocDir = (items: any[], id: string = null, pName: string) => {
  * @param _duration
  * @param _finishCallBack
  */
-export const delayedDownloadDoc = (
-  bookList: any[],
-  _duration: number = 1000,
-  _finishCallBack: (markdown: string) => void
-) => {
+export const delayedDownloadDoc = async (bookList: any[]) => {
   if (!bookList || bookList.length === 0) {
     Log.error('知识库选项无效')
     process.exit(0)
   }
 
-  const newInfo = bookList.map(async (item) => {
-    return mkTreeTocDir(item.docs, '', item.name)
+  const newInfo = bookList.map((item) => {
+    return mkTreeTocDir(item.docs, '', item)
   })
 
-  // let flat = genFlatDocList(newInfo)
+  let index = 0
 
-  // console.log(flat)
+  const flatList = await genFlatDocList(newInfo)
+  const MAX = flatList.length - 1
 
-  // const content = setJSONString({ booksInfo: newInfo, expired: Date.now() + 3600000 })
-  // F.touch2(CONFIG.bookInfoFile, content)
+  const spinner = ora('导出文档任务开始').start()
+
+  let reportContent = `# 导出报告 \n ---- \n`
+
+  let timer = setInterval(async () => {
+    if (index === MAX) {
+      reportContent += `---- \n ## 生成时间${getTime()}`
+      const reportFilePath = CONFIG.outputDir + `/导出报告.md`
+      F.touch2(reportFilePath, String(reportContent))
+      spinner.stop()
+      Log.success(`导出文档任务结束,共导出${index - 1}个文档`)
+      clearInterval(timer)
+      process.exit(0)
+    }
+
+    const { pslug, user, url, title, fullPath } = flatList[index]
+
+    const repos = [user, pslug, url].join('/')
+    spinner.text = `正在导出[${title}-${repos}]`
+
+    const content: string = await exportMarkdown('/' + repos)
+    if (content) {
+      const fileDir = CONFIG.outputDir + '/' + fullPath + '.md'
+      F.touch2(fileDir, content)
+      reportContent += `## [${title}] 导出完成 文件路径${fileDir} \n`
+    } else {
+      reportContent += `## [${title}] 导出失败 \n`
+    }
+    index++
+  }, CONFIG.duration)
 }

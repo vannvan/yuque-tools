@@ -44,7 +44,6 @@ class File {
     const _fileName = `${absolutePath}/${fileName}`
     fs.writeFile(_fileName, content, (error) => {
       if (error) return console.log(`${_fileName}写入文件失败,原因是` + error.message)
-      // log(chalk.green(`${_fileName}创建成功`))
     })
   }
 
@@ -55,9 +54,7 @@ class File {
    */
   async touch2(fileNameAbsolutePath: fs.PathLike, content: string) {
     if (!content) log(chalk.red('内容为空'))
-    fs.writeFile(fileNameAbsolutePath, content, (error) => {
-      if (error) return console.log(`${fileNameAbsolutePath}写入文件失败,原因是` + error.message)
-    })
+    fs.writeFileSync(fileNameAbsolutePath, content)
   }
 
   /**

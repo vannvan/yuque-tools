@@ -6,6 +6,7 @@ import { ICookies } from './type.js'
 import ora from 'ora'
 import { crawlYuqueBookPage, exportMarkdown, getDocsOfBooks } from './yuque.js'
 import JSEncrypt from 'jsencrypt-node'
+import { writeFile, writeFileSync } from 'fs'
 const log = console.log
 
 /**
@@ -13,12 +14,6 @@ const log = console.log
  * @returns
  */
 export const setExpireTime = () => Date.now() + CONFIG.localExpire
-
-/**
- * 生成YYY-MM-DD HH:mm:ss格式的时间
- * @returns
- */
-export const getTime = () => new Date().toJSON().replace('T', ' ').substring(0, 19)
 
 /**
  * 打印日志
@@ -258,9 +253,9 @@ export const delayedDownloadDoc = async (bookList: any[]) => {
 
   let timer = setInterval(async () => {
     if (index === MAX) {
-      reportContent += `---- \n ## 生成时间${getTime()}`
+      reportContent += `---- \n ## 生成时间${new Date()}`
       const reportFilePath = CONFIG.outputDir + `/导出报告.md`
-      F.touch2(reportFilePath, String(reportContent))
+      F.touch2(reportFilePath, reportContent)
       spinner.stop()
       Log.success(`导出文档任务结束,共导出${index - 1}个文档`)
       clearInterval(timer)

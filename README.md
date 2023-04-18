@@ -87,11 +87,10 @@ yuque-docs/yuque.config.json
 >
 > npm run yuque userName password
 
-同样可采用项目根目录的.yuquerc.js长期使用
+同样可采用项目根目录的yuque.config.json长期使用
 
 ## TODO
 
 - [ ] 导出到本地
 - [ ] 代码优化
 - [ ] 导出参数配置化
-- [ ] 

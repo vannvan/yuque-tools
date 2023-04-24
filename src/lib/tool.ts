@@ -6,7 +6,6 @@ import { ICookies } from './type.js'
 import ora from 'ora'
 import { crawlYuqueBookPage, exportMarkdown, getDocsOfBooks } from './yuque.js'
 import JSEncrypt from 'jsencrypt-node'
-import { writeFile, writeFileSync } from 'fs'
 const log = console.log
 
 /**
@@ -116,7 +115,7 @@ export const delayedGetDocCommands = (
   let timer = setInterval(async () => {
     if (index >= MAX) {
       spinner.stop()
-      Log.success('文档数据获取完成,共导出')
+      Log.success('文档数据获取完成')
       typeof finishCallBack === 'function' && finishCallBack(bookList)
       clearInterval(timer)
       return
@@ -245,6 +244,7 @@ export const delayedDownloadDoc = async (bookList: any[]) => {
   let index = 0
 
   const flatList = await genFlatDocList(newInfo)
+
   const MAX = flatList.length - 1
 
   const spinner = ora('导出文档任务开始').start()
@@ -262,7 +262,7 @@ export const delayedDownloadDoc = async (bookList: any[]) => {
       process.exit(0)
     }
 
-    const { pslug, user, url, title, fullPath } = flatList[index]
+    const { pslug, user, url, title, fullPath } = flatList[index] || {}
 
     const repos = [user, pslug, url].join('/')
     spinner.text = `正在导出[${title}-${repos}]`

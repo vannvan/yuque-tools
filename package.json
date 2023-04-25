@@ -1,12 +1,12 @@
 {
   "name": "yuque-tools",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "语雀知识库内容批量导出和二次处理工具",
   "keywords": [
     "yuque",
-    "语雀",
     "yuque export",
-    "语雀 导出"
+    "yuque tools",
+    "yuque-tools"
   ],
   "homepage": "https://github.com/vannvan/yuque-tools#readme",
   "license": "MIT",

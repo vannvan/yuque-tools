@@ -8,7 +8,8 @@
     "inlineSourceMap": true,
     "noUnusedLocals": false,
     "moduleResolution": "node",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "declaration": false
   },
   "include": ["./src/**/*"]
 }

@@ -14,6 +14,7 @@ import fs from 'fs'
 const log = console.log
 import chalk from 'chalk'
 import path from 'path'
+import { Log } from './tool.js'
 
 class File {
   /**
@@ -64,7 +65,7 @@ class File {
   rm(fullPathName: fs.PathLike) {
     fs.unlink(fullPathName, (error) => {
       if (error) {
-        log(chalk.red(`删除${fullPathName}失败`))
+        Log.error(`删除${fullPathName}失败`)
         process.exit(0)
       }
     })
@@ -75,9 +76,14 @@ class File {
    * @param fullPathName
    */
   rmdir(fullPathName: fs.PathLike) {
+    let exit = fs.existsSync(fullPathName)
+    if (!exit) {
+      Log.warn('文件夹不存在')
+      return
+    }
     fs.rmdir(fullPathName, { recursive: true }, (error) => {
       if (error) {
-        log(chalk.red(`删除${fullPathName}失败`))
+        Log.error(`删除${fullPathName}失败`)
         process.exit(0)
       }
     })
@@ -111,6 +117,7 @@ class File {
   async readDirectory(pathName: any, filterCallback: (arg0: string) => any) {
     if (!this.isExit(pathName)) {
       log(chalk.red('路径无效'))
+
       return
     }
 

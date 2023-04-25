@@ -14,14 +14,14 @@
   "type": "module",
   "main": "dist/cli",
   "bin": {
-    "ytool": "dist/bin/index.js"
+    "ytool": "dist/cli/index.js"
   },
   "files": [
     "package.json",
     "dist"
   ],
   "scripts": {
-    "bin": "ts-node-esm -T src/cli/index.ts",
+    "cli": "ts-node-esm -T src/cli/index.ts",
     "clean": "ts-node-esm -T src/clean.ts",
     "start": "node dist/app.js",
     "test": "echo \"Error: no test specified\" && exit 1",

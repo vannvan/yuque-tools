@@ -21,7 +21,7 @@ title: 阿哈哈哈啊
 ---
 ```
 
-- hugo的title这样的
+- hugo的title需要这样的
 
 ```bash
 ---
@@ -91,6 +91,7 @@ yuque-docs/yuque.config.json
 
 ## TODO
 
-- [ ] cli完善
+- [x] cli完善
 - [ ] 代码优化
 - [ ] 导出参数配置化
+- [ ] 

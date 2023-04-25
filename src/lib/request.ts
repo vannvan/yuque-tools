@@ -24,7 +24,7 @@ export const get = <T>(url: string): Promise<{ data: T }> => {
         resolve(res.data)
       })
       .catch((error) => {
-        reject(error)
+        reject(error.code)
       })
   })
 }
@@ -53,7 +53,7 @@ export const post = <T>(url: string, params: any, header?: object): Promise<{ da
         resolve(res.data)
       })
       .catch((error) => {
-        reject(error)
+        reject(error.code)
       })
   })
 }

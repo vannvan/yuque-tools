@@ -174,7 +174,6 @@ export const inquireBooks = async (): Promise<string[]> => {
  */
 const genFlatDocList = async (bookList: any[]) => {
   const ans: any[] = []
-
   const each = (list: any[]) => {
     if (list) {
       list.map((doc) => {
@@ -191,7 +190,10 @@ const genFlatDocList = async (bookList: any[]) => {
 
   bookList.map((item) => {
     item &&
-      item.map((subItem: { children: any }) => {
+      item.map((subItem: { visible: number; type: string; children: any }) => {
+        if (subItem.type === 'DOC' && subItem.visible === 1) {
+          ans.push(subItem)
+        }
         each(subItem.children)
       })
   })
@@ -238,12 +240,18 @@ export const delayedDownloadDoc = async (bookList: any[]) => {
   }
 
   const newInfo = bookList.map((item) => {
+    // 创建知识库目录
+    F.mkdir(CONFIG.outputDir + '/' + item.name)
     return mkTreeTocDir(item.docs, '', item)
   })
 
   let index = 0
 
   const flatList = await genFlatDocList(newInfo)
+
+  if (flatList.length === 0) {
+    Log.warn('当前知识库下暂无文档')
+  }
 
   const MAX = flatList.length - 1
 

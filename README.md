@@ -11,10 +11,10 @@
 2. [yuque-exporter](https://github.com/yuque/yuque-exporter/tree/cli)采用读取原始文档方式，部分html节点无法处理   
 > 此方案借鉴了[yuque-exporter](https://github.com/yuque/yuque-exporter/tree/cli)的一些思路，感谢`atian25`  
 
-    具体情况如下
-    ![](https://p.ipic.vip/xgq0vl.png)
-    ![](https://p.ipic.vip/7gurgh.png)  
-    以上导出经转义后的md文档仍有多余的a标签(a标签可以采用正则匹配去除掉，但如果文档本身就有类似标签就无法区分了)，可能后面语雀会优化此问题，但他眼下没有。
+具体情况如下
+![](https://p.ipic.vip/xgq0vl.png)
+![](https://p.ipic.vip/7gurgh.png)  
+以上导出经转义后的md文档仍有多余的a标签(a标签可以采用正则匹配去除掉，但如果文档本身就有类似标签就无法区分了)，可能后面语雀会优化此问题，但他眼下没有。  
 3. 支持对文档的再加工(可配置)，以适配其他平台的md格式  
 
 - 例如hexo的title需要这样的

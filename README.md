@@ -76,8 +76,8 @@ pull -> 登录 -> 交互式选择知识库 -> 等待下载完成
 目前登录完成后会设置一天的有效时间，也就是说在24小时之内重复导出只有第一次需要登录。
 
 #### 安装
-> npm i yuque-tools -g 或者  
-> npm i yuque-tools
+> npm i yuque-tools -g 安装到全局   
+> npm i yuque-tools 安装到局部  
 > 安装到全局以下方法使用`ytool xx`,安装到局部以下方法使用`npx ytool xx`
 
 #### pull 导出

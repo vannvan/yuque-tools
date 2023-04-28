@@ -1,6 +1,6 @@
 {
   "name": "yuque-tools",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "语雀知识库内容批量导出和二次处理工具",
   "keywords": [
     "yuque",
@@ -9,6 +9,10 @@
     "yuque-tools"
   ],
   "homepage": "https://github.com/vannvan/yuque-tools#readme",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:vannvan/yuque-tools.git"
+  },
   "license": "MIT",
   "author": "vannvan",
   "type": "module",
@@ -21,8 +25,8 @@
     "dist"
   ],
   "scripts": {
-    "cli": "ts-node-esm -T src/cli/index.ts",
     "clean": "ts-node-esm -T src/clean.ts",
+    "cli": "ts-node-esm -T src/cli/index.ts",
     "start": "node dist/app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc": "tsc",

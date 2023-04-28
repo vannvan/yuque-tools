@@ -1,13 +1,19 @@
 语雀知识库内容批量导出和二次处理工具(非TOKEN方式,非官方)  
-特别说明：由于此方案采用账号登录方式，出于安全需求考虑，仅支持本地化操作，源码无窃取用户信息的脚本，因此无需担心信息泄漏。
+> 特别说明：由于此方案采用账号登录方式，出于安全需求考虑，仅支持本地化操作，源码无窃取用户信息的脚本，因此无需担心信息泄漏，可放心使用。
+
+![](https://badgen.net/npm/dm/yuque-tools)
+![](https://badgen.net/npm/v/yuque-tools)
+![](https://badgen.net/npm/node/next)
 
 ## 缘何
 
 1. 语雀目前非会员用户取消了token授权功能  
-2. [yuque-exporter](https://github.com/yuque/yuque-exporter/tree/cli)采用读取原始文档方式，部分html节点无法处理  
+2. [yuque-exporter](https://github.com/yuque/yuque-exporter/tree/cli)采用读取原始文档方式，部分html节点无法处理   
+> 此方案借鉴了[yuque-exporter](https://github.com/yuque/yuque-exporter/tree/cli)的一些思路，感谢`atian25`  
+
     具体情况如下
     ![](https://p.ipic.vip/xgq0vl.png)
-    ![](https://p.ipic.vip/7gurgh.png)
+    ![](https://p.ipic.vip/7gurgh.png)  
     以上导出经转义后的md文档仍有多余的a标签(a标签可以采用正则匹配去除掉，但如果文档本身就有类似标签就无法区分了)，可能后面语雀会优化此问题，但他眼下没有。
 3. 支持对文档的再加工(可配置)，以适配其他平台的md格式  
 
@@ -30,7 +36,7 @@ draft: true
 ```
 
 - 自定义md尾部版权归属  
-- 其它内容自定义替换的
+- 其它内容需要自定义替换的
 
 4. 语雀后续对自己内容对外输出的通道应该会收紧(猜测)，此方案具有更大的能力和扩展性(基本可以为所欲为)
 
@@ -59,9 +65,9 @@ draft: true
 > repos 代表 用户名/知识库slug  
 > docs 代表  用户名/知识库slug/文档slug
 
-## 打开方式
+## 使用方式
 
-### CLI
+### CLI方式
 
 整体步骤
 
@@ -69,14 +75,15 @@ pull -> 登录 -> 交互式选择知识库 -> 等待下载完成
 
 目前登录完成后会设置一天的有效时间，也就是说在24小时之内重复导出只有第一次需要登录。
 
+#### 安装
+> npm i yuque-tools -g 或者  
+> npm i yuque-tools
+> 安装到全局以下方法使用`ytool xx`,安装到局部以下方法使用`npx ytool xx`
+
 #### pull 导出
-
->
-> npm i yuque-tools -g
-
 创建目录`yuque-docs`并进入目录
 
-> ytool pull
+> ytool pull  
 
 执行命令后会进入账号登录环节，完成登录后会进入交互式选择知识库环节，选择需要导出的知识库即可
 
@@ -92,9 +99,9 @@ pull -> 登录 -> 交互式选择知识库 -> 等待下载完成
 
 #### clean 清除缓存
 
-> ytool clean
+> ytool clean  
 
-### 源码
+### 源码方式
 >
 > npm run yuque
 

@@ -54,6 +54,6 @@
     "ts-node": "^10.9.1"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
+    "vannvan:registry": "https://npm.pkg.github.com/"
   }
 }

@@ -19,7 +19,7 @@ jobs:
         with:
           node-version: 16
       - run: npm i
-      - run: npm run  tsc
+      - run: npm run tsc
 
   publish-gpr:
     needs: build

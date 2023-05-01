@@ -98,38 +98,28 @@ export const genPassword = (password: string) => {
  * @param duration
  * @param finishCallBack
  */
-export const delayedGetDocCommands = (
-  bookList: any[],
-  duration: number,
-  type: 'api' | 'crawl',
-  finishCallBack: (booklist: any) => void
-) => {
+export const delayedGetDocCommands = (bookList: any[], finishCallBack: (booklist: any) => void) => {
   if (!bookList || !bookList.length) {
     Log.error('知识库数据有误')
     process.exit(0)
   }
-  let index = 0
-  const MAX = bookList.length
   const spinner = ora('开始获取文档数据').start()
 
-  let timer = setInterval(async () => {
-    if (index >= MAX) {
-      spinner.stop()
-      Log.success('文档数据获取完成')
-      typeof finishCallBack === 'function' && finishCallBack(bookList)
-      clearInterval(timer)
-      return
-    }
-    const { name, slug, user, id } = bookList[index]
-    spinner.text = `【${index}】开始获取${name}的文档数据`
-    const docs =
-      type == 'api' ? await getDocsOfBooks(id) : await crawlYuqueBookPage(`/${user}/${slug}`)
-    spinner.text = `【${index}】${name}的文档数据获取成功`
-    if (docs && bookList[index]) {
-      bookList[index].docs = docs as any
-    }
-    index++
-  }, duration)
+  const promises = bookList.map((item) => {
+    const { slug, user } = item
+    return crawlYuqueBookPage(`/${user}/${slug}`)
+  })
+  /**
+   * 可能会存在失败
+   */
+  Promise.all(promises).then((res) => {
+    spinner.stop()
+    Log.success('文档数据获取完成')
+    bookList.map((_item, index) => {
+      bookList[index].docs = res[index]
+    })
+    typeof finishCallBack === 'function' && finishCallBack(bookList)
+  })
 }
 
 /**
@@ -253,7 +243,7 @@ export const delayedDownloadDoc = async (bookList: any[]) => {
     Log.warn('当前知识库下暂无文档')
   }
 
-  const MAX = flatList.length - 1
+  const MAX = flatList.length
 
   const spinner = ora('导出文档任务开始').start()
 
@@ -265,7 +255,7 @@ export const delayedDownloadDoc = async (bookList: any[]) => {
       const reportFilePath = CONFIG.outputDir + `/导出报告.md`
       F.touch2(reportFilePath, reportContent)
       spinner.stop()
-      Log.success(`导出文档任务结束,共导出${index - 1}个文档`)
+      Log.success(`导出文档任务结束,共导出${index}个文档`)
       clearInterval(timer)
       process.exit(0)
     }

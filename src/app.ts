@@ -75,11 +75,14 @@ import { IAccountInfo } from './lib/type.js'
     }
   }
 
+  /**
+   * 获取知识库信息，生成所有知识库的配置文件
+   */
   const getBook = async () => {
     setTimeout(async () => {
       const bookList = await getBookStacks()
-      delayedGetDocCommands(bookList, CONFIG.duration, 'crawl', async (_bookList) => {
-        const content = setJSONString({ booksInfo: bookList, expired: Date.now() + 3600000 })
+      delayedGetDocCommands(bookList, async (_bookList) => {
+        const content = setJSONString({ booksInfo: _bookList, expired: Date.now() + 3600000 })
         F.touch2(CONFIG.bookInfoFile, content)
         setTimeout(() => {
           ask()

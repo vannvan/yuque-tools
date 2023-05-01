@@ -1,6 +1,6 @@
 {
   "name": "yuque-tools",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "语雀知识库内容批量导出和二次处理工具",
   "keywords": [
     "yuque",

@@ -8,10 +8,10 @@ on:
     types: [created]
   pull_request:
     branches:
-      - main
+      - npm
   push:
     branches:
-      - main
+      - npm
 jobs:
   # install:
   #   runs-on: ubuntu-latest

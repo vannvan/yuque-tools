@@ -41,7 +41,7 @@ export const loginYuque = async (accountInfo: IAccountInfo) => {
 }
 
 /**
- * 获取知识库
+ * 获取知识库列表
  */
 export const getBookStacks = async () => {
   const { data } = await get<TBookStackItem[]>(YUQUE_API.yuqueBooksList)
@@ -106,6 +106,8 @@ export const exportMarkdown = async (
 
 /**
  * 爬取语雀知识库页面数据
+ * @param repos
+ * @returns
  */
 export const crawlYuqueBookPage = (repos: string): Promise<string> => {
   return new Promise((resolve, reject) => {

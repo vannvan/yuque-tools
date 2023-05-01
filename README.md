@@ -5,10 +5,15 @@
 ![](https://badgen.net/npm/v/yuque-tools)
 ![](https://badgen.net/npm/node/next)
 
+## 样例
+
+[![example.gif](https://www.z4a.net/images/2023/05/01/example.gif)](https://www.z4a.net/image/VmUHiO)
+
 ## 缘何
 
 1. 语雀目前非会员用户取消了token授权功能  
-2. [yuque-exporter](https://github.com/yuque/yuque-exporter/tree/cli)采用读取原始文档方式，部分html节点无法处理   
+2. [yuque-exporter](https://github.com/yuque/yuque-exporter/tree/cli)采用读取原始文档方式，部分html节点无法处理
+
 > 此方案借鉴了[yuque-exporter](https://github.com/yuque/yuque-exporter/tree/cli)的一些思路，感谢`atian25`  
 
 具体情况如下
@@ -76,11 +81,13 @@ pull -> 登录 -> 交互式选择知识库 -> 等待下载完成
 目前登录完成后会设置一天的有效时间，也就是说在24小时之内重复导出只有第一次需要登录。
 
 #### 安装
-> npm i yuque-tools -g 安装到全局   
+>
+> npm i yuque-tools -g 安装到全局
 > npm i yuque-tools 安装到局部  
 > 安装到全局以下方法使用`ytool xx`,安装到局部以下方法使用`npx ytool xx`
 
 #### pull 导出
+
 创建目录`yuque-docs`并进入目录
 
 > ytool pull  
@@ -121,6 +128,3 @@ pull -> 登录 -> 交互式选择知识库 -> 等待下载完成
 [反馈意见](https://github.com/vannvan/yuque-tools/issues)
 
 本项目可以共创，欢迎提意见或参与功能优化工作，如果有帮助欢迎点个鼓励的⭐️
-
-
-

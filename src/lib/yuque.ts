@@ -46,14 +46,13 @@ export const loginYuque = async (accountInfo: IAccountInfo) => {
 export const getBookStacks = async () => {
   const { data } = await get<TBookStackItem[]>(YUQUE_API.yuqueBooksList)
   if (data) {
-    const list = data.reduce((prev: any, curr: { books: any }) => {
-      return prev.books.concat(curr.books)
-    }) as unknown as TBookItem[]
+    // reduce [{c:[1,2],a:'11'}] => [{c:[1,2],a:'11'}]
+    const list = data.map(item => item.books).flat() as unknown as TBookItem[]
     const _list = list.map((item: TBookItem) => {
       return {
         slug: item.slug,
         name: item.name,
-        user: item.user.name,
+        user: item.user.login,
         id: item.id,
         docs: [],
       }

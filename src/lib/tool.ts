@@ -205,7 +205,8 @@ const mkTreeTocDir = (
   return items
     .filter((item) => item['parent_uuid'] === id)
     .map((item) => {
-      const fullPath = pItem.name + '/' + item.title
+      const regex = /[<>:"\/\\|?*\x00-\x1F]/g
+      const fullPath = pItem.name + '/' + item.title.replace(regex, '') // 过滤名称中的特殊字符
       item.type == 'TITLE' && F.mkdir(CONFIG.outputDir + '/' + fullPath)
       return {
         ...item,

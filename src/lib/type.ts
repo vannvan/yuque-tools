@@ -27,6 +27,7 @@ export type TBookItem = {
   name: string
   user: {
     name: string
+    login: string
   }
   docs: TDocItem[]
 }

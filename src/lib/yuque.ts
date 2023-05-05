@@ -46,7 +46,7 @@ export const loginYuque = async (accountInfo: IAccountInfo) => {
 export const getBookStacks = async () => {
   const { data } = await get<TBookStackItem[]>(YUQUE_API.yuqueBooksList)
   if (data) {
-    // reduce [{c:[1,2],a:'11'}] => [{c:[1,2],a:'11'}]
+    // reduce [{c:[1,2],a:'11'}] => {c: Array(2), a: '11'}
     const list = data.map(item => item.books).flat() as unknown as TBookItem[]
     const _list = list.map((item: TBookItem) => {
       return {

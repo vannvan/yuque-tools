@@ -126,4 +126,4 @@ pull -> 登录 -> 交互式选择知识库 -> 等待下载完成
 [反馈意见](https://github.com/vannvan/yuque-tools/issues)
 [更新记录⭐️](https://github.com/vannvan/yuque-tools/issues/9)
 
-本项目可以共创，欢迎提意见或参与功能优化工作，如果有帮助欢迎点个鼓励的⭐️
+欢迎提意见或参与功能优化工作，如果有帮助欢迎点个鼓励的⭐️

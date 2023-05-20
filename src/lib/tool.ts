@@ -207,7 +207,11 @@ const mkTreeTocDir = (
     .map((item) => {
       const regex = /[<>:"\/\\|?*\x00-\x1F]/g
       const fullPath = pItem.name + '/' + item.title.replace(regex, '') // 过滤名称中的特殊字符
-      item.type == 'TITLE' && F.mkdir(CONFIG.outputDir + '/' + fullPath)
+      // 如果是目录会有TITLE，如果存在子文档会有child_uuid
+      if (item.type == 'TITLE' || item.child_uuid) {
+        F.mkdir(CONFIG.outputDir + '/' + fullPath)
+      }
+
       return {
         ...item,
         pslug: pItem.slug, // 上一级的slug
@@ -265,15 +269,19 @@ export const delayedDownloadDoc = async (bookList: any[]) => {
 
     const repos = [user, pslug, url].join('/')
     spinner.text = `正在导出[${title}-${repos}]`
-
-    const content: string = await exportMarkdown('/' + repos)
-    if (content) {
-      const fileDir = CONFIG.outputDir + '/' + fullPath + '.md'
-      F.touch2(fileDir, content)
-      reportContent += `## [${title}] 导出完成 文件路径${fileDir} \n`
-    } else {
-      reportContent += `## [${title}] 导出失败 \n`
+    try {
+      const content: string = await exportMarkdown('/' + repos)
+      if (content) {
+        const fileDir = CONFIG.outputDir + '/' + fullPath + '.md'
+        F.touch2(fileDir, content)
+        reportContent += `- 🌈[${title}] 导出完成 文件路径${fileDir} \n`
+      } else {
+        reportContent += `- ❌[${title}] 导出失败  \n`
+      }
+    } catch (error) {
+      reportContent += `- ❌[${title}] 导出失败 \n`
     }
+
     index++
   }, CONFIG.duration)
 }

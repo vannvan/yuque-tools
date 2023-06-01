@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
-const program = new Command()
+
 import { config as CONFIG } from '../config.js'
 import { Command } from 'commander'
 import { Log } from '../lib/tool.js'
 
 import fs from 'fs'
-
+const program = new Command()
 const pkg = JSON.parse(fs.readFileSync(new URL('../../package.json', import.meta.url), 'utf8'))
 
 program.name('ytool').description('ytool is a Yuque plugin').version(pkg.version)

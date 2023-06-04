@@ -4,7 +4,8 @@
 name: 自动打包
 
 on:
-  push:
+  release:
+#   push:
 #     branches: ['main']
 
 jobs:

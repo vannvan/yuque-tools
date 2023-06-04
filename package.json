@@ -27,6 +27,7 @@
   "scripts": {
     "clean": "ts-node-esm -T src/clean.ts",
     "cli": "ts-node-esm -T src/cli/index.ts",
+    "pack": "pkg hello.js --out-path=release/ --targets=macos --compress=GZip",
     "start": "node dist/app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc": "tsc",
@@ -46,6 +47,7 @@
     "jsencrypt-node": "^1.0.4",
     "nodemon": "^2.0.22",
     "ora": "4",
+    "pkg": "^5.8.1",
     "shelljs": "^0.8.5",
     "tslib": "^2.5.0",
     "typescript": "^5.0.3"

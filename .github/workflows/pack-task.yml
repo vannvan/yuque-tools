@@ -19,6 +19,7 @@ jobs:
           registry-url: https://registry.npmjs.org/
 
       - run: npm i
+      - run: npm run tsc
       - run: npm run pack
 
       - name: Commit

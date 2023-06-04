@@ -5,7 +5,7 @@ name: 自动打包
 
 on:
   push:
-    branches: ['main']
+#     branches: ['main']
 
 jobs:
   build:

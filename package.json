@@ -27,7 +27,8 @@
   "scripts": {
     "clean": "ts-node-esm -T src/clean.ts",
     "cli": "ts-node-esm -T src/cli/index.ts",
-    "pack": "pkg . --out-path=release/ --targets=macos --compress=GZip",
+    "pack:macos": "pkg . --out-path=release/ --targets=macos --compress=GZip",
+    "pack:win": "pkg . --out-path=release/ --targets=win --compress=GZip",
     "start": "node dist/app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc": "tsc",

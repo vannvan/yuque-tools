@@ -21,6 +21,8 @@ jobs:
       - run: npm i
       - run: npm run tsc
       - run: npm run pack
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_PUBLISH_WORKFLOW}}
 
       - name: Commit
         run: |

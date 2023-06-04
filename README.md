@@ -121,6 +121,10 @@ pull -> 登录 -> 交互式选择知识库 -> 等待下载完成
 
 导出完成后的知识库在`yuque-docs/docs`文件夹中，目前默认会以语雀原始目录结构存放，同时缓存信息在`yuque-docs/.meta`文件夹中。
 
+### 程序包
+此方式适用于不熟悉或不需要`Node`环境的朋友们
+[程序包](https://github.com/vannvan/yuque-tools/releases/tag/v1.0.0-beta)
+
 ## issues
 
 [反馈意见](https://github.com/vannvan/yuque-tools/issues)

@@ -117,8 +117,7 @@ class File {
   async readDirectory(pathName: any, filterCallback: (arg0: string) => any) {
     if (!this.isExit(pathName)) {
       log(chalk.red('路径无效'))
-
-      return
+      return false
     }
 
     return new Promise((resolve) => {

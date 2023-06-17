@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-
 import { config as CONFIG } from '../config.js'
 import { Command } from 'commander'
 import { Log } from '../lib/tool.js'
@@ -9,11 +8,11 @@ import fs from 'fs'
 const program = new Command()
 const pkg = JSON.parse(fs.readFileSync(new URL('../../package.json', import.meta.url), 'utf8'))
 
-program.name('ytool').description('ytool is a Yuque plugin').version(pkg.version)
+program.name('ytool').description('ytool 是一个语雀文档导出插件').version(pkg.version)
 
 program
   .command('clean')
-  .description('clean local cache')
+  .description('清除本地缓存')
   .action((_str: string, _options) => {
     const fullPathName = CONFIG.outputDir
     fs.rm(fullPathName, { recursive: true }, (error) => {
@@ -32,9 +31,22 @@ program
 
 program
   .command('pull')
-  .description('pull yuque docs')
-  .action((_str: string, _options) => {
-    import('../app.js')
+  .description('获取语雀知识库资源')
+  .action(async (_str: string, _options) => {
+    const Command = await import('../app.js')
+    const cmd = new Command.default()
+    const { args } = _options
+    if (args.length >= 2) {
+      const [userName, password, ...rest] = args
+      cmd.init({
+        userName,
+        password,
+        tocRange: rest,
+        skipDoc: rest.includes('skip'),
+      })
+    } else {
+      cmd.init({})
+    }
   })
 
 program.parse(process.argv)

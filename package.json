@@ -1,6 +1,6 @@
 {
   "name": "yuque-tools",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "语雀知识库内容批量导出和二次处理工具",
   "keywords": [
     "yuque",
@@ -32,6 +32,7 @@
     "start": "node dist/app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc": "tsc",
+    "watch": "tsc --watch",
     "yuque": "ts-node-esm -T src/app.ts"
   },
   "dependencies": {

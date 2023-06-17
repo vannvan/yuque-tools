@@ -126,7 +126,10 @@ export const delayedGetDocCommands = (bookList: any[], finishCallBack: (booklist
  * 询问需要的知识库
  * @returns
  */
-export const inquireBooks = async (): Promise<string[]> => {
+export const inquireBooks = async (): Promise<{
+  tocList: string[]
+  skipDoc: boolean
+}> => {
   const book = F.read(CONFIG.bookInfoFile)
   if (book) {
     const { booksInfo } = JSON.parse(book)
@@ -143,17 +146,28 @@ export const inquireBooks = async (): Promise<string[]> => {
           {
             type: 'checkbox',
             message: '请选择知识库(空格选中)',
-            name: 'books',
+            name: 'tocList',
             choices: options,
+          },
+          {
+            type: 'confirm',
+            message: '是否跳过本地相同文件',
+            name: 'skpDoc',
           },
         ])
         .then(async (answer) => {
-          resolve(answer.books)
+          resolve({
+            tocList: answer.tocList,
+            skipDoc: answer.skpDoc,
+          })
         })
     })
   } else {
     Log.error('知识库数据获取失败')
-    return []
+    return {
+      tocList: [],
+      skipDoc: false,
+    }
   }
 }
 
@@ -224,11 +238,10 @@ const mkTreeTocDir = (
 
 /**
  * 定时获取文档数据
- * @param bookList
- * @param _duration
- * @param _finishCallBack
+ * @param bookList 文档列表
+ * @param skipDoc 是否跳过本地已存在的文件
  */
-export const delayedDownloadDoc = async (bookList: any[]) => {
+export const delayedDownloadDoc = async (bookList: any[], skipDoc: boolean) => {
   if (!bookList || bookList.length === 0) {
     Log.error('知识库选项无效')
     process.exit(0)
@@ -273,8 +286,15 @@ export const delayedDownloadDoc = async (bookList: any[]) => {
       const content: string = await exportMarkdown('/' + repos)
       if (content) {
         const fileDir = CONFIG.outputDir + '/' + fullPath + '.md'
-        F.touch2(fileDir, content)
-        reportContent += `- 🌈[${title}] 导出完成 文件路径${fileDir} \n`
+        // 是否已存在
+        const isExit = await F.isExit(fileDir)
+        if (skipDoc && isExit) {
+          spinner.text = `本次跳过[${title}-${repos}]`
+          reportContent += `- 🌈[${title}] 本次跳过 文件路径${fileDir} \n`
+        } else {
+          F.touch2(fileDir, content)
+          reportContent += `- 🌈[${title}] 导出完成 文件路径${fileDir} \n`
+        }
       } else {
         reportContent += `- ❌[${title}] 导出失败  \n`
       }

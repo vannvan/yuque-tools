@@ -47,7 +47,7 @@ export const getBookStacks = async () => {
   const { data } = await get<TBookStackItem[]>(YUQUE_API.yuqueBooksList)
   if (data) {
     // reduce [{c:[1,2],a:'11'}] => {c: Array(2), a: '11'}
-    const list = data.map(item => item.books).flat() as unknown as TBookItem[]
+    const list = data.map((item) => item.books).flat() as unknown as TBookItem[]
     const _list = list.map((item: TBookItem) => {
       return {
         slug: item.slug,
@@ -90,10 +90,7 @@ export const getDocsOfBooks = async (bookId: string): Promise<any> => {
  * @param linebreak 是否保留换行
  * @returns md内容
  */
-export const exportMarkdown = async (
-  repos: string,
-  linebreak: boolean = false
-): Promise<string> => {
+export const exportMarkdown = async (repos: string, linebreak: boolean): Promise<string> => {
   const markdownContent = await get(YUQUE_API.yuqueExportMarkdown(repos, linebreak))
   if (markdownContent) {
     return markdownContent as unknown as string

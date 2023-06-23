@@ -12,24 +12,27 @@ import { config as CONFIG } from './config.js'
 import F from './lib/file.js'
 import path from 'path'
 import { getBookStacks, loginYuque } from './lib/yuque.js'
-import { IAccountInfo } from './lib/type.js'
+import { IAccountInfo, IYuqueTools, TCLI_ARGS, TKnowledgeConfig } from './lib/type.js'
 
-class YuqueTools {
+class YuqueTools implements IYuqueTools {
   accountInfo: IAccountInfo
-  // 支持模糊匹配表知识库 all字符串表示所有
-  tocRange: string[]
-  // 支持跳过本地已存在的文档
-  skipDoc: boolean
-  // 用户已选的知识库slug列表
   userSelectedDoc: string[]
+  ctx: this
+  knowledgeConfig: TKnowledgeConfig
+  haveSecondLevel: boolean
   constructor() {
+    this.ctx = this
     this.accountInfo = {
       userName: '',
       password: '',
     }
-    this.skipDoc = false
-    this.tocRange = []
+    this.knowledgeConfig = {
+      tocRange: [],
+      skipDoc: undefined,
+      linebreak: undefined,
+    }
     this.userSelectedDoc = []
+    this.haveSecondLevel = false
   }
   /**
    * 1. 检查本地缓存文件，是否已经有账号信息，同时检查是否已过期
@@ -39,44 +42,47 @@ class YuqueTools {
    * @param tocRange
    * @param skipDoc
    */
-  async init(args?: {
-    userName?: string
-    password?: string
-    tocRange?: string[]
-    skipDoc?: boolean
-  }) {
+  async init(args?: TCLI_ARGS) {
     Log.info('开始登录语雀')
 
     // load account info from yuque.config.json
     const isExitConfig = await F.isExit(path.resolve(CONFIG.localConfig))
     // 先读取用户本地配置
     if (isExitConfig) {
-      const configUserInfo = JSON.parse(F.read(path.resolve(CONFIG.localConfig))) || {}
-      this.accountInfo = {
-        userName: configUserInfo.userName,
-        password: configUserInfo.password,
+      try {
+        const configUserInfo = JSON.parse(F.read(path.resolve(CONFIG.localConfig))) || {}
+        const { userName, password, ...rest } = configUserInfo
+
+        this.accountInfo = {
+          userName: userName,
+          password: password,
+        }
+
+        this.knowledgeConfig = { ...rest }
+      } catch (error) {
+        Log.warn('配置信息有误，开始交互式环节')
       }
-      this.tocRange = configUserInfo.tocRange
-      this.skipDoc = configUserInfo.skipDoc
     }
 
     // 就算用户本地配置有这些信息，但还是优先采用本次传入的
-    this.accountInfo = {
-      userName: args.userName,
-      password: args.password,
+    if (args.userName && args.password) {
+      const { userName, password, ...rest } = args
+      this.accountInfo = {
+        userName: userName,
+        password: password,
+      }
+
+      this.knowledgeConfig = {
+        ...rest,
+      }
+
+      Log.info(`您当前传入的有效信息为:`)
+
+      args.userName && Log.info(`账号: ${args.userName}`, 2)
+      args.tocRange && Log.info(`知识库: ${args.tocRange}`, 2)
+      args.tocRange && Log.info(`是否跳过本地文件: ${args.skipDoc ? '是' : '否'}`, 2)
+      args.linebreak && Log.info(`是否保持换行: ${args.linebreak ? '是' : '否'}`, 2)
     }
-
-    // set toc
-    this.tocRange = args.tocRange || this.tocRange
-
-    // is skip
-    this.skipDoc = args.skipDoc || this.skipDoc
-
-    Log.info(`您当前传入的有效信息为:`)
-
-    args.userName && Log.info(`账号: ${args.userName}`)
-    args.tocRange && Log.info(`知识库: ${args.tocRange.filter((item) => item !== 'skip')}`)
-    args.tocRange && Log.info(`是否跳过本地文件: ${args.skipDoc ? '是' : '否'}`)
 
     // exit docs dir?
     const docExit = await F.isExit(path.resolve(CONFIG.outputDir))
@@ -137,23 +143,41 @@ class YuqueTools {
         const filterBookList = bookList.filter((item: any) => targetTocList.includes(item.slug))
 
         // 正式执行导出任务
-        await delayedDownloadDoc(filterBookList, this.skipDoc)
+        await delayedDownloadDoc(this.ctx, filterBookList)
       }
     }
   }
 
   /**
    * 筛选知识库
+   * 支持两种形式 1. 知识库 2. 知识库/xxx
    */
   private async getTocList(): Promise<string[]> {
-    if (this.tocRange.length) {
+    const { tocRange } = this.knowledgeConfig
+    if (tocRange.length) {
       const book = F.read(CONFIG.bookInfoFile)
       const { booksInfo } = JSON.parse(book)
       // all
-      if (this.tocRange.includes('all')) {
+      if (tocRange.includes('all')) {
         return booksInfo.map((item: { slug: any }) => item.slug)
       } else {
-        const regex = new RegExp(this.tocRange.join('|'))
+        // 知识库顶级目录
+        const tocTopLevel = []
+
+        for (const ch of tocRange) {
+          // 如果是多级目录，只取第一级
+          if (/\//.test(ch)) {
+            // 打上有二级目录标记，后续好处理
+            this.haveSecondLevel = true
+            tocTopLevel.push(ch.split('/').at(0))
+          } else {
+            tocTopLevel.push(ch)
+          }
+        }
+
+        // const regex =  new RegExp(this.tocRange.join('|'))
+        const regex = new RegExp(tocTopLevel.join('|'))
+
         const matchToc = booksInfo.filter((item: any) => {
           return regex.test(item.name)
         })
@@ -162,9 +186,14 @@ class YuqueTools {
           : []
       }
     } else {
-      const { tocList: userTocList, skipDoc } = await inquireBooks()
-      this.skipDoc = skipDoc
-      this.userSelectedDoc = userTocList
+      // 如果上面都没有，那就从询问环节取
+      const { tocList: userTocRange, skipDoc, linebreak } = await inquireBooks()
+      this.userSelectedDoc = userTocRange
+      this.knowledgeConfig = {
+        ...this.knowledgeConfig,
+        skipDoc,
+        linebreak,
+      }
     }
     return this.userSelectedDoc
   }

@@ -31,10 +31,10 @@ const YUQUE_API = {
   /**
    * 导出md
    * @param repos
-   * @param linebreak
+   * @param linebreak 是否保持换行
    * @returns
    */
-  yuqueExportMarkdown(repos: string, linebreak: boolean = false) {
+  yuqueExportMarkdown(repos: string, linebreak: boolean) {
     return `${repos}/markdown?attachment=true&latexcode=false&anchor=false&linebreak=${linebreak}`
   },
 }

@@ -36,16 +36,22 @@ program
     const Command = await import('../app.js')
     const cmd = new Command.default()
     const { args } = _options
+
     if (args.length >= 2) {
+      // 认为前两位是账号信息
       const [userName, password, ...rest] = args
-      cmd.init({
+      const tocRange = rest.length ? rest.filter((item: string) => !/skip|lb/.test(item)) : []
+
+      const targetArgs = {
         userName,
         password,
-        tocRange: rest,
         skipDoc: rest.includes('skip'),
-      })
+        linebreak: rest.includes('lb'),
+        tocRange: tocRange,
+      }
+      cmd.init(targetArgs)
     } else {
-      cmd.init({})
+      cmd.init({} as any)
     }
   })
 

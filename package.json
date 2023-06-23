@@ -29,7 +29,6 @@
     "cli": "ts-node-esm -T src/cli/index.ts",
     "pack:macos": "pkg . --out-path=release/ --targets=macos --compress=GZip",
     "pack:win": "pkg . --out-path=release/ --targets=win --compress=GZip",
-    "start": "node dist/app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc": "tsc",
     "watch": "tsc --watch",

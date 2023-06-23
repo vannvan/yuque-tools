@@ -2,9 +2,9 @@ import inquirer from 'inquirer'
 import chalk from 'chalk'
 import F from './file.js'
 import { config as CONFIG } from '../config.js'
-import { ICookies } from './type.js'
+import { ICookies, IYuqueTools } from './type.js'
 import ora from 'ora'
-import { crawlYuqueBookPage, exportMarkdown, getDocsOfBooks } from './yuque.js'
+import { crawlYuqueBookPage, exportMarkdown } from './yuque.js'
 import JSEncrypt from 'jsencrypt-node'
 const log = console.log
 
@@ -19,7 +19,9 @@ export const setExpireTime = () => Date.now() + CONFIG.localExpire
  */
 export const Log = {
   error: (text: string) => log(chalk.red(text)),
-  info: (text: string) => log(chalk.white(text)),
+  info: (text: string, indent?: number) => {
+    indent ? log(chalk.white(' '.repeat(indent) + text)) : log(chalk.white(text))
+  },
   success: (text: string) => log(chalk.green(text)),
   warn: (text: string) => log(chalk.yellow(text)),
 }
@@ -41,13 +43,13 @@ export const inquireAccount = (): Promise<{ userName: string; password: string }
       .prompt([
         {
           type: 'input',
-          message: 'userName',
           name: 'userName',
+          message: '账号',
         },
         {
           type: 'password',
-          message: 'password',
           name: 'password',
+          message: '密码',
         },
       ])
       .then(async (answer) => {
@@ -126,10 +128,14 @@ export const delayedGetDocCommands = (bookList: any[], finishCallBack: (booklist
  * 询问需要的知识库
  * @returns
  */
-export const inquireBooks = async (): Promise<{
-  tocList: string[]
-  skipDoc: boolean
-}> => {
+export const inquireBooks = async (): Promise<
+  | {
+      tocList: string[]
+      skipDoc: boolean
+      linebreak: boolean
+    }
+  | undefined
+> => {
   const book = F.read(CONFIG.bookInfoFile)
   if (book) {
     const { booksInfo } = JSON.parse(book)
@@ -154,20 +160,23 @@ export const inquireBooks = async (): Promise<{
             message: '是否跳过本地相同文件',
             name: 'skpDoc',
           },
+          {
+            type: 'confirm',
+            message: '是否保持语雀换行(会有<br/>标签)',
+            name: 'linebreak',
+          },
         ])
         .then(async (answer) => {
           resolve({
             tocList: answer.tocList,
             skipDoc: answer.skpDoc,
+            linebreak: answer.linebreak,
           })
         })
     })
   } else {
     Log.error('知识库数据获取失败')
-    return {
-      tocList: [],
-      skipDoc: false,
-    }
+    return undefined
   }
 }
 
@@ -241,27 +250,40 @@ const mkTreeTocDir = (
  * @param bookList 文档列表
  * @param skipDoc 是否跳过本地已存在的文件
  */
-export const delayedDownloadDoc = async (bookList: any[], skipDoc: boolean) => {
+export const delayedDownloadDoc = async (app: IYuqueTools, bookList: any[]) => {
   if (!bookList || bookList.length === 0) {
     Log.error('知识库选项无效')
     process.exit(0)
   }
 
+  const { tocRange, skipDoc, linebreak } = app.knowledgeConfig
   const newInfo = bookList.map((item) => {
     // 创建知识库目录
     F.mkdir(CONFIG.outputDir + '/' + item.name)
     return mkTreeTocDir(item.docs, '', item)
   })
 
+  // 最终要导出的文档列表
+  let targetTocList = []
+
   let index = 0
+  // 知识库下所有的文档
+  targetTocList = await genFlatDocList(newInfo)
 
-  const flatList = await genFlatDocList(newInfo)
+  // 二次筛选，因为可能只需要导出知识库下某目录的文档
+  if (app.haveSecondLevel) {
+    const docDirRegex = new RegExp(tocRange.join('|'))
 
-  if (flatList.length === 0) {
+    targetTocList = targetTocList.filter((item) => {
+      if (docDirRegex.test(item.fullPath)) return item.fullPath
+    })
+  }
+
+  if (targetTocList.length === 0) {
     Log.warn('当前知识库下暂无文档')
   }
 
-  const MAX = flatList.length
+  const MAX = targetTocList.length
 
   const spinner = ora('导出文档任务开始').start()
 
@@ -278,12 +300,12 @@ export const delayedDownloadDoc = async (bookList: any[], skipDoc: boolean) => {
       process.exit(0)
     }
 
-    const { pslug, user, url, title, fullPath } = flatList[index] || {}
+    const { pslug, user, url, title, fullPath } = targetTocList[index] || {}
 
     const repos = [user, pslug, url].join('/')
     spinner.text = `正在导出[${title}-${repos}]`
     try {
-      const content: string = await exportMarkdown('/' + repos)
+      const content: string = await exportMarkdown('/' + repos, linebreak)
       if (content) {
         const fileDir = CONFIG.outputDir + '/' + fullPath + '.md'
         // 是否已存在

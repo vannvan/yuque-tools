@@ -80,7 +80,7 @@ pull -> 登录 -> 交互式选择知识库 -> 等待下载完成
 
 ## issues
 
-[反馈意见](https://github.com/vannvan/yuque-tools/issues)
-[更新记录⭐️](https://github.com/vannvan/yuque-tools/issues/9)
+[反馈意见](https://github.com/vannvan/yuque-tools/issues) |
+[更新记录](https://github.com/vannvan/yuque-tools/blob/main/CHANGELOG.md)
 
-欢迎提意见或参与功能优化工作，如果有帮助欢迎点个鼓励的⭐️
+欢迎提供更好的意见，如果有帮助欢迎点个鼓励的⭐️

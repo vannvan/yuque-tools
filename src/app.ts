@@ -138,7 +138,7 @@ class YuqueTools implements IYuqueTools {
     } else {
       const targetTocList = await this.getTocList()
       if (targetTocList.length === 0) {
-        Log.error('未匹配或为选择知识库，程序中断')
+        Log.error('未匹配或未选择知识库，程序中断')
         process.exit(0)
       } else {
         const filterBookList = bookList.filter((item: any) => targetTocList.includes(item.slug))

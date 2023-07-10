@@ -5,7 +5,6 @@ node_modules
 /directories
 .vscode/
 /docs/*
-.yuquerc.js
 yuque.config.json
 pnpm-lock.yaml
 

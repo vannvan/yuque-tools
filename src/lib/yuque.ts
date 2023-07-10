@@ -11,10 +11,10 @@ const { JSDOM } = jsdom
  * 登录语雀
  * @param accountInfo
  */
-export const loginYuque = async (accountInfo: IAccountInfo) => {
+export const loginYuque = async (accountInfo?: IAccountInfo) => {
   const { userName, password } = accountInfo
   if (!userName || !password) {
-    Log.error('账号信息有误')
+    Log.error('账号信息不完整')
     process.exit(0)
   }
 
@@ -24,19 +24,22 @@ export const loginYuque = async (accountInfo: IAccountInfo) => {
     loginType: 'password',
   }
 
-  const { data } = await post<ILoginResponse>(YUQUE_API.yuqueLoginApi, loginInfo, {
-    Referer: CONFIG.host + YUQUE_API.yuqueReferer,
-    origin: CONFIG.host,
-  })
+  try {
+    const { data } = await post<ILoginResponse>(YUQUE_API.yuqueLoginApi, loginInfo, {
+      Referer: CONFIG.host + YUQUE_API.yuqueReferer,
+      origin: CONFIG.host,
+    })
 
-  if (data.ok) {
-    const userInfoContent = setJSONString({ ...data.user, expired: setExpireTime() })
-    await F.touch2(CONFIG.userInfoFile, userInfoContent)
-    Log.success('语雀登录成功')
-    return 'ok'
-  } else {
-    Log.error('语雀登录失败')
-    process.exit(0)
+    if (data.ok) {
+      const userInfoContent = setJSONString({ ...data.user, expired: setExpireTime() })
+      await F.touch2(CONFIG.userInfoFile, userInfoContent)
+      Log.success('语雀登录成功')
+      return 'ok'
+    } else {
+      throw '语雀登录失败，请确认账号密码是否正确'
+    }
+  } catch (error) {
+    return error + ': 语雀登录失败，请确认账号密码是否正确'
   }
 }
 

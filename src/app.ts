@@ -112,11 +112,12 @@ class YuqueTools implements IYuqueTools {
       this.accountInfo = await inquireAccount()
     }
 
-    const login = await loginYuque(this.accountInfo)
-    if (login === 'ok') {
+    const loginMessage = await loginYuque(this.accountInfo)
+    if (loginMessage === 'ok') {
       this.ask()
     } else {
-      Log.error('语雀登录失败')
+      Log.error(loginMessage)
+      process.exit(0)
     }
   }
 

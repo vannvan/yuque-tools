@@ -3,6 +3,11 @@ export interface IAccountInfo {
   password: string
 }
 
+export type IUserConfig = IAccountInfo & {
+  host: string
+  output: string
+}
+
 export interface ILoginResponse {
   ok: boolean
   goto: string

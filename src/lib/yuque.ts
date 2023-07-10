@@ -125,8 +125,8 @@ const exportMarkdown = async (repos: string, linebreak: boolean): Promise<string
  * @param repos
  * @returns
  */
-const crawlYuqueBookPage = (repos: string): Promise<string> => {
-  return new Promise((resolve) => {
+const crawlYuqueBookPage = (repos: string): Promise<{ value: any }[]> => {
+  return new Promise((resolve, reject) => {
     get(repos)
       .then((res) => {
         const virtualConsole = new jsdom.VirtualConsole()
@@ -138,13 +138,13 @@ const crawlYuqueBookPage = (repos: string): Promise<string> => {
           const { book } = window.appData || {}
           resolve(book?.toc)
         } catch (error) {
-          resolve('')
           Log.error(`知识库${repos}页面数据爬取失败`)
+          reject([])
         }
       })
       .catch(() => {
         Log.error(`知识库${repos}页面数据爬取失败`)
-        resolve('')
+        reject([])
       })
   })
 }

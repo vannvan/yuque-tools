@@ -2,10 +2,11 @@
 
 import { config as CONFIG } from '../config.js'
 import { Command } from 'commander'
-import { Log } from '../lib/tool.js'
+import { Log, getLocalUserConfig } from '../lib/tool.js'
 
 import fs from 'fs'
 const program = new Command()
+
 const pkg = JSON.parse(fs.readFileSync(new URL('../../package.json', import.meta.url), 'utf8'))
 
 program.name('ytool').description('ytool 是一个语雀文档导出插件').version(pkg.version)
@@ -14,7 +15,8 @@ program
   .command('clean')
   .description('清除本地缓存')
   .action((_str: string, _options) => {
-    const fullPathName = CONFIG.outputDir
+    const { output } = getLocalUserConfig()
+    const fullPathName = output || CONFIG.outputDir
     fs.rm(fullPathName, { recursive: true }, (error) => {
       if (error) {
         if (error.code === 'ENOENT') {

@@ -30,6 +30,13 @@ export const config = {
   outputDir: './docs',
 
   /**
+   * 自定义目录
+   */
+  set setOutputDir(path: string) {
+    this.outputDir = path
+  },
+
+  /**
    * cookie存储地址
    */
   get cookieFile() {

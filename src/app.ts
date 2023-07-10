@@ -3,6 +3,7 @@ import {
   delayedDownloadDoc,
   delayedGetDocCommands,
   getLocalCookies,
+  getLocalUserConfig,
   inquireAccount,
   inquireBooks,
   Log,
@@ -58,8 +59,7 @@ class YuqueTools implements IYuqueTools {
     // 先读取用户本地配置
     if (isExitConfig) {
       try {
-        const configUserInfo = JSON.parse(F.read(path.resolve(CONFIG.localConfig))) || {}
-        const { userName, password, ...rest } = configUserInfo
+        const { userName, password, ...rest } = getLocalUserConfig()
 
         this.accountInfo = {
           userName: userName,
@@ -67,8 +67,13 @@ class YuqueTools implements IYuqueTools {
         }
 
         // 空间可以自定义host 知识库类型
-        this.knowledgeBaseType = /www\.yuque\.com/.test(rest.host) ? 'personally' : 'space'
-        this.knowledgeConfig = { ...rest }
+        this.knowledgeBaseType = rest.host ? 'space' : 'personally'
+
+        // 自定义输出目录
+        CONFIG.setOutputDir = rest.output ? rest.output : CONFIG.outputDir
+
+        // 其它配置
+        this.knowledgeConfig = { ...rest } as any
       } catch (error) {
         Log.warn('配置信息有误，开始交互式环节')
       }

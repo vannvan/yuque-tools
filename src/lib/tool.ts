@@ -2,10 +2,11 @@ import inquirer from 'inquirer'
 import chalk from 'chalk'
 import F from './file.js'
 import { config as CONFIG } from '../config.js'
-import { ICookies, IYuqueTools } from './type.js'
+import { ICookies, IUserConfig, IYuqueTools } from './type.js'
 import ora from 'ora'
 import { crawlYuqueBookPage, exportMarkdown } from './yuque.js'
 import JSEncrypt from 'jsencrypt-node'
+import path from 'path'
 const log = console.log
 
 /**
@@ -24,6 +25,11 @@ export const Log = {
   },
   success: (text: string) => log(chalk.green(text)),
   warn: (text: string) => log(chalk.yellow(text)),
+}
+
+export const getLocalUserConfig = (): IUserConfig => {
+  const configUserInfo = JSON.parse(F.read(path.resolve(CONFIG.localConfig))) || {}
+  return configUserInfo as IUserConfig
 }
 
 /**
@@ -121,17 +127,17 @@ export const delayedGetDocCommands = (
   /**
    * 可能会存在失败
    */
-  Promise.all(promises)
+  Promise.allSettled(promises)
     .then((res) => {
       spinner.stop()
       Log.success('文档数据获取完成')
       bookList.map((_item, index) => {
-        bookList[index].docs = res[index]
+        bookList[index].docs = (res[index] as any).value
       })
       typeof finishCallBack === 'function' && finishCallBack(bookList)
     })
     .catch((error) => {
-      console.log('------', error)
+      Log.error(error)
     })
 }
 
@@ -296,9 +302,11 @@ export const delayedDownloadDoc = async (app: IYuqueTools, bookList: any[]) => {
 
   const MAX = targetTocList.length
 
-  const spinner = ora('导出文档任务开始').start()
+  const spinner = ora('导出文档任务开始\n').start()
 
   let reportContent = `# 导出报告 \n ---- \n`
+
+  // console.log('targetTocList',targetTocList);
 
   let timer = setInterval(async () => {
     if (index === MAX) {

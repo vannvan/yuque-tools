@@ -1,5 +1,3 @@
-import { type } from 'os'
-
 export interface IAccountInfo {
   userName: string
   password: string
@@ -78,6 +76,8 @@ export type TCLI_ARGS = {
   linebreak: boolean
 }
 
+export type TKnowledgeBaseType = 'personally' | 'space'
+
 export interface IYuqueTools {
   ctx: this
   accountInfo: IAccountInfo
@@ -87,5 +87,8 @@ export interface IYuqueTools {
   haveSecondLevel: boolean
   // 用户已选的知识库slug列表
   userSelectedDoc: string[]
+
+  // 知识库类型
+  knowledgeBaseType: TKnowledgeBaseType
   init(args?: TCLI_ARGS): void
 }

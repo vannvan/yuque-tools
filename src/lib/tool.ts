@@ -100,28 +100,39 @@ export const genPassword = (password: string) => {
  * @param duration
  * @param finishCallBack
  */
-export const delayedGetDocCommands = (bookList: any[], finishCallBack: (booklist: any) => void) => {
+export const delayedGetDocCommands = (
+  app: IYuqueTools,
+  bookList: any[],
+  finishCallBack: (booklist: any) => void
+) => {
+  const isPersonally = app.knowledgeBaseType === 'personally'
+
   if (!bookList || !bookList.length) {
     Log.error('知识库数据有误')
     process.exit(0)
   }
-  const spinner = ora('开始获取文档数据').start()
+  const spinner = ora('开始获取文档数据\n').start()
 
   const promises = bookList.map((item) => {
     const { slug, user } = item
     return crawlYuqueBookPage(`/${user}/${slug}`)
   })
+
   /**
    * 可能会存在失败
    */
-  Promise.all(promises).then((res) => {
-    spinner.stop()
-    Log.success('文档数据获取完成')
-    bookList.map((_item, index) => {
-      bookList[index].docs = res[index]
+  Promise.all(promises)
+    .then((res) => {
+      spinner.stop()
+      Log.success('文档数据获取完成')
+      bookList.map((_item, index) => {
+        bookList[index].docs = res[index]
+      })
+      typeof finishCallBack === 'function' && finishCallBack(bookList)
     })
-    typeof finishCallBack === 'function' && finishCallBack(bookList)
-  })
+    .catch((error) => {
+      console.log('------', error)
+    })
 }
 
 /**

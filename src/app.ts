@@ -12,7 +12,13 @@ import { config as CONFIG } from './config.js'
 import F from './lib/file.js'
 import path from 'path'
 import { getBookStacks, loginYuque } from './lib/yuque.js'
-import { IAccountInfo, IYuqueTools, TCLI_ARGS, TKnowledgeConfig } from './lib/type.js'
+import {
+  IAccountInfo,
+  IYuqueTools,
+  TCLI_ARGS,
+  TKnowledgeBaseType,
+  TKnowledgeConfig,
+} from './lib/type.js'
 
 class YuqueTools implements IYuqueTools {
   accountInfo: IAccountInfo
@@ -20,6 +26,7 @@ class YuqueTools implements IYuqueTools {
   ctx: this
   knowledgeConfig: TKnowledgeConfig
   haveSecondLevel: boolean
+  knowledgeBaseType: TKnowledgeBaseType
   constructor() {
     this.ctx = this
     this.accountInfo = {
@@ -31,6 +38,7 @@ class YuqueTools implements IYuqueTools {
       skipDoc: undefined,
       linebreak: undefined,
     }
+    this.knowledgeBaseType = 'personally'
     this.userSelectedDoc = []
     this.haveSecondLevel = false
   }
@@ -58,6 +66,8 @@ class YuqueTools implements IYuqueTools {
           password: password,
         }
 
+        // 空间可以自定义host 知识库类型
+        this.knowledgeBaseType = /www\.yuque\.com/.test(rest.host) ? 'personally' : 'space'
         this.knowledgeConfig = { ...rest }
       } catch (error) {
         Log.warn('配置信息有误，开始交互式环节')
@@ -154,7 +164,7 @@ class YuqueTools implements IYuqueTools {
    * 支持两种形式 1. 知识库 2. 知识库/xxx
    */
   private async getTocList(): Promise<string[]> {
-    const { tocRange } = this.knowledgeConfig
+    const { tocRange = [] } = this.knowledgeConfig
     if (tocRange.length) {
       const book = F.read(CONFIG.bookInfoFile)
       const { booksInfo } = JSON.parse(book)
@@ -204,8 +214,9 @@ class YuqueTools implements IYuqueTools {
    */
   private async getBook() {
     setTimeout(async () => {
-      const bookList = await getBookStacks()
-      delayedGetDocCommands(bookList, async (_bookList) => {
+      const bookList = await getBookStacks(this.ctx)
+      // console.log(`共有${bookList.length}个知识库`)
+      delayedGetDocCommands(this.ctx, bookList, async (_bookList) => {
         const content = setJSONString({ booksInfo: _bookList, expired: Date.now() + 3600000 })
         F.touch2(CONFIG.bookInfoFile, content)
         setTimeout(() => {

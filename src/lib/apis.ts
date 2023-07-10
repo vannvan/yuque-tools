@@ -13,10 +13,17 @@ const YUQUE_API = {
   },
 
   /**
-   * 知识库列表
+   * 个人知识库列表
    */
   get yuqueBooksList() {
     return '/api/mine/book_stacks'
+  },
+
+  /**
+   * 空间知识库列表
+   */
+  get yuqueBooksListOfSpace() {
+    return '/api/mine/user_books?offset=0&limit=30&query=&user_type=Group'
   },
 
   /**

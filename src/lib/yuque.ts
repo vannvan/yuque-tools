@@ -2,7 +2,14 @@ import jsdom from 'jsdom'
 import { setExpireTime, genPassword, Log, setJSONString } from './tool.js'
 import { config as CONFIG } from '../config.js'
 import { get, post } from './request.js'
-import { IAccountInfo, ILoginResponse, TBookItem, TBookStackItem, TDocItem } from './type'
+import {
+  IAccountInfo,
+  ILoginResponse,
+  IYuqueTools,
+  TBookItem,
+  TBookStackItem,
+  TDocItem,
+} from './type'
 import F from './file.js'
 import YUQUE_API from './apis.js'
 const { JSDOM } = jsdom
@@ -11,7 +18,7 @@ const { JSDOM } = jsdom
  * 登录语雀
  * @param accountInfo
  */
-export const loginYuque = async (accountInfo?: IAccountInfo) => {
+const loginYuque = async (accountInfo?: IAccountInfo) => {
   const { userName, password } = accountInfo
   if (!userName || !password) {
     Log.error('账号信息不完整')
@@ -46,12 +53,21 @@ export const loginYuque = async (accountInfo?: IAccountInfo) => {
 /**
  * 获取知识库列表
  */
-export const getBookStacks = async () => {
-  const { data } = await get<TBookStackItem[]>(YUQUE_API.yuqueBooksList)
+const getBookStacks = async (app: IYuqueTools) => {
+  const isPersonally = app.knowledgeBaseType === 'personally'
+
+  const { data } = await get<TBookStackItem[]>(
+    isPersonally ? YUQUE_API.yuqueBooksList : YUQUE_API.yuqueBooksListOfSpace
+  )
   if (data) {
     // reduce [{c:[1,2],a:'11'}] => {c: Array(2), a: '11'}
-    const list = data.map((item) => item.books).flat() as unknown as TBookItem[]
-    const _list = list.map((item: TBookItem) => {
+    // 个人知识库和空间知识库的结构不一样
+    const sourceBooks = isPersonally
+      ? (data.map((item) => item.books).flat() as unknown as TBookItem[])
+      : (data as unknown as TBookItem[])
+
+    // const list = data.map((item) => item.books).flat() as unknown as TBookItem[]
+    const _list = sourceBooks.map((item: TBookItem) => {
       return {
         slug: item.slug,
         name: item.name,
@@ -72,7 +88,7 @@ export const getBookStacks = async () => {
  * @param bookId
  * @returns 文档列表
  */
-export const getDocsOfBooks = async (bookId: string): Promise<any> => {
+const getDocsOfBooks = async (bookId: string): Promise<any> => {
   const { data } = await get<TDocItem[]>(YUQUE_API.yuqueDocsOfBook(bookId))
   if (data) {
     const list = data.map((item) => {
@@ -93,7 +109,7 @@ export const getDocsOfBooks = async (bookId: string): Promise<any> => {
  * @param linebreak 是否保留换行
  * @returns md内容
  */
-export const exportMarkdown = async (repos: string, linebreak: boolean): Promise<string> => {
+const exportMarkdown = async (repos: string, linebreak: boolean): Promise<string> => {
   const markdownContent = await get(YUQUE_API.yuqueExportMarkdown(repos, linebreak))
   if (markdownContent) {
     return markdownContent as unknown as string
@@ -105,24 +121,32 @@ export const exportMarkdown = async (repos: string, linebreak: boolean): Promise
 
 /**
  * 爬取语雀知识库页面数据
+ * 不能reject
  * @param repos
  * @returns
  */
-export const crawlYuqueBookPage = (repos: string): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    get(repos).then((res) => {
-      const virtualConsole = new jsdom.VirtualConsole()
-      const window = new JSDOM(`${res}`, { runScripts: 'dangerously', virtualConsole }).window
-      virtualConsole.on('error', () => {
-        // don't do anything
+const crawlYuqueBookPage = (repos: string): Promise<string> => {
+  return new Promise((resolve) => {
+    get(repos)
+      .then((res) => {
+        const virtualConsole = new jsdom.VirtualConsole()
+        const window = new JSDOM(`${res}`, { runScripts: 'dangerously', virtualConsole }).window
+        virtualConsole.on('error', () => {
+          // don't do anything
+        })
+        try {
+          const { book } = window.appData || {}
+          resolve(book?.toc)
+        } catch (error) {
+          resolve('')
+          Log.error(`知识库${repos}页面数据爬取失败`)
+        }
       })
-      try {
-        const { book } = window.appData
-        resolve(book.toc)
-      } catch (error) {
-        reject('')
+      .catch(() => {
         Log.error(`知识库${repos}页面数据爬取失败`)
-      }
-    })
+        resolve('')
+      })
   })
 }
+
+export { loginYuque, getBookStacks, getDocsOfBooks, exportMarkdown, crawlYuqueBookPage }

@@ -31,8 +31,7 @@
     "pack:win": "pkg . --out-path=release/ --targets=win --compress=GZip",
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc": "tsc",
-    "watch": "tsc --watch",
-    "yuque": "ts-node-esm -T src/app.ts"
+    "watch": "tsc --watch"
   },
   "dependencies": {
     "@artus/tsconfig": "^1.0.1",

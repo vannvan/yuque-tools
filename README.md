@@ -37,7 +37,7 @@ pull -> 登录 -> 交互式选择知识库(命令行参数完整不会进入交�
 |参数|说明|是否必填|
 |--|--|--|
 |userName password | 语雀账号和密码|是|
-|tocRange|例如: `test-book/测试目录` ， `test-book test-book2`，多个知识库之间空格隔开|否|
+|tocRange|例如: `test-book/测试目录 test-book2`，多个知识库之间空格隔开|否|
 |all | 导出所有知识库|否|
 |skip | 导出时跳过本地同名文件|否|
 |lb | 导出时保留语雀换行标签，即`<br/>`标签|否|

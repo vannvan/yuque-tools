@@ -1,9 +1,9 @@
 export default class Init implements ICommand {
   public name = 'pull'
   public description = '获取语雀知识库资源'
-  ctx: any
-  constructor() {
-    //
+  ctx: TCLIContext
+  constructor(ctx: TCLIContext) {
+    this.ctx = ctx
   }
   async action(args: string[]) {
     const Command = await import('../core/app.js')

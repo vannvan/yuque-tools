@@ -4,34 +4,37 @@ import { fileURLToPath } from 'node:url'
 import { dirname } from 'node:path'
 import { Command } from 'commander'
 const __dirname = dirname(fileURLToPath(import.meta.url))
-import argv from '../lib/dev/argv.js'
+import { argv } from '../lib/dev/argv.js'
 import { Log } from '../lib/dev/log.js'
+
 class DynamicCMD {
   public ctx: any
-  cliInfo: {
-    version: string
-    name: string
-    description: string
-  }
-  constructor(cliInfo: { version: string; name: string; description: string }) {
+  cliInfo: TCLIInfo
+  constructor(cliInfo: TCLIInfo) {
     this.cliInfo = cliInfo
+    this.genaratContext(this.cliInfo)
     this.init()
   }
 
   init() {
     this.genarateCommand()
   }
+
+  genaratContext(cliInfo: TCLIInfo) {
+    this.ctx = {
+      cliInfo,
+      __isCLI__: true,
+    }
+  }
+
   /**
    * 动态挂载cmd
    */
   async genarateCommand(): Promise<void> {
     const commandList = glob.sync(`${path.join(__dirname, '../command')}/*.?(jsx|js|ts)`)
-
     const program = new Command()
-    program
-      .name(this.cliInfo.name)
-      .description(this.cliInfo.description)
-      .version(this.cliInfo.version)
+    // TODO 这里的name应该动态获取
+    program.name('ytool').description(this.cliInfo.description).version(this.cliInfo.version)
 
     const { commandInput } = argv()
 
@@ -45,7 +48,7 @@ class DynamicCMD {
         return
       }
       const Command = await import(matchCmd)
-      const cmd = new Command.default()
+      const cmd = new Command.default(this.ctx)
       program
         .command(cmd.name)
         .description(cmd.description)

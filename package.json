@@ -1,6 +1,6 @@
 {
   "name": "yuque-tools",
-  "version": "1.0.2",
+  "version": "1.0.1",
   "description": "语雀知识库内容批量导出和二次处理工具",
   "keywords": [
     "yuque",
@@ -45,6 +45,7 @@
     "inquirer": "8",
     "jsdom": "^21.1.1",
     "jsencrypt-node": "^1.0.4",
+    "latest-version": "^7.0.0",
     "ora": "4",
     "pkg": "^5.8.1",
     "tslib": "^2.5.0",

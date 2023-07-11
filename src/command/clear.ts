@@ -6,8 +6,10 @@ import { Log } from '../lib/dev/log.js'
 export default class Init implements ICommand {
   public name = 'clear'
   public description = '清除本地缓存'
-  ctx: any
-  constructor() {}
+  ctx: TCLIContext
+  constructor(ctx: TCLIContext) {
+    this.ctx = ctx
+  }
   async action() {
     const { output } = await getLocalUserConfig()
     const fullPathName = output || CONFIG.outputDir

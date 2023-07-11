@@ -63,7 +63,7 @@ class YuqueTools implements IYuqueTools {
     // 先读取用户本地配置
     if (isExitConfig) {
       try {
-        const { userName, password, ...rest } = getLocalUserConfig()
+        const { userName, password, ...rest } = await getLocalUserConfig()
 
         this.accountInfo = {
           userName: userName,
@@ -95,12 +95,12 @@ class YuqueTools implements IYuqueTools {
         ...rest,
       }
 
-      Log.info(`您当前传入的有效信息为:`)
+      Log.info(`当前导出操作的有效参数:`)
 
       args.userName && Log.info(`账号: ${args.userName}`, 2)
       args.tocRange && Log.info(`知识库: ${args.tocRange}`, 2)
-      args.tocRange && Log.info(`是否跳过本地文件: ${args.skipDoc ? '是' : '否'}`, 2)
-      args.linebreak && Log.info(`是否保持换行: ${args.linebreak ? '是' : '否'}`, 2)
+      args.tocRange && Log.info(`是否跳过本地文件: ${args.skipDoc ? 'true' : 'false'}`, 2)
+      args.linebreak && Log.info(`是否保持换行: ${args.linebreak ? 'true' : 'false'}`, 2)
     }
 
     // exit docs dir?

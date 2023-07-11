@@ -1,13 +1,11 @@
 import axios from 'axios'
 import F from './dev/file.js'
-import { getLocalCookies, setJSONString } from './tool.js'
+import { getLocalCookies, getLocalUserConfig, setJSONString } from './tool.js'
 import { config as CONFIG } from '../core/config.js'
-import path from 'path'
 import { Log } from './dev/log.js'
 
-const getHost = () => {
-  const configUserInfo = JSON.parse(F.read(path.resolve(CONFIG.localConfig))) || {}
-  const { host } = configUserInfo
+const getHost = async () => {
+  const { host } = await getLocalUserConfig()
   return host || CONFIG.host
 }
 
@@ -21,7 +19,7 @@ export const get = <T>(url: string): Promise<{ data: T }> => {
   return new Promise(async (resolve, reject) => {
     // console.log('请求地址', getHost() + url)
     const config = {
-      url: getHost() + url,
+      url: (await getHost()) + url,
       method: 'get',
       headers: {
         'content-type': 'application/json',
@@ -41,10 +39,10 @@ export const get = <T>(url: string): Promise<{ data: T }> => {
 }
 
 export const post = <T>(url: string, params: any, header?: object): Promise<{ data: T }> => {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     //  登录接口统一使用yuque域名
     const config = {
-      url: (/login/.test(url) ? CONFIG.host : getHost()) + url,
+      url: (/login/.test(url) ? CONFIG.host : await getHost()) + url,
       method: 'post',
       data: params,
       headers: Object.assign(header || {}, {

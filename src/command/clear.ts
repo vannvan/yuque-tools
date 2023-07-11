@@ -8,8 +8,8 @@ export default class Init implements ICommand {
   public description = '清除本地缓存'
   ctx: any
   constructor() {}
-  action() {
-    const { output } = getLocalUserConfig()
+  async action() {
+    const { output } = await getLocalUserConfig()
     const fullPathName = output || CONFIG.outputDir
     fs.rm(fullPathName, { recursive: true }, (error) => {
       if (error) {

@@ -13,9 +13,20 @@ import { Log } from './dev/log.js'
  */
 export const setExpireTime = () => Date.now() + CONFIG.localExpire
 
-export const getLocalUserConfig = (): IUserConfig => {
-  const configUserInfo = JSON.parse(F.read(path.resolve(CONFIG.localConfig))) || {}
-  return configUserInfo as IUserConfig
+export const getLocalUserConfig = async (): Promise<IUserConfig> => {
+  const configFile = path.resolve(CONFIG.localConfig)
+  const isExitConfig = await F.isExit(configFile)
+  if (isExitConfig) {
+    try {
+      // Maybe file is not a json file
+      const configUserInfo = JSON.parse(F.read(configFile)) || {}
+      return configUserInfo as IUserConfig
+    } catch {
+      return {} as IUserConfig
+    }
+  } else {
+    return {} as IUserConfig
+  }
 }
 
 /**
@@ -36,12 +47,12 @@ export const inquireAccount = (): Promise<{ userName: string; password: string }
         {
           type: 'input',
           name: 'userName',
-          message: '账号',
+          message: 'userName',
         },
         {
           type: 'password',
           name: 'password',
-          message: '密码',
+          message: 'password',
         },
       ])
       .then(async (answer) => {

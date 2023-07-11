@@ -42,6 +42,7 @@
     "axios": "^1.3.4",
     "chalk": "4.1.2",
     "commander": "^10.0.0",
+    "glob": "^8.1.0",
     "inquirer": "8",
     "jsdom": "^21.1.1",
     "jsencrypt-node": "^1.0.4",

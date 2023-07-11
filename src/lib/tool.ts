@@ -152,7 +152,7 @@ export const inquireBooks = async (): Promise<
         .prompt([
           {
             type: 'checkbox',
-            message: '请选择知识库(空格选中)',
+            message: '请选择知识库(空格选中,a选中所有)',
             name: 'tocList',
             choices: options,
           },

@@ -36,32 +36,39 @@ pull -> 登录 -> 交互式选择知识库(命令行参数完整不会进入交�
 
 |参数|说明|必填|
 |--|--|--|
-|userName password | 语雀账号和密码|是|
-|tocRange|例如: `test-book/测试目录 test-book2`，多个知识库之间空格隔开|是|
-|all | 导出所有知识库，与tocRange互斥|否|
-|skip | 导出时跳过本地同名文件|是|
-|lb | 导出时保留语雀换行标签，即`<br/>`标签|是|
+|userName password | 语雀账号和密码|是/交互|
+|tocRange|例如: `test-book/测试目录 test-book2`，多个知识库之间空格隔开|是/交互|
+|all | 导出所有知识库，与`tocRange`互斥|是/交互|
+|skip | 导出时是否跳过本地同名文件|否/交互|
+|lb | 导出时是否保留语雀换行标签，即`<br/>`标签|否/交互|
 |host |指定`空间`域名，例如: `https://van.yuque.com`，后面不要有斜杠(`/`)|否|
 |output|导出目录，例如: `./mydocs`，默认为`docs`|否|
 
-> 以上必填的参数未通过命令行传入会进入交互式环节  
-> 为降低命令行使用时的复杂性，`host`及`output`仅支持配置形式使用且不会进入闻讯环节，具体配置方式见以下[TIPS](#tips)⬇️
->
-##### 导出示例
+注意:
+
+- 默认认为前两个参数为帐号和密码
+- 当以上**必填**参数全都存在时不会进入交互式环节，反之则会进入交互环节
+- 为降低命令行使用时的复杂度，`host`及`output`仅支持配置形式使用且不会进入闻讯环节，具体配置方式见以下[TIPS](#tips)⬇️
+
+##### 应用示例
 
 以 [我的测试知识库](https://www.yuque.com/vannvan/dd67e4) 为例
 
 以上参数生效的前提是`userName`和`password`同时存在，且在所有参数最前面，其它参数顺序均无具体要求
 
-> ytool pull 18989XXX xxxx test-book skip  表示导出`test-book`这个知识库，跳过本地同名文件
+> ytool pull 18989XXX xxxx all 表示导出**所有**知识库，**不跳过**本地同名文件，**不保持语雀换行标签**
 
-> ytool pull 18989XXX xxxx test-book/测试目录 skip  表示导出`test-book`这个知识库下的`测试目录`下的文档，跳过本地同名文件
+> ytool pull 18989XXX xxxx test-book 表示导出`test-book`知识库，**不跳过**本地同名文件，**不保持语雀换行标签**
 
-> ytool pull 18989XXX xxxx test-book other-book skip 表示导出`test-book`和`other-book`两个知识库，跳过本地同名文件
+> ytool pull 18989XXX xxxx test-book skip  表示导出`test-book`知识库，**跳过**本地同名文件
 
-> ytool pull 18989XXX xxxx all skip 表示导出所有知识库，跳过本地同名文件
+> ytool pull 18989XXX xxxx test-book/测试目录 skip  表示导出`test-book`知识库下`测试目录`下的文档，**跳过**本地同名文件
 
-> ⚠️ ytool pull 什么都没有传的情况下，以上所有需要的信息都会进入交互式问询环节
+> ytool pull 18989XXX xxxx test-book other-book skip 表示导出`test-book`和`other-book`两个知识库，**跳过**本地同名文件
+
+> ytool pull 18989XXX xxxx all skip lb 表示导出**所有**知识库，**跳过**本地同名文件，**保持语雀换行标签**
+
+> ⚠️ ytool pull 什么都没有传的情况下，以上所有可选的信息都会进入交互式问询环节
 
 #### 清除缓存 clean
 
@@ -71,7 +78,7 @@ pull -> 登录 -> 交互式选择知识库(命令行参数完整不会进入交�
 
 #### TIPS
 
-导出参数知识配置化形式，适合长期使用 `yuque-docs/yuque.config.json`(固定的配置文件名称)，具体含义与上述[参数说明]一致
+导出参数支持配置化形式，适合长期使用，采用`yuque-docs/yuque.config.json`进行配置(固定的配置文件名称)，具体含义与上述[参数说明]一致
 
 ```json
 {
@@ -92,7 +99,7 @@ pull -> 登录 -> 交互式选择知识库(命令行参数完整不会进入交�
 
 ### 最佳实践
 
-此工具开发的初心是将其作为一个将语雀知识库与其它平台数据共享的`介质`，因此也具备很多实践的可能性，
+此工具开发的初心是将其作为一个将语雀知识库与其它平台数据共享的**介质**，因此也具备很多实践的可能性，
 通过语雀作为文字的载体，你可以通过`yuque-tools`实现以下几种可能性：
 
 1. 你有自己的个人博客，通过定制脚本将语雀知识库的内容同步至自己的服务器；
@@ -102,9 +109,9 @@ pull -> 登录 -> 交互式选择知识库(命令行参数完整不会进入交�
 
 目前具体实践已应用至我个人的 [knowledge-garden](https://github.com/vannvan/knowledge-garden) 中，感兴趣的朋友可以了解其具体实现。
 
-## issues
+## Issues
 
 [反馈意见](https://github.com/vannvan/yuque-tools/issues) |
-[更新记录](https://github.com/vannvan/yuque-tools/blob/main/CHANGELOG.md)
+[更新记录及计划](https://github.com/vannvan/yuque-tools/blob/main/CHANGELOG.md)
 
 欢迎提供更好的意见，如果有帮助欢迎点个鼓励的⭐️

@@ -1,31 +1,17 @@
 import inquirer from 'inquirer'
-import chalk from 'chalk'
-import F from './file.js'
-import { config as CONFIG } from '../config.js'
+import F from './dev/file.js'
+import { config as CONFIG } from '../core/config.js'
 import { ICookies, IUserConfig, IYuqueTools } from './type.js'
 import ora from 'ora'
 import { crawlYuqueBookPage, exportMarkdown } from './yuque.js'
-import JSEncrypt from 'jsencrypt-node'
 import path from 'path'
-const log = console.log
+import { Log } from './dev/log.js'
 
 /**
  * 设置过期时间
  * @returns
  */
 export const setExpireTime = () => Date.now() + CONFIG.localExpire
-
-/**
- * 打印日志
- */
-export const Log = {
-  error: (text: string) => log(chalk.red(text)),
-  info: (text: string, indent?: number) => {
-    indent ? log(chalk.white(' '.repeat(indent) + text)) : log(chalk.white(text))
-  },
-  success: (text: string) => log(chalk.green(text)),
-  warn: (text: string) => log(chalk.yellow(text)),
-}
 
 export const getLocalUserConfig = (): IUserConfig => {
   const configUserInfo = JSON.parse(F.read(path.resolve(CONFIG.localConfig))) || {}
@@ -85,19 +71,6 @@ export const getLocalCookies = () => {
     // Log.error('本地cookie获取失败')
     return undefined
   }
-}
-
-/**
- * 加密
- * @param password
- * @returns
- */
-export const genPassword = (password: string) => {
-  const encryptor = new JSEncrypt()
-  encryptor.setPublicKey(CONFIG.publicKey)
-  const time = Date.now()
-  const symbol = time + ':' + password
-  return encryptor.encrypt(symbol)
 }
 
 /**

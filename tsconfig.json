@@ -9,7 +9,9 @@
     "noUnusedLocals": false,
     "moduleResolution": "node",
     "skipLibCheck": true,
-    "declaration": false
+    "declaration": false,
+    "importHelpers": true
+    // "declarationDir": "./types"
   },
   "include": ["./src/**/*"]
 }

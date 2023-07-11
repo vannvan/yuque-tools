@@ -1,8 +1,9 @@
 import axios from 'axios'
-import F from './file.js'
-import { Log, getLocalCookies, setJSONString } from './tool.js'
-import { config as CONFIG } from '../config.js'
+import F from './dev/file.js'
+import { getLocalCookies, setJSONString } from './tool.js'
+import { config as CONFIG } from '../core/config.js'
 import path from 'path'
+import { Log } from './dev/log.js'
 
 const getHost = () => {
   const configUserInfo = JSON.parse(F.read(path.resolve(CONFIG.localConfig))) || {}

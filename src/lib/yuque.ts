@@ -1,6 +1,6 @@
 import jsdom from 'jsdom'
-import { setExpireTime, genPassword, Log, setJSONString } from './tool.js'
-import { config as CONFIG } from '../config.js'
+import { setExpireTime, setJSONString } from './tool.js'
+import { config as CONFIG } from '../core/config.js'
 import { get, post } from './request.js'
 import {
   IAccountInfo,
@@ -10,8 +10,10 @@ import {
   TBookStackItem,
   TDocItem,
 } from './type'
-import F from './file.js'
+import F from './dev/file.js'
 import YUQUE_API from './apis.js'
+import { Log } from './dev/log.js'
+import { encrypt } from './dev/encrypt.js'
 const { JSDOM } = jsdom
 
 /**
@@ -27,7 +29,7 @@ const loginYuque = async (accountInfo?: IAccountInfo) => {
 
   const loginInfo = {
     login: userName,
-    password: genPassword(password),
+    password: encrypt(password),
     loginType: 'password',
   }
 

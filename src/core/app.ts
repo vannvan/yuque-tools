@@ -6,20 +6,20 @@ import {
   getLocalUserConfig,
   inquireAccount,
   inquireBooks,
-  Log,
   setJSONString,
-} from './lib/tool.js'
+} from '../lib/tool.js'
 import { config as CONFIG } from './config.js'
-import F from './lib/file.js'
+import F from '../lib/dev/file.js'
 import path from 'path'
-import { getBookStacks, loginYuque } from './lib/yuque.js'
+import { getBookStacks, loginYuque } from '../lib/yuque.js'
 import {
   IAccountInfo,
   IYuqueTools,
   TCLI_ARGS,
   TKnowledgeBaseType,
   TKnowledgeConfig,
-} from './lib/type.js'
+} from '../lib/type.js'
+import { Log } from '../lib/dev/log.js'
 
 class YuqueTools implements IYuqueTools {
   accountInfo: IAccountInfo
@@ -52,6 +52,10 @@ class YuqueTools implements IYuqueTools {
    * @param skipDoc
    */
   async init(args?: TCLI_ARGS) {
+    if (!args) {
+      Log.error('参数错误，退出程序')
+      process.exit(0)
+    }
     Log.info('开始登录语雀')
 
     // load account info from yuque.config.json

@@ -14,7 +14,7 @@ import fs from 'fs'
 const log = console.log
 import chalk from 'chalk'
 import path from 'path'
-import { Log } from './tool.js'
+import { Log } from './log.js'
 
 class File {
   /**

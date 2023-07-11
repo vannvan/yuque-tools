@@ -23,7 +23,7 @@ const YUQUE_API = {
    * 空间知识库列表
    */
   get yuqueBooksListOfSpace() {
-    return '/api/mine/user_books?offset=0&limit=30&query=&user_type=Group'
+    return '/api/mine/user_books?user_type=Group'
   },
 
   /**

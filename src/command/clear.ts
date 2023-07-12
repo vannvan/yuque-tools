@@ -3,11 +3,11 @@ import fs from 'fs'
 import { config as CONFIG } from '../core/config.js'
 import { Log } from '../lib/dev/log.js'
 
-export default class Init implements ICommand {
+export default class Init implements Ytool.Cli.ICommand {
   public name = 'clear'
   public description = '清除本地缓存'
-  ctx: TCLIContext
-  constructor(ctx: TCLIContext) {
+  ctx: Ytool.Cli.TCLIContext
+  constructor(ctx: Ytool.Cli.TCLIContext) {
     this.ctx = ctx
   }
   async action() {

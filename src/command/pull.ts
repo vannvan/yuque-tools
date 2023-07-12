@@ -1,13 +1,13 @@
-export default class Init implements ICommand {
+export default class Init implements Ytool.Cli.ICommand {
   public name = 'pull'
   public description = '获取语雀知识库资源'
-  ctx: TCLIContext
-  constructor(ctx: TCLIContext) {
+  ctx: Ytool.Cli.TCLIContext
+  constructor(ctx: Ytool.Cli.TCLIContext) {
     this.ctx = ctx
   }
   async action(args: string[]) {
     const Command = await import('../core/app.js')
-    const cmd = new Command.default()
+    const cmd = new Command.default(this.ctx)
     if (args.length >= 2) {
       // 认为前两位是账号信息
       const [userName, password, ...rest] = args

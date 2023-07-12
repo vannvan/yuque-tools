@@ -16,8 +16,18 @@
   "license": "MIT",
   "author": "vannvan",
   "type": "module",
-  "main": "dist/",
-  "typings": "types/sdk/index.d.ts",
+  "exports": {
+    ".": {
+      "types": {
+        "default": "./sdk.d.ts"
+      },
+      "default": {
+        "default": "./dist/sdk/index.js"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "types": "sdk.d.ts",
   "bin": {
     "ytool": "dist/cli/index.js"
   },

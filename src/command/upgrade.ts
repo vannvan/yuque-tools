@@ -1,9 +1,9 @@
 import latestVersion from 'latest-version'
-export default class Upgrade implements ICommand {
+export default class Upgrade implements Ytool.Cli.ICommand {
   public name = 'upgrade'
   public description = '工具升级'
-  ctx: TCLIContext
-  constructor(ctx: TCLIContext) {
+  ctx: Ytool.Cli.TCLIContext
+  constructor(ctx: Ytool.Cli.TCLIContext) {
     this.ctx = ctx
   }
   async action() {

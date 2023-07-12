@@ -1,7 +1,7 @@
 import inquirer from 'inquirer'
 import F from './dev/file.js'
 import { config as CONFIG } from '../core/config.js'
-import { ICookies, IUserConfig, IYuqueTools } from './type.js'
+import { ICookies, IUserConfig } from './type.js'
 import ora from 'ora'
 import { crawlYuqueBookPage, exportMarkdown } from './yuque.js'
 import path from 'path'
@@ -91,7 +91,7 @@ export const getLocalCookies = () => {
  * @param finishCallBack
  */
 export const delayedGetDocCommands = (
-  app: IYuqueTools,
+  app: Ytool.App.IYuqueTools,
   bookList: any[],
   finishCallBack: (booklist: any) => void
 ) => {
@@ -251,7 +251,7 @@ const mkTreeTocDir = (
  * @param bookList 文档列表
  * @param skipDoc 是否跳过本地已存在的文件
  */
-export const delayedDownloadDoc = async (app: IYuqueTools, bookList: any[]) => {
+export const delayedDownloadDoc = async (app: Ytool.App.IYuqueTools, bookList: any[]) => {
   if (!bookList || bookList.length === 0) {
     Log.error('知识库选项无效')
     process.exit(0)

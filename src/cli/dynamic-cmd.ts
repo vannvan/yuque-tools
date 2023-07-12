@@ -3,14 +3,14 @@ import glob from 'glob'
 import { fileURLToPath } from 'node:url'
 import { dirname } from 'node:path'
 import { Command } from 'commander'
-const __dirname = dirname(fileURLToPath(import.meta.url))
 import { argv } from '../lib/dev/argv.js'
 import { Log } from '../lib/dev/log.js'
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
 class DynamicCMD {
   public ctx: any
-  cliInfo: TCLIInfo
-  constructor(cliInfo: TCLIInfo) {
+  cliInfo: Ytool.Cli.TCLIInfo
+  constructor(cliInfo: Ytool.Cli.TCLIInfo) {
     this.cliInfo = cliInfo
     this.genaratContext(this.cliInfo)
     this.init()
@@ -20,7 +20,7 @@ class DynamicCMD {
     this.genarateCommand()
   }
 
-  genaratContext(cliInfo: TCLIInfo) {
+  genaratContext(cliInfo: Ytool.Cli.TCLIInfo) {
     this.ctx = {
       cliInfo,
       __isCLI__: true,

@@ -10,54 +10,54 @@ export const config = {
   -----END PUBLIC KEY-----`,
 
   /**
-   * 本地过期信息时间
+   * local expiration time
    */
   localExpire: 86400000,
 
   /**
-   * 请求yuque的间隔
+   * request yuque API duration
    */
   duration: 500,
 
   /**
-   * 用户本地配置
+   *  user config file name
    */
   localConfig: './yuque.config.json',
 
   /**
-   * 输出目录
+   * output dir
    */
   outputDir: './docs',
 
   /**
-   * 自定义目录
+   * set custom doc path
    */
   set setOutputDir(path: string) {
     this.outputDir = path
   },
 
   /**
-   * cookie存储地址
+   * cookie info full path
    */
   get cookieFile() {
     return path.join(config.outputDir, '.meta/cookies.json')
   },
   /**
-   * 用户信息存储地址
+   * user info full path
    */
   get userInfoFile() {
     return path.join(config.outputDir, '.meta/userinfo.json')
   },
 
   /**
-   * 知识库
+   * book info full path
    */
   get bookInfoFile() {
     return path.join(config.outputDir, '.meta/booksinfo.json')
   },
 
   /**
-   * 信息数据元目录
+   * the app cache file path
    */
   get metaDir() {
     return path.join(config.outputDir, '.meta')

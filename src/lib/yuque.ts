@@ -2,14 +2,7 @@ import jsdom from 'jsdom'
 import { setExpireTime, setJSONString } from './tool.js'
 import { config as CONFIG } from '../core/config.js'
 import { get, post } from './request.js'
-import {
-  IAccountInfo,
-  ILoginResponse,
-  IYuqueTools,
-  TBookItem,
-  TBookStackItem,
-  TDocItem,
-} from './type'
+import { ILoginResponse, TBookItem, TBookStackItem, TDocItem } from './type'
 import F from './dev/file.js'
 import YUQUE_API from './apis.js'
 import { Log } from './dev/log.js'
@@ -20,7 +13,7 @@ const { JSDOM } = jsdom
  * 登录语雀
  * @param accountInfo
  */
-const loginYuque = async (accountInfo?: IAccountInfo) => {
+const loginYuque = async (accountInfo?: Ytool.App.IAccountInfo) => {
   const { userName, password } = accountInfo
   if (!userName || !password) {
     Log.error('账号信息不完整')
@@ -55,7 +48,7 @@ const loginYuque = async (accountInfo?: IAccountInfo) => {
 /**
  * 获取知识库列表
  */
-const getBookStacks = async (app: IYuqueTools) => {
+const getBookStacks = async (app: Ytool.App.IYuqueTools) => {
   const isPersonally = app.knowledgeBaseType === 'personally'
 
   const { data } = await get<TBookStackItem[]>(

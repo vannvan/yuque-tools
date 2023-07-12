@@ -1,6 +1,7 @@
 import Ytool from '../core/app.js'
-import { IYuqueTools } from '../lib/type.js'
 
-const sdk: IYuqueTools = new Ytool()
+const sdk = new Ytool({
+  __isCLI__: false,
+})
 
 export default sdk

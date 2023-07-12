@@ -1,9 +1,4 @@
-export interface IAccountInfo {
-  userName: string
-  password: string
-}
-
-export type IUserConfig = IAccountInfo & {
+export type IUserConfig = Ytool.App.IAccountInfo & {
   host: string
   output: string
 }
@@ -53,47 +48,4 @@ export type TDocItem = {
 
 export interface IDocsOfBook {
   data: TDocItem[]
-}
-
-/**
- * 给用户的知识库配置
- */
-export type TKnowledgeConfig = {
-  // 知识库范围
-  tocRange: string[]
-  // 支持跳过本地已存在的文档
-  skipDoc: boolean
-  // 是否保持yuque换行
-  linebreak: boolean
-}
-
-/**
- * 命令行参数
- */
-export type TCLI_ARGS = {
-  userName?: string
-  password?: string
-  // 知识库范围
-  tocRange: string[]
-  // 支持跳过本地已存在的文档
-  skipDoc: boolean
-  // 是否保持yuque换行
-  linebreak: boolean
-}
-
-export type TKnowledgeBaseType = 'personally' | 'space'
-
-export interface IYuqueTools {
-  ctx: this
-  accountInfo: IAccountInfo
-  // 用户的导出配置
-  knowledgeConfig: TKnowledgeConfig
-  // 是否有二级目录
-  haveSecondLevel: boolean
-  // 用户已选的知识库slug列表
-  userSelectedDoc: string[]
-
-  // 知识库类型
-  knowledgeBaseType: TKnowledgeBaseType
-  init(args?: TCLI_ARGS): void
 }

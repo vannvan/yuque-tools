@@ -10,8 +10,10 @@
     "moduleResolution": "node",
     "skipLibCheck": true,
     "declaration": false,
-    "importHelpers": true
+    "importHelpers": true,
+    "esModuleInterop": true
     // "declarationDir": "./types"
   },
-  "include": ["./src/**/*"]
+
+  "include": ["./src/**/*", "typings.d.ts", "./sdk.d.ts"]
 }

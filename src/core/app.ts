@@ -12,24 +12,16 @@ import { config as CONFIG } from './config.js'
 import F from '../lib/dev/file.js'
 import path from 'path'
 import { getBookStacks, loginYuque } from '../lib/yuque.js'
-import {
-  IAccountInfo,
-  IYuqueTools,
-  TCLI_ARGS,
-  TKnowledgeBaseType,
-  TKnowledgeConfig,
-} from '../lib/type.js'
 import { Log } from '../lib/dev/log.js'
 
-class YuqueTools implements IYuqueTools {
-  accountInfo: IAccountInfo
+class YuqueTools implements Ytool.App.IYuqueTools {
+  accountInfo: Ytool.App.IAccountInfo
   userSelectedDoc: string[]
-  ctx: this
-  knowledgeConfig: TKnowledgeConfig
+  ctx: Ytool.App.TAppContext
+  knowledgeConfig: Ytool.App.TKnowledgeConfig
   haveSecondLevel: boolean
-  knowledgeBaseType: TKnowledgeBaseType
-  constructor() {
-    this.ctx = this
+  knowledgeBaseType: Ytool.App.TKnowledgeBaseType
+  constructor(ctx?: Ytool.App.TAppInjectContext) {
     this.accountInfo = {
       userName: '',
       password: '',
@@ -42,16 +34,18 @@ class YuqueTools implements IYuqueTools {
     this.knowledgeBaseType = 'personally'
     this.userSelectedDoc = []
     this.haveSecondLevel = false
+
+    // TODO
+    this.ctx = Object.assign(this, {
+      ctx,
+    })
   }
   /**
    * 1. 检查本地缓存文件，是否已经有账号信息，同时检查是否已过期
    * 2. 检查必要的文档结构目录是否存在
-   * @param userName
-   * @param password
-   * @param tocRange
-   * @param skipDoc
+   * @param args 参考 Ytool.Cli.TCLI_ARGS
    */
-  async init(args?: TCLI_ARGS) {
+  async init(args?: Ytool.Cli.TCLI_ARGS) {
     if (!args) {
       Log.error('参数错误，退出程序')
       process.exit(0)
@@ -227,10 +221,10 @@ class YuqueTools implements IYuqueTools {
       // console.log(`共有${bookList.length}个知识库`)
       delayedGetDocCommands(this.ctx, bookList, async (_bookList) => {
         const content = setJSONString({ booksInfo: _bookList, expired: Date.now() + 3600000 })
-        F.touch2(CONFIG.bookInfoFile, content)
-        setTimeout(() => {
-          this.ask()
-        }, 200)
+        await F.touch2(CONFIG.bookInfoFile, content)
+        // setTimeout(() => {
+        this.ask()
+        // }, 200)
       })
     }, 300)
   }

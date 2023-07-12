@@ -37,11 +37,12 @@
     "*.d.ts"
   ],
   "scripts": {
+    "clean": "rimraf coverage dist tmp",
     "cli": "ts-node-esm -T src/cli/index.ts",
     "pack:macos": "pkg . --out-path=release/ --targets=macos --compress=GZip",
     "pack:win": "pkg . --out-path=release/ --targets=win --compress=GZip",
-    "tsc": "tsc",
-    "watch": "tsc --watch"
+    "tsc": "npm run clean && tsc -p tsconfig.release.json",
+    "watch": "tsc --watch -p tsconfig.json"
   },
   "dependencies": {
     "@artus/tsconfig": "^1.0.1",
@@ -58,10 +59,14 @@
     "latest-version": "^7.0.0",
     "ora": "4",
     "pkg": "^5.8.1",
+    "rimraf": "^5.0.1",
     "tslib": "^2.5.0",
     "typescript": "^5.0.3"
   },
   "devDependencies": {
+    "@types/jest": "^29.5.3",
+    "jest": "^29.6.1",
+    "ts-jest": "^29.1.1",
     "ts-node": "^10.9.1"
   },
   "publishConfig": {

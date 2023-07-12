@@ -13,7 +13,7 @@ const { JSDOM } = jsdom
  * 登录语雀
  * @param accountInfo
  */
-const loginYuque = async (accountInfo?: Ytool.App.IAccountInfo) => {
+const loginYuque = async (accountInfo: Ytool.App.IAccountInfo) => {
   const { userName, password } = accountInfo
   if (!userName || !password) {
     Log.error('账号信息不完整')

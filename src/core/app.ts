@@ -45,7 +45,7 @@ class YuqueTools implements Ytool.App.IYuqueTools {
    * 2. 检查必要的文档结构目录是否存在
    * @param args 参考 Ytool.Cli.TCLI_ARGS
    */
-  async init(args?: Ytool.Cli.TCLI_ARGS) {
+  async init(args: Ytool.Cli.TCLI_ARGS) {
     if (!args) {
       Log.error('参数错误，退出程序')
       process.exit(0)
@@ -107,13 +107,30 @@ class YuqueTools implements Ytool.App.IYuqueTools {
       await F.mkdir(path.resolve(CONFIG.outputDir))
       await F.mkdir(path.resolve(CONFIG.metaDir))
     } else {
+    }
+    if (this.exitMetaDir()) {
       const cookie = getLocalCookies()
-      // is expired
       if (cookie && cookie?.expired > Date.now()) {
+        // is expired
         isNeedLogin = true
+      } else if (cookie?.expired < Date.now()) {
+        // not expired
+        this.ask()
+        return
       }
     }
     isNeedLogin && this.start()
+  }
+
+  private async exitMetaDir() {
+    const docExit = await F.isExit(path.resolve(CONFIG.outputDir))
+    if (!docExit) {
+      await F.mkdir(path.resolve(CONFIG.outputDir))
+      await F.mkdir(path.resolve(CONFIG.metaDir))
+      return false
+    } else {
+      return true
+    }
   }
 
   /**

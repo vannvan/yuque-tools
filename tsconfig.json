@@ -5,15 +5,15 @@
     "target": "ESNext",
     "outDir": "dist",
     "sourceMap": false,
-    "inlineSourceMap": true,
+    "inlineSourceMap": false,
     "noUnusedLocals": false,
     "moduleResolution": "node",
     "skipLibCheck": true,
     "declaration": false,
     "importHelpers": true,
-    "esModuleInterop": true
-    // "declarationDir": "./types"
+    "esModuleInterop": true,
+    "rootDir": "./src"
   },
 
-  "include": ["./src/**/*", "typings.d.ts", "./sdk.d.ts"]
+  "include": ["./src/**/*", "./sdk.d.ts", "typings.d.ts"]
 }

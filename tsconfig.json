@@ -2,7 +2,7 @@
   "extends": "@artus/tsconfig",
   "compilerOptions": {
     "module": "ES2022",
-    "target": "ES2022",
+    "target": "ESNext",
     "outDir": "dist",
     "sourceMap": false,
     "inlineSourceMap": true,

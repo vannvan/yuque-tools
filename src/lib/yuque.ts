@@ -104,7 +104,7 @@ const getDocsOfBooks = async (bookId: string): Promise<any> => {
  * @param linebreak 是否保留换行
  * @returns md内容
  */
-const exportMarkdown = async (repos: string, linebreak: boolean): Promise<string> => {
+const getMarkdownContent = async (repos: string, linebreak: boolean): Promise<string> => {
   const markdownContent = await get(YUQUE_API.yuqueExportMarkdown(repos, linebreak))
   if (markdownContent) {
     return markdownContent as unknown as string
@@ -144,4 +144,4 @@ const crawlYuqueBookPage = (repos: string): Promise<{ value: any }[]> => {
   })
 }
 
-export { loginYuque, getBookStacks, getDocsOfBooks, exportMarkdown, crawlYuqueBookPage }
+export { loginYuque, getBookStacks, getDocsOfBooks, getMarkdownContent, crawlYuqueBookPage }

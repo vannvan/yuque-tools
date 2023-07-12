@@ -3,7 +3,7 @@ import F from './dev/file.js'
 import { config as CONFIG } from '../core/config.js'
 import { ICookies, IUserConfig } from './type.js'
 import ora from 'ora'
-import { crawlYuqueBookPage, exportMarkdown } from './yuque.js'
+import { crawlYuqueBookPage, getMarkdownContent } from './yuque.js'
 import path from 'path'
 import { Log } from './dev/log.js'
 
@@ -308,7 +308,7 @@ export const delayedDownloadDoc = async (app: Ytool.App.IYuqueTools, bookList: a
     const repos = [user, pslug, url].join('/')
     spinner.text = `正在导出[${title}-${repos}]`
     try {
-      const content: string = await exportMarkdown('/' + repos, linebreak)
+      const content: string = await getMarkdownContent('/' + repos, linebreak)
       if (content) {
         const fileDir = CONFIG.outputDir + '/' + fullPath + '.md'
         // 是否已存在

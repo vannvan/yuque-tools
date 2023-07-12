@@ -1,7 +1,9 @@
-import Ytool from '../core/app.js'
+import Ytool from '../core/app'
 
-const sdk = new Ytool({
+import { loginYuque, getBookStacks, getDocsOfBooks, getMarkdownContent } from '../lib/yuque.js'
+
+const ytool = new Ytool({
   __isCLI__: false,
 })
 
-export default sdk
+export { ytool, loginYuque, getBookStacks, getDocsOfBooks, getMarkdownContent }

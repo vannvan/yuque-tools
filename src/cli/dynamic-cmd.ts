@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import path from 'path'
 import glob from 'glob'
 import { fileURLToPath } from 'node:url'
@@ -31,7 +33,7 @@ class DynamicCMD {
    * 动态挂载cmd
    */
   async genarateCommand(): Promise<void> {
-    const commandList = glob.sync(`${path.join(__dirname, '../command')}/*.?(jsx|js|ts)`)
+    const commandList = glob.sync(`${path.join(__dirname, '../command')}/*.?(js|ts)`)
     const program = new Command()
     // TODO 这里的name应该动态获取
     program.name('ytool').description(this.cliInfo.description).version(this.cliInfo.version)

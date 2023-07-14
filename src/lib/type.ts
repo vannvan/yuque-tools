@@ -1,9 +1,4 @@
-export type IUserConfig = Ytool.App.IAccountInfo & {
-  host: string
-  output: string
-}
-
-export interface ILoginResponse {
+interface ILoginResponse {
   ok: boolean
   goto: string
   user: {
@@ -14,12 +9,12 @@ export interface ILoginResponse {
   }
 }
 
-export interface ICookies {
+interface ICookies {
   expired: number
   data: string
 }
 
-export type TBookItem = {
+type TBookItem = {
   id: string
   slug: string
   name: string
@@ -30,22 +25,24 @@ export type TBookItem = {
   docs: TDocItem[]
 }
 
-export type TBookStackItem = {
+type TBookStackItem = {
   books: TBookItem[]
   name: string
   id: number
 }
 
-export interface IBookStack {
+interface IBookStack {
   data: TBookStackItem[]
 }
 
-export type TDocItem = {
+type TDocItem = {
   title: string
   slug: string
   description: string
 }
 
-export interface IDocsOfBook {
+interface IDocsOfBook {
   data: TDocItem[]
 }
+
+export { ILoginResponse, ICookies, TBookItem, TDocItem, TBookStackItem, IBookStack, IDocsOfBook }

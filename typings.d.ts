@@ -5,6 +5,7 @@ declare namespace Ytool {
     type TCLIInfo = {
       version: string
       name: string
+      binName: string
       description: string
     }
 
@@ -50,10 +51,23 @@ declare namespace Ytool {
     type IAccountInfo = Pick<Cli.TCLI_ARGS, 'userName' | 'password'>
 
     /**
-     * 给用户的知识库配置
+     * 用户的知识库配置
      */
-    type TKnowledgeConfig = Pick<Cli.TCLI_ARGS, 'tocRange' | 'linebreak' | 'skipDoc'>
+    type TKnowledgeConfig = Pick<Cli.TCLI_ARGS, 'linebreak' | 'skipDoc' | 'tocRange'>
 
+    /**
+     * 用户本地配置
+     */
+    type TUserLocalConfig = Partial<
+      Cli.TCLI_ARGS & {
+        output?: string
+        host?: string
+      }
+    >
+
+    /**
+     * 知识库类型
+     */
     type TKnowledgeBaseType = 'personally' | 'space'
 
     type TAppInjectContext = Partial<

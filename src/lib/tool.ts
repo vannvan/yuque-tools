@@ -1,7 +1,7 @@
 import inquirer from 'inquirer'
 import F from './dev/file.js'
 import { config as CONFIG } from '../core/config.js'
-import { ICookies, IUserConfig } from './type.js'
+import { ICookies } from './type.js'
 import ora from 'ora'
 import { crawlYuqueBookPage, getMarkdownContent } from './yuque.js'
 import path from 'path'
@@ -13,19 +13,23 @@ import { Log } from './dev/log.js'
  */
 export const setExpireTime = () => Date.now() + CONFIG.localExpire
 
-export const getLocalUserConfig = async (): Promise<IUserConfig> => {
+/**
+ * get user custom config
+ * @returns
+ */
+export const getLocalUserConfig = async (): Promise<Ytool.App.TUserLocalConfig> => {
   const configFile = path.resolve(CONFIG.localConfig)
   const isExitConfig = await F.isExit(configFile)
   if (isExitConfig) {
     try {
       // Maybe file is not a json file
       const configUserInfo = JSON.parse(F.read(configFile)) || {}
-      return configUserInfo as IUserConfig
+      return configUserInfo as Ytool.App.TUserLocalConfig
     } catch {
-      return {} as IUserConfig
+      return {} as Ytool.App.TUserLocalConfig
     }
   } else {
-    return {} as IUserConfig
+    return {} as Ytool.App.TUserLocalConfig
   }
 }
 

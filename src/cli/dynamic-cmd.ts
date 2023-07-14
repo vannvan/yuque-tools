@@ -36,7 +36,8 @@ class DynamicCMD {
     const commandList = glob.sync(`${path.join(__dirname, '../command')}/*.?(js|ts)`)
     const program = new Command()
     // TODO 这里的name应该动态获取
-    program.name('ytool').description(this.cliInfo.description).version(this.cliInfo.version)
+    const { binName, description, version } = this.cliInfo
+    program.name(binName).description(`${binName}@${version} ${description}`).version(version)
 
     const { commandInput } = argv()
 

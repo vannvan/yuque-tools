@@ -1,3 +1,7 @@
+import { writeFileSync } from 'fs'
+import { config as CONFIG } from '../core/config.js'
+import { Log } from '../lib/dev/log.js'
+
 export default class Init implements Ytool.Cli.ICommand {
   public name = 'init'
   public description = '初始化配置'
@@ -6,7 +10,16 @@ export default class Init implements Ytool.Cli.ICommand {
     this.ctx = ctx
   }
   action() {
-    console.log('init action')
-    //
+    const configTemplate: Ytool.App.TUserLocalConfig = {
+      userName: '',
+      password: '',
+      tocRange: ['xxx知识库', 'yyy知识库/zzz目录'],
+      skipDoc: true,
+      output: './docs',
+      linebreak: false,
+    }
+
+    writeFileSync(CONFIG.localConfig, JSON.stringify(configTemplate, null, 2))
+    Log.success(`配置初始化完成，${CONFIG.localConfig}`)
   }
 }

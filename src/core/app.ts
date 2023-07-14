@@ -16,9 +16,9 @@ import { Log } from '../lib/dev/log.js'
 
 class YuqueTools implements Ytool.App.IYuqueTools {
   accountInfo: Ytool.App.IAccountInfo
-  userSelectedDoc: string[]
   ctx: Ytool.App.TAppContext
   knowledgeConfig: Ytool.App.TKnowledgeConfig
+  userSelectedDoc: string[]
   haveSecondLevel: boolean
   knowledgeBaseType: Ytool.App.TKnowledgeBaseType
   constructor(ctx?: Ytool.App.TAppInjectContext) {

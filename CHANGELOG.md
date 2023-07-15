@@ -1,6 +1,6 @@
 # 更新记录
 
-## 最新版本 v1.0.2
+## 最新版本 v2.0.0
 
 ## 目前已支持的知识库结构
 
@@ -17,8 +17,17 @@
 - [x] 支持跳过或者覆盖本地已存在文件
 - [x] 其他可能出现错误的环节处理
 - [x] 语雀换行可选，因为对于`<br/>`标签有些平台认有些平台不认
-- [ ] 支持空间级别的知识库导出
+- [x] 支持空间级别的知识库导出
 - [ ] push
+
+## v2.0.0
+
+- [x] 支持空间级别的知识库导出
+- [x] 试验性`sdk`能力
+- [x] `init`命令，用于初始化配置模版
+- [x] `upgrade`命令，用于工具操作
+
+具体使用方法见:[使用方式](https://github.com/vannvan/yuque-tools#使用方式)
 
 ## v1.0.0
 
@@ -29,7 +38,7 @@
 例如:
 > ytool pull 18989XXX xxxx 个人日记 其它XXX skip  lb
 
-具体使用方法见:[导出示例](https://github.com/vannvan/yuque-tools#pull-%E5%AF%BC%E5%87%BA)
+具体使用方法见:[导出示例](https://github.com/vannvan/yuque-tools#应用示例)
 
 ## v0.0.9
 
@@ -42,7 +51,7 @@
 > ytool pull 18989XXX xxxx 个人日记 其它XXX skip   表示导出个人日记 其它XXX这两个知识库并不覆盖本地文件
 > ytool pull 18989XXX xxxx all skip 表示导出所有并不覆盖本地文件
 
-具体使用方法见:[导出示例](https://github.com/vannvan/yuque-tools#pull-%E5%AF%BC%E5%87%BA)
+具体使用方法见:[导出示例](https://github.com/vannvan/yuque-tools#应用示例)
 
 ## v0.0.8
 

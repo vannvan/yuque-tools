@@ -2,6 +2,7 @@ import path from 'path'
 import { loginYuque, ytool, getBookStacks } from '../src/sdk/index.js'
 import fs from 'fs'
 
+// TODO 测试用例还需要再琢磨一下
 const accountInfo = fs.readFileSync(path.resolve('./yuque.config.json'))
 const _accountInfo = JSON.parse(accountInfo.toString())
 describe('ytool test', () => {
@@ -37,7 +38,5 @@ describe('ytool test', () => {
   it('getBookStacks', async () => {
     console.log(ytool)
     console.log(_accountInfo)
-
-    // getBookStacks()
   })
 })

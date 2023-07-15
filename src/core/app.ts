@@ -239,9 +239,7 @@ class YuqueTools implements Ytool.App.IYuqueTools {
       delayedGetDocCommands(this.ctx, bookList, async (_bookList) => {
         const content = setJSONString({ booksInfo: _bookList, expired: Date.now() + 3600000 })
         await F.touch2(CONFIG.bookInfoFile, content)
-        // setTimeout(() => {
         this.ask()
-        // }, 200)
       })
     }, 300)
   }

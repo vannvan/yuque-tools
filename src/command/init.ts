@@ -11,8 +11,8 @@ export default class Init implements Ytool.Cli.ICommand {
   }
   action() {
     const configTemplate: Ytool.App.TUserLocalConfig = {
-      userName: '',
-      password: '',
+      userName: 'XXX',
+      password: 'XXX',
       tocRange: ['xxx知识库', 'yyy知识库/zzz目录'],
       skipDoc: true,
       output: './docs',

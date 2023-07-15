@@ -3,25 +3,25 @@ import {
   delayedDownloadDoc,
   delayedGetDocCommands,
   getLocalCookies,
+  getLocalUserConfig,
   inquireAccount,
   inquireBooks,
-  Log,
   setJSONString,
-} from './lib/tool.js'
+} from '../lib/tool.js'
 import { config as CONFIG } from './config.js'
-import F from './lib/file.js'
+import F from '../lib/dev/file.js'
 import path from 'path'
-import { getBookStacks, loginYuque } from './lib/yuque.js'
-import { IAccountInfo, IYuqueTools, TCLI_ARGS, TKnowledgeConfig } from './lib/type.js'
+import { getBookStacks, loginYuque } from '../lib/yuque.js'
+import { Log } from '../lib/dev/log.js'
 
-class YuqueTools implements IYuqueTools {
-  accountInfo: IAccountInfo
+class YuqueTools implements Ytool.App.IYuqueTools {
+  accountInfo: Ytool.App.IAccountInfo
+  ctx: Ytool.App.TAppContext
+  knowledgeConfig: Ytool.App.TKnowledgeConfig
   userSelectedDoc: string[]
-  ctx: this
-  knowledgeConfig: TKnowledgeConfig
   haveSecondLevel: boolean
-  constructor() {
-    this.ctx = this
+  knowledgeBaseType: Ytool.App.TKnowledgeBaseType
+  constructor(ctx?: Ytool.App.TAppInjectContext) {
     this.accountInfo = {
       userName: '',
       password: '',
@@ -31,18 +31,25 @@ class YuqueTools implements IYuqueTools {
       skipDoc: undefined,
       linebreak: undefined,
     }
+    this.knowledgeBaseType = 'personally'
     this.userSelectedDoc = []
     this.haveSecondLevel = false
+
+    // TODO
+    this.ctx = Object.assign(this, {
+      ctx,
+    })
   }
   /**
    * 1. 检查本地缓存文件，是否已经有账号信息，同时检查是否已过期
    * 2. 检查必要的文档结构目录是否存在
-   * @param userName
-   * @param password
-   * @param tocRange
-   * @param skipDoc
+   * @param args 参考 Ytool.Cli.TCLI_ARGS
    */
-  async init(args?: TCLI_ARGS) {
+  async init(args: Ytool.Cli.TCLI_ARGS) {
+    if (!args) {
+      Log.error('参数错误，退出程序')
+      process.exit(0)
+    }
     Log.info('开始登录语雀')
 
     // load account info from yuque.config.json
@@ -50,15 +57,21 @@ class YuqueTools implements IYuqueTools {
     // 先读取用户本地配置
     if (isExitConfig) {
       try {
-        const configUserInfo = JSON.parse(F.read(path.resolve(CONFIG.localConfig))) || {}
-        const { userName, password, ...rest } = configUserInfo
+        const { userName, password, ...rest } = await getLocalUserConfig()
 
         this.accountInfo = {
           userName: userName,
           password: password,
         }
 
-        this.knowledgeConfig = { ...rest }
+        // 空间可以自定义host 知识库类型
+        this.knowledgeBaseType = rest.host ? 'space' : 'personally'
+
+        // 自定义输出目录
+        CONFIG.setOutputDir = rest.output ? rest.output : CONFIG.outputDir
+
+        // 其它配置
+        this.knowledgeConfig = { ...rest } as any
       } catch (error) {
         Log.warn('配置信息有误，开始交互式环节')
       }
@@ -76,12 +89,12 @@ class YuqueTools implements IYuqueTools {
         ...rest,
       }
 
-      Log.info(`您当前传入的有效信息为:`)
+      Log.info(`当前导出操作的有效参数:`)
 
       args.userName && Log.info(`账号: ${args.userName}`, 2)
       args.tocRange && Log.info(`知识库: ${args.tocRange}`, 2)
-      args.tocRange && Log.info(`是否跳过本地文件: ${args.skipDoc ? '是' : '否'}`, 2)
-      args.linebreak && Log.info(`是否保持换行: ${args.linebreak ? '是' : '否'}`, 2)
+      args.tocRange && Log.info(`是否跳过本地文件: ${args.skipDoc ? 'true' : 'false'}`, 2)
+      args.linebreak && Log.info(`是否保持换行: ${args.linebreak ? 'true' : 'false'}`, 2)
     }
 
     // exit docs dir?
@@ -94,13 +107,30 @@ class YuqueTools implements IYuqueTools {
       await F.mkdir(path.resolve(CONFIG.outputDir))
       await F.mkdir(path.resolve(CONFIG.metaDir))
     } else {
+    }
+    if (this.exitMetaDir()) {
       const cookie = getLocalCookies()
-      // is expired
       if (cookie && cookie?.expired > Date.now()) {
+        // is expired
         isNeedLogin = true
+      } else if (cookie?.expired < Date.now()) {
+        // not expired
+        this.ask()
+        return
       }
     }
     isNeedLogin && this.start()
+  }
+
+  private async exitMetaDir() {
+    const docExit = await F.isExit(path.resolve(CONFIG.outputDir))
+    if (!docExit) {
+      await F.mkdir(path.resolve(CONFIG.outputDir))
+      await F.mkdir(path.resolve(CONFIG.metaDir))
+      return false
+    } else {
+      return true
+    }
   }
 
   /**
@@ -154,7 +184,7 @@ class YuqueTools implements IYuqueTools {
    * 支持两种形式 1. 知识库 2. 知识库/xxx
    */
   private async getTocList(): Promise<string[]> {
-    const { tocRange } = this.knowledgeConfig
+    const { tocRange = [] } = this.knowledgeConfig
     if (tocRange.length) {
       const book = F.read(CONFIG.bookInfoFile)
       const { booksInfo } = JSON.parse(book)
@@ -204,13 +234,12 @@ class YuqueTools implements IYuqueTools {
    */
   private async getBook() {
     setTimeout(async () => {
-      const bookList = await getBookStacks()
-      delayedGetDocCommands(bookList, async (_bookList) => {
+      const bookList = await getBookStacks(this.ctx)
+      // console.log(`共有${bookList.length}个知识库`)
+      delayedGetDocCommands(this.ctx, bookList, async (_bookList) => {
         const content = setJSONString({ booksInfo: _bookList, expired: Date.now() + 3600000 })
-        F.touch2(CONFIG.bookInfoFile, content)
-        setTimeout(() => {
-          this.ask()
-        }, 200)
+        await F.touch2(CONFIG.bookInfoFile, content)
+        this.ask()
       })
     }, 300)
   }

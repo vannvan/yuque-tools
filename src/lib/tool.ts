@@ -1,12 +1,11 @@
 import inquirer from 'inquirer'
-import chalk from 'chalk'
-import F from './file.js'
-import { config as CONFIG } from '../config.js'
-import { ICookies, IYuqueTools } from './type.js'
+import F from './dev/file.js'
+import { config as CONFIG } from '../core/config.js'
+import { ICookies } from './type.js'
 import ora from 'ora'
-import { crawlYuqueBookPage, exportMarkdown } from './yuque.js'
-import JSEncrypt from 'jsencrypt-node'
-const log = console.log
+import { crawlYuqueBookPage, getMarkdownContent } from './yuque.js'
+import path from 'path'
+import { Log } from './dev/log.js'
 
 /**
  * 设置过期时间
@@ -15,15 +14,23 @@ const log = console.log
 export const setExpireTime = () => Date.now() + CONFIG.localExpire
 
 /**
- * 打印日志
+ * get user custom config
+ * @returns
  */
-export const Log = {
-  error: (text: string) => log(chalk.red(text)),
-  info: (text: string, indent?: number) => {
-    indent ? log(chalk.white(' '.repeat(indent) + text)) : log(chalk.white(text))
-  },
-  success: (text: string) => log(chalk.green(text)),
-  warn: (text: string) => log(chalk.yellow(text)),
+export const getLocalUserConfig = async (): Promise<Ytool.App.TUserLocalConfig> => {
+  const configFile = path.resolve(CONFIG.localConfig)
+  const isExitConfig = await F.isExit(configFile)
+  if (isExitConfig) {
+    try {
+      // Maybe file is not a json file
+      const configUserInfo = JSON.parse(F.read(configFile)) || {}
+      return configUserInfo as Ytool.App.TUserLocalConfig
+    } catch {
+      return {} as Ytool.App.TUserLocalConfig
+    }
+  } else {
+    return {} as Ytool.App.TUserLocalConfig
+  }
 }
 
 /**
@@ -44,12 +51,12 @@ export const inquireAccount = (): Promise<{ userName: string; password: string }
         {
           type: 'input',
           name: 'userName',
-          message: '账号',
+          message: 'userName',
         },
         {
           type: 'password',
           name: 'password',
-          message: '密码',
+          message: 'password',
         },
       ])
       .then(async (answer) => {
@@ -82,46 +89,44 @@ export const getLocalCookies = () => {
 }
 
 /**
- * 加密
- * @param password
- * @returns
- */
-export const genPassword = (password: string) => {
-  const encryptor = new JSEncrypt()
-  encryptor.setPublicKey(CONFIG.publicKey)
-  const time = Date.now()
-  const symbol = time + ':' + password
-  return encryptor.encrypt(symbol)
-}
-
-/**
  * 获取知识库下的文档任务 api方式或爬取方式
  * @param bookList
  * @param duration
  * @param finishCallBack
  */
-export const delayedGetDocCommands = (bookList: any[], finishCallBack: (booklist: any) => void) => {
+export const delayedGetDocCommands = (
+  app: Ytool.App.IYuqueTools,
+  bookList: any[],
+  finishCallBack: (booklist: any) => void
+) => {
+  const isPersonally = app.knowledgeBaseType === 'personally'
+
   if (!bookList || !bookList.length) {
     Log.error('知识库数据有误')
     process.exit(0)
   }
-  const spinner = ora('开始获取文档数据').start()
+  const spinner = ora('开始获取文档数据\n').start()
 
   const promises = bookList.map((item) => {
     const { slug, user } = item
     return crawlYuqueBookPage(`/${user}/${slug}`)
   })
+
   /**
    * 可能会存在失败
    */
-  Promise.all(promises).then((res) => {
-    spinner.stop()
-    Log.success('文档数据获取完成')
-    bookList.map((_item, index) => {
-      bookList[index].docs = res[index]
+  Promise.allSettled(promises)
+    .then((res) => {
+      spinner.stop()
+      Log.success('文档数据获取完成')
+      bookList.map((_item, index) => {
+        bookList[index].docs = (res[index] as any).value
+      })
+      typeof finishCallBack === 'function' && finishCallBack(bookList)
     })
-    typeof finishCallBack === 'function' && finishCallBack(bookList)
-  })
+    .catch((error) => {
+      Log.error(error)
+    })
 }
 
 /**
@@ -151,7 +156,7 @@ export const inquireBooks = async (): Promise<
         .prompt([
           {
             type: 'checkbox',
-            message: '请选择知识库(空格选中)',
+            message: '请选择知识库(空格选中,a选中所有)',
             name: 'tocList',
             choices: options,
           },
@@ -250,7 +255,7 @@ const mkTreeTocDir = (
  * @param bookList 文档列表
  * @param skipDoc 是否跳过本地已存在的文件
  */
-export const delayedDownloadDoc = async (app: IYuqueTools, bookList: any[]) => {
+export const delayedDownloadDoc = async (app: Ytool.App.IYuqueTools, bookList: any[]) => {
   if (!bookList || bookList.length === 0) {
     Log.error('知识库选项无效')
     process.exit(0)
@@ -285,9 +290,11 @@ export const delayedDownloadDoc = async (app: IYuqueTools, bookList: any[]) => {
 
   const MAX = targetTocList.length
 
-  const spinner = ora('导出文档任务开始').start()
+  const spinner = ora('导出文档任务开始\n').start()
 
   let reportContent = `# 导出报告 \n ---- \n`
+
+  // console.log('targetTocList',targetTocList);
 
   let timer = setInterval(async () => {
     if (index === MAX) {
@@ -305,7 +312,7 @@ export const delayedDownloadDoc = async (app: IYuqueTools, bookList: any[]) => {
     const repos = [user, pslug, url].join('/')
     spinner.text = `正在导出[${title}-${repos}]`
     try {
-      const content: string = await exportMarkdown('/' + repos, linebreak)
+      const content: string = await getMarkdownContent('/' + repos, linebreak)
       if (content) {
         const fileDir = CONFIG.outputDir + '/' + fullPath + '.md'
         // 是否已存在

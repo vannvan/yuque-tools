@@ -2,14 +2,18 @@
   "extends": "@artus/tsconfig",
   "compilerOptions": {
     "module": "ES2022",
-    "target": "ES2022",
+    "target": "ESNext",
     "outDir": "dist",
     "sourceMap": false,
-    "inlineSourceMap": true,
+    "inlineSourceMap": false,
     "noUnusedLocals": false,
     "moduleResolution": "node",
     "skipLibCheck": true,
-    "declaration": false
+    "declaration": false,
+    "importHelpers": true,
+    "esModuleInterop": true,
+    "rootDir": "./src"
   },
-  "include": ["./src/**/*"]
+
+  "include": ["./src/**/*", "./sdk.d.ts", "typings.d.ts"]
 }

@@ -1,17 +1,25 @@
 import axios from 'axios'
-import F from './file.js'
-import { Log, getLocalCookies, setJSONString } from './tool.js'
-import { config as CONFIG } from '../config.js'
+import F from './dev/file.js'
+import { getLocalCookies, getLocalUserConfig, setJSONString } from './tool.js'
+import { config as CONFIG } from '../core/config.js'
+import { Log } from './dev/log.js'
+
+const getHost = async () => {
+  const { host } = await getLocalUserConfig()
+  return host || CONFIG.host
+}
 
 export const get = <T>(url: string): Promise<{ data: T }> => {
   const cookie = getLocalCookies()?.data
+
   if (!cookie) {
     Log.error('本地cookie加载失败，程序中断')
     process.exit(0)
   }
   return new Promise(async (resolve, reject) => {
+    // console.log('请求地址', getHost() + url)
     const config = {
-      url: CONFIG.host + url,
+      url: (await getHost()) + url,
       method: 'get',
       headers: {
         'content-type': 'application/json',
@@ -24,15 +32,17 @@ export const get = <T>(url: string): Promise<{ data: T }> => {
         resolve(res.data)
       })
       .catch((error) => {
+        Log.error(error.code)
         reject(error.code)
       })
   })
 }
 
 export const post = <T>(url: string, params: any, header?: object): Promise<{ data: T }> => {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
+    //  登录接口统一使用yuque域名
     const config = {
-      url: CONFIG.host + url,
+      url: (/login/.test(url) ? CONFIG.host : await getHost()) + url,
       method: 'post',
       data: params,
       headers: Object.assign(header || {}, {
@@ -53,6 +63,7 @@ export const post = <T>(url: string, params: any, header?: object): Promise<{ da
         resolve(res.data)
       })
       .catch((error) => {
+        Log.error(error.code)
         reject(error.code)
       })
   })

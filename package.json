@@ -1,7 +1,7 @@
 {
   "name": "yuque-tools",
   "binName": "ytool",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "语雀知识库内容批量导出和二次处理工具",
   "keywords": [
     "yuque",

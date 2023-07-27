@@ -2,7 +2,7 @@
 
 import path from 'path'
 import glob from 'glob'
-import { fileURLToPath } from 'node:url'
+import { fileURLToPath, pathToFileURL } from 'node:url'
 import { dirname } from 'node:path'
 import { Command } from 'commander'
 import { argv } from '../lib/dev/argv.js'
@@ -34,8 +34,8 @@ class DynamicCMD {
    */
   async genarateCommand(): Promise<void> {
     const commandList = glob.sync(`${path.join(__dirname, '../command')}/*.?(js|ts)`)
+
     const program = new Command()
-    // TODO 这里的name应该动态获取
     const { binName, description, version } = this.cliInfo
     program.name(binName).description(`${binName}@${version} ${description}`).version(version)
 
@@ -50,7 +50,7 @@ class DynamicCMD {
         Log.error(`${commandInput} 命令不存在，请使用 -h 查看有效命令`)
         return
       }
-      const Command = await import(matchCmd)
+      const Command = await import(pathToFileURL(matchCmd).toString())
       const cmd = new Command.default(this.ctx)
       program
         .command(cmd.name)
@@ -61,7 +61,7 @@ class DynamicCMD {
     } catch (error) {
       for (let i = 0; i < commandList.length; i++) {
         const item = commandList[i]
-        const Command = await import(item)
+        const Command = await import(pathToFileURL(item).toString())
         const cmd = new Command.default()
         program.command(cmd.name).description(cmd.description)
       }

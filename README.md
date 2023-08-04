@@ -105,7 +105,6 @@ pull -> 登录 -> 交互式选择知识库(命令行参数完整不会进入交�
 
 > ytool upgrade
 
-
 ### 最佳实践
 
 此工具开发的初心是将其作为一个将语雀知识库与其它平台数据共享的**介质**，因此也具备很多实践的可能性，
@@ -117,6 +116,12 @@ pull -> 登录 -> 交互式选择知识库(命令行参数完整不会进入交�
 4. ...
 
 目前具体实践已应用至我个人的 [knowledge-garden](https://github.com/vannvan/knowledge-garden) 中，感兴趣的朋友可以了解其具体实现。
+
+## 推荐
+
+在跨平台文档同步/博客方案方面[elog](https://github.com/LetTTGACO/elog)有着更强大的能力，有需要的朋友可以了解一下这个项目
+
+<img width="1674" alt="image" src="https://github.com/vannvan/yuque-tools/assets/43501134/8876287c-c80d-420d-82af-ade2586970d6">
 
 ## Issues
 

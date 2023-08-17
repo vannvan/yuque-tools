@@ -10,6 +10,14 @@
 
 [![example.gif](https://www.z4a.net/images/2023/05/01/example.gif)](https://www.z4a.net/image/VmUHiO)
 
+## 支持
+
+- 个人知识库
+- 空间(团队)知识库
+- 协作知识库
+
+> 自 2.1.0 版本开始，交互式列表中 👤 前缀表示个人知识库，其它则为 👥
+
 ## 使用方式
 
 ### 整体步骤

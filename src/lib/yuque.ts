@@ -1,5 +1,5 @@
 import jsdom from 'jsdom'
-import { setExpireTime, setJSONString } from './tool.js'
+import { getMetaUserInfo, setExpireTime, setJSONString } from './tool.js'
 import { config as CONFIG } from '../core/config.js'
 import { get, post } from './request.js'
 import { ILoginResponse, TBookItem, TBookStackItem, TDocItem } from './type'
@@ -51,31 +51,42 @@ const loginYuque = async (accountInfo: Ytool.App.IAccountInfo) => {
 const getBookStacks = async (app: Ytool.App.IYuqueTools) => {
   const isPersonally = app.knowledgeBaseType === 'personally'
 
-  const { data } = await get<TBookStackItem[]>(
+  const { data = [] } = await get<TBookStackItem[]>(
     isPersonally ? YUQUE_API.yuqueBooksList : YUQUE_API.yuqueBooksListOfSpace
   )
-  if (data) {
+
+  const collabBooks = (await getCollabBooks()) || []
+
+  const { login: currentLogin } = await getMetaUserInfo()
+
+  if (data.length > 0 || collabBooks.length > 0) {
     // reduce [{c:[1,2],a:'11'}] => {c: Array(2), a: '11'}
     // 个人知识库和空间知识库的结构不一样
     const sourceBooks = isPersonally
       ? (data.map((item) => item.books).flat() as unknown as TBookItem[])
       : (data as unknown as TBookItem[])
 
-    // const list = data.map((item) => item.books).flat() as unknown as TBookItem[]
-    const _list = sourceBooks.map((item: TBookItem) => {
+    const _list = sourceBooks.concat(collabBooks).map((item: TBookItem) => {
       return {
         slug: item.slug,
         name: item.name,
         user: item.user.login,
         id: item.id,
         docs: [],
+        // flag
+        type: currentLogin === item.user.login ? 'owner' : 'collab',
       }
     })
     return _list
   } else {
-    Log.error('获取知识库失败')
+    Log.error('知识库数据获取失败')
     process.exit(0)
   }
+}
+
+const getCollabBooks = async (): Promise<TBookItem[]> => {
+  const { data } = await get(YUQUE_API.yuqueCollabBooks)
+  return data as TBookItem[]
 }
 
 /**

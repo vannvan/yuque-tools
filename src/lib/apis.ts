@@ -20,6 +20,13 @@ const YUQUE_API = {
   },
 
   /**
+   * 协作知识库
+   */
+  get yuqueCollabBooks() {
+    return '/api/mine/raw_collab_books'
+  },
+
+  /**
    * 空间知识库列表
    */
   get yuqueBooksListOfSpace() {

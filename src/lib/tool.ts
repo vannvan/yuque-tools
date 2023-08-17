@@ -33,6 +33,21 @@ export const getLocalUserConfig = async (): Promise<Ytool.App.TUserLocalConfig> 
   }
 }
 
+export const getMetaUserInfo = async (): Promise<Ytool.App.TYuqueLoginInfo> => {
+  const userInfoFile = path.resolve(CONFIG.userInfoFile)
+  const isExit = await F.isExit(userInfoFile)
+  if (isExit) {
+    try {
+      const loginUserInfo = JSON.parse(F.read(userInfoFile)) || {}
+      return loginUserInfo as Ytool.App.TYuqueLoginInfo
+    } catch (error) {
+      return {} as Ytool.App.TYuqueLoginInfo
+    }
+  } else {
+    return {} as Ytool.App.TYuqueLoginInfo
+  }
+}
+
 /**
  * 转换为json字符串
  * @param content
@@ -145,8 +160,9 @@ export const inquireBooks = async (): Promise<
   if (book) {
     const { booksInfo } = JSON.parse(book)
     const options = booksInfo.map((item: any, index: number) => {
+      const type = item.type === 'owner' ? '👤' : '👥'
       return {
-        name: `[${index + 1}]` + item.name,
+        name: `${type}[${index + 1}]` + item.name,
         value: item.slug,
       }
     })

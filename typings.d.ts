@@ -46,6 +46,16 @@ declare namespace Ytool {
 
   namespace App {
     /**
+     * 当前登录的用户信息
+     */
+    type TYuqueLoginInfo = {
+      id: number
+      type: string
+      login: string
+      name: string
+    }
+
+    /**
      * 账户信息
      */
     type IAccountInfo = Pick<Cli.TCLI_ARGS, 'userName' | 'password'>

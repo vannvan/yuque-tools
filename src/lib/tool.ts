@@ -140,7 +140,7 @@ export const delayedGetDocCommands = (
       typeof finishCallBack === 'function' && finishCallBack(bookList)
     })
     .catch((error) => {
-      Log.error(error)
+      Log.error(error, { title: '知识库数据获取报错', body: error })
     })
 }
 

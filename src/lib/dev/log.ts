@@ -24,7 +24,7 @@ export const Log = {
       const queryString = new URLSearchParams(Object.entries(errorInfo)).toString()
       const link = terminalLink('👉提个BUG(cmd/ctrl+click)', `${issuesLink}?${queryString}`)
       log(chalk.red(text + ' '.repeat(4) + link))
-      process.exit(1)
+      // process.exit(1)
     } else {
       log(chalk.red(text))
     }

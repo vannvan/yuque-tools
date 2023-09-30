@@ -125,6 +125,10 @@ pull -> 登录 -> 交互式选择知识库(命令行参数完整不会进入交�
 
 目前具体实践已应用至我个人的 [knowledge-garden](https://github.com/vannvan/knowledge-garden) 中，感兴趣的朋友可以了解其具体实现。
 
+## 程序版
+
+[🎉可执行程序版v1.0.0——无需Node环境](https://github.com/vannvan/yuque-tools/releases)
+
 ## 推荐
 
 在跨平台文档同步/博客方案方面[elog](https://github.com/LetTTGACO/elog)有着更强大的能力，有需要的朋友可以了解一下这个项目

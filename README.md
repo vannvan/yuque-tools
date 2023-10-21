@@ -4,7 +4,7 @@
 ![](https://badgen.net/npm/v/yuque-tools)
 ![](https://badgen.net/npm/node/next)
 
-[了解实现过程-与其它工具有什么不一样](https://github.com/vannvan/yuque-tools/blob/main/ABOUT.md)
+[🎉可执行程序版v1.0.0——无需Node环境](https://github.com/vannvan/yuque-tools/releases)
 
 ## 样例
 
@@ -18,6 +18,8 @@
 
 > 自 2.1.0 版本开始，交互式列表中 👤 前缀表示个人知识库，其它则为 👥
 
+[了解实现过程-与其它工具有什么不一样](https://github.com/vannvan/yuque-tools/blob/main/ABOUT.md)
+
 ## 使用方式
 
 ### 整体步骤
@@ -26,21 +28,19 @@ pull -> 登录 -> 交互式选择知识库(命令行参数完整不会进入交�
 
 目前登录完成后会设置一天的有效时间，也就是说在24小时之内重复导出只有第一次需要登录。
 
-### CLI方式
-
-#### 安装 install
+### 安装 install
 >
 > npm i yuque-tools -g 安装到全局  
 > npm i yuque-tools 安装到局部  
 > 安装到全局以下方法使用`ytool xx`，安装到局部以下方法使用`npx ytool xx`
 
-#### 导出 pull
+### 导出 pull
 
 创建目录`yuque-docs`并进入目录
 
 > ytool pull
 
-##### 参数说明
+#### 参数说明
 
 |参数|说明|必填|
 |--|--|--|
@@ -59,7 +59,7 @@ pull -> 登录 -> 交互式选择知识库(命令行参数完整不会进入交�
 - 对于`skip`和`lb`，为了命令行使用便捷，采用`skip`表示，而为了含义明确，在配置中采用`skipDoc`表示,`lb`同理；
 - 为降低命令行使用时的复杂度，`host`及`output`(特定场景需要)仅支持配置形式使用且不会进入问询环节，具体配置方式见以下[TIPS](#tips)⬇️
 
-##### 应用示例
+#### 应用示例
 
 以 [我的测试知识库](https://www.yuque.com/vannvan/dd67e4) 为例
 
@@ -83,13 +83,13 @@ pull -> 登录 -> 交互式选择知识库(命令行参数完整不会进入交�
 
 > ytool pull 即什么都没有传的情况下，以上所有可选的信息都会进入交互式问询环节
 
-#### 清除缓存 clear
+### 清除缓存 clear
 
 工具可能存在因`yuque`接口的不稳定性产生的无法规避的错误(概率较低)，从而导致导出操作失败/异常，此时可以`clear`之后再重试导出操作。
 
 > ytool clear  
 
-#### TIPS
+### TIPS
 
 导出参数支持配置化形式，适合长期使用，采用`yuque-docs/yuque.config.json`进行配置，具体含义与上述[参数说明]一致
 
@@ -107,13 +107,15 @@ pull -> 登录 -> 交互式选择知识库(命令行参数完整不会进入交�
 }
 ```
 
-#### 更新插件 upgrade
+### 更新插件 upgrade
 
 考虑后期此工具(外挂)还会支持更多工具，从2.0版本开始支持便捷的升级操作，采用如下命令即可方便的完成升级
 
 > ytool upgrade
 
-### 最佳实践
+目前具体实践已应用至我个人的 [knowledge-garden](https://github.com/vannvan/knowledge-garden) 中，感兴趣的朋友可以了解其具体实现。
+
+## 最佳实践
 
 此工具开发的初心是将其作为一个将语雀知识库与其它平台数据共享的**介质**，因此也具备很多实践的可能性，
 通过语雀作为文字的载体，你可以通过`yuque-tools`实现以下几种可能性：
@@ -122,12 +124,6 @@ pull -> 登录 -> 交互式选择知识库(命令行参数完整不会进入交�
 2. 你在多个社区有自己的内容创作，通过定制脚本将语雀知识库的内容同步至内容平台；
 3. 你有更灵活的私域/公域的文字记录，通过`yuque-tools`灵活的导出能力，将内容分发至不同的平台；
 4. ...
-
-目前具体实践已应用至我个人的 [knowledge-garden](https://github.com/vannvan/knowledge-garden) 中，感兴趣的朋友可以了解其具体实现。
-
-## 程序版
-
-[🎉可执行程序版v1.0.0——无需Node环境](https://github.com/vannvan/yuque-tools/releases)
 
 ## 推荐
 

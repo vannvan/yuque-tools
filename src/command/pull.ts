@@ -11,13 +11,16 @@ export default class Init implements Ytool.Cli.ICommand {
     if (args.length >= 2) {
       // 认为前两位是账号信息
       const [userName, password, ...rest] = args
-      const tocRange = rest.length ? rest.filter((item: string) => !/skip|lb/.test(item)) : []
+      const tocRange = rest.length
+        ? rest.filter((item: string) => !/skip|lb|only_note/.test(item))
+        : []
 
       const targetArgs = {
         userName,
         password,
         skipDoc: rest.includes('skip'),
         linebreak: rest.includes('lb'),
+        only_note: rest.includes('only_note'),
         tocRange: tocRange,
       }
       cmd.init(targetArgs)

@@ -25,7 +25,7 @@ const loginYuque = async (accountInfo: Ytool.App.IAccountInfo) => {
     password: encrypt(password),
     loginType: 'password',
   }
-
+  Log.info('开始登录语雀')
   try {
     const { data } = await post<ILoginResponse>(YUQUE_API.yuqueLoginApi, loginInfo, {
       Referer: CONFIG.host + YUQUE_API.yuqueReferer,
@@ -181,11 +181,18 @@ const getNotes = async (offset: number, limit: number): Promise<any> => {
     })
     return {
       list: list,
-      hasMore : has_more,
+      hasMore: has_more,
     }
   } else {
     Log.error(`获取小记失败`)
   }
 }
 
-export { loginYuque, getBookStacks, getDocsOfBooks, getMarkdownContent, crawlYuqueBookPage, getNotes }
+export {
+  loginYuque,
+  getBookStacks,
+  getDocsOfBooks,
+  getMarkdownContent,
+  crawlYuqueBookPage,
+  getNotes,
+}

@@ -51,6 +51,17 @@ const YUQUE_API = {
   yuqueExportMarkdown(repos: string, linebreak: boolean) {
     return `${repos}/markdown?attachment=true&latexcode=false&anchor=false&linebreak=${linebreak}`
   },
+
+  /**
+   * 导出小记
+   * @param repos
+   * @param linebreak 是否保持换行
+   * @returns
+   */
+  yuqueExportNotes(offset: number, limit: number) {
+    return `/api/modules/note/notes/NoteController/index?offset=${offset}&q=&filter_type=all&status=0&merge_dynamic_data=0&order=content_updated_at&with_pinned_notes=true&limit=${limit}
+`
+  },
 }
 
 export default YUQUE_API

@@ -2,7 +2,7 @@ import jsdom from 'jsdom'
 import { getMetaUserInfo, setExpireTime, setJSONString } from './tool.js'
 import { config as CONFIG } from '../core/config.js'
 import { get, post } from './request.js'
-import { ILoginResponse, TBookItem, TBookStackItem, TDocItem } from './type'
+import { ILoginResponse, TBookItem, TBookStackItem, TDocItem, TNoteRst } from './type'
 import F from './dev/file.js'
 import YUQUE_API from './apis.js'
 import { Log } from './dev/log.js'
@@ -155,4 +155,37 @@ const crawlYuqueBookPage = (repos: string): Promise<{ value: any }[]> => {
   })
 }
 
-export { loginYuque, getBookStacks, getDocsOfBooks, getMarkdownContent, crawlYuqueBookPage }
+/**
+ * 导出小记
+ * @param offset 偏移
+ * @param limit 每页数量
+ * @returns md内容
+ */
+const getNotes = async (offset: number, limit: number): Promise<any> => {
+  const api = YUQUE_API.yuqueExportNotes(offset, limit)
+  const data = await get(api)
+  // console.log("getNotes", data)
+  const noteRst = data as unknown as TNoteRst
+  const notes = noteRst.notes
+  const has_more = noteRst.has_more
+  if (notes) {
+    const list = notes.map((item) => {
+      const tags = item.tags.map((item1) => {
+        return item1.name
+      })
+      return {
+        content: item.content.abstract,
+        tags: tags,
+        slug: item.slug,
+      }
+    })
+    return {
+      list: list,
+      hasMore : has_more,
+    }
+  } else {
+    Log.error(`获取小记失败`)
+  }
+}
+
+export { loginYuque, getBookStacks, getDocsOfBooks, getMarkdownContent, crawlYuqueBookPage, getNotes }

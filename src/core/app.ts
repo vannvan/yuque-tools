@@ -7,6 +7,7 @@ import {
   inquireAccount,
   inquireBooks,
   setJSONString,
+  getAllNotes
 } from '../lib/tool.js'
 import { config as CONFIG } from './config.js'
 import F from '../lib/dev/file.js'
@@ -156,6 +157,13 @@ class YuqueTools implements Ytool.App.IYuqueTools {
    * @returns
    */
   private async ask() {
+    await getAllNotes()
+    const { tocRange = [] } = this.knowledgeConfig
+    //只导出小记
+    if (tocRange.length && tocRange.includes('only_note')) {
+      return
+    }
+
     if (!(await F.isExit(CONFIG.bookInfoFile))) {
       await this.getBook()
       return

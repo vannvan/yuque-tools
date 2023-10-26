@@ -1,9 +1,10 @@
+import TurndownService from 'turndown'
 import inquirer from 'inquirer'
 import F from './dev/file.js'
 import { config as CONFIG } from '../core/config.js'
 import { ICookies } from './type.js'
 import ora from 'ora'
-import { crawlYuqueBookPage, getMarkdownContent } from './yuque.js'
+import { crawlYuqueBookPage, getMarkdownContent, getNotes } from './yuque.js'
 import path from 'path'
 import { Log } from './dev/log.js'
 
@@ -349,4 +350,74 @@ export const delayedDownloadDoc = async (app: Ytool.App.IYuqueTools, bookList: a
 
     index++
   }, CONFIG.duration)
+
+
+}
+
+/**
+* 获取所有小记
+*/
+export const getAllNotes = async () => {
+  var turndownService = new TurndownService()
+  let count = -1;
+  const limit = 50; // 你想要的每次请求的笔记数量
+
+  let index = 0
+
+  const spinner = ora('导出小记任务开始\n').start()
+
+  let reportContent = `# 导出报告 \n ---- \n`
+
+  // console.log('targetTocList',targetTocList);
+
+  let has_more = true
+
+  const notePath = CONFIG.outputDir + '/notes/'
+  F.mkdir(notePath)
+
+  let timer = setInterval(async () => {
+    if (!has_more) {
+      reportContent += `---- \n ## 生成时间${new Date()}`
+      const reportFilePath = CONFIG.outputDir + `/导出报告.md`
+      F.touch2(reportFilePath, reportContent)
+      spinner.stop()
+      Log.success(`导出文档任务结束,共导出${index}个文档`)
+      clearInterval(timer)
+      process.exit(0)
+    }
+    try {
+      count += 1
+      const offset = count * limit
+      const { list, hasMore } = await getNotes(offset, limit);
+      has_more = hasMore
+      for (const item of list) {
+        const { content, slug, tags } = item
+        const title = slug
+        const fullPath = slug
+        spinner.text = `正在导出[${title}]`
+        let markdown = turndownService.turndown(content)
+        if (markdown) {
+          const fileDir = notePath + fullPath + '.md'
+          // 是否已存在
+          const isExit = await F.isExit(fileDir)
+          if (isExit) {
+            spinner.text = `本次跳过[${title}]`
+            reportContent += `- 🌈[${title}] 本次跳过 文件路径${fileDir} \n`
+          } else {
+            const tagsString = tags.map(tag => `#${tag}`).join(" ");
+            // console.log(tagsString);
+            markdown = tagsString + "\n" + markdown
+            F.touch2(fileDir, markdown)
+            reportContent += `- 🌈[${title}] 导出完成 文件路径${fileDir} \n`
+          }
+        } else {
+          reportContent += `- ❌[${title}] 导出失败  \n`
+        }
+        index++
+      }
+    } catch (error) {
+      reportContent += `- ❌导出失败 \n`
+    }
+
+  }, 1000)
 }

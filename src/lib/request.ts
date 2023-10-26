@@ -17,7 +17,7 @@ export const get = <T>(url: string): Promise<{ data: T }> => {
     process.exit(0)
   }
   return new Promise(async (resolve, reject) => {
-    console.log('请求地址', getHost() + url)
+    // console.log('请求地址', getHost() + url)
     const config = {
       url: (await getHost()) + url,
       method: 'get',

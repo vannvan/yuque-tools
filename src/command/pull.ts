@@ -1,6 +1,7 @@
 export default class Init implements Ytool.Cli.ICommand {
   public name = 'pull'
-  public description = '获取语雀知识库资源'
+  public description =
+    '获取语雀知识库资源\n用法:yuque-tools pull [userName] [password] [skip|lb|only_note] [tocRange]'
   ctx: Ytool.Cli.TCLIContext
   constructor(ctx: Ytool.Cli.TCLIContext) {
     this.ctx = ctx

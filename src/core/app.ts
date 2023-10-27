@@ -7,6 +7,7 @@ import {
   inquireAccount,
   inquireBooks,
   setJSONString,
+  getAllNotes,
 } from '../lib/tool.js'
 import { config as CONFIG } from './config.js'
 import F from '../lib/dev/file.js'
@@ -30,6 +31,7 @@ class YuqueTools implements Ytool.App.IYuqueTools {
       tocRange: [],
       skipDoc: undefined,
       linebreak: undefined,
+      only_note: false,
     }
     this.knowledgeBaseType = 'personally'
     this.userSelectedDoc = []
@@ -50,7 +52,6 @@ class YuqueTools implements Ytool.App.IYuqueTools {
       Log.error('参数错误，退出程序')
       process.exit(0)
     }
-    Log.info('开始登录语雀')
 
     // load account info from yuque.config.json
     const isExitConfig = await F.isExit(path.resolve(CONFIG.localConfig))
@@ -95,6 +96,7 @@ class YuqueTools implements Ytool.App.IYuqueTools {
       args.tocRange && Log.info(`知识库: ${args.tocRange}`, 2)
       args.tocRange && Log.info(`是否跳过本地文件: ${args.skipDoc ? 'true' : 'false'}`, 2)
       args.linebreak && Log.info(`是否保持换行: ${args.linebreak ? 'true' : 'false'}`, 2)
+      args.only_note && Log.info('本次只导出小记～～')
     }
 
     // exit docs dir?
@@ -156,6 +158,14 @@ class YuqueTools implements Ytool.App.IYuqueTools {
    * @returns
    */
   private async ask() {
+    const { only_note } = this.knowledgeConfig
+
+    //只导出小记
+    if (only_note) {
+      await getAllNotes()
+      return
+    }
+
     if (!(await F.isExit(CONFIG.bookInfoFile))) {
       await this.getBook()
       return

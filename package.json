@@ -1,6 +1,6 @@
 {
   "name": "yuque-tools",
-  "version": "2.1.4",
+  "version": "2.2.0",
   "description": "语雀知识库内容批量导出和二次处理工具",
   "keywords": [
     "yuque",
@@ -45,11 +45,12 @@
     "watch": "tsc --watch -p tsconfig.json"
   },
   "dependencies": {
+    "@types/turndown": "^5.0.3",
     "axios": "^1.3.4",
     "chalk": "4.1.2",
     "commander": "^10.0.0",
     "glob": "7",
-    "inquirer": "8",
+    "inquirer": "^8.2.6",
     "jsdom": "^21.1.1",
     "jsencrypt-node": "^1.0.4",
     "latest-version": "^7.0.0",
@@ -58,6 +59,7 @@
     "rimraf": "^5.0.1",
     "terminal-link": "^3.0.0",
     "tslib": "^2.5.0",
+    "turndown": "^7.1.2",
     "typescript": "^5.0.3"
   },
   "devDependencies": {

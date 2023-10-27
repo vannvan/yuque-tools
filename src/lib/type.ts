@@ -41,8 +41,32 @@ type TDocItem = {
   description: string
 }
 
+type TNoteTag = {
+  id: number
+  name: string
+}
+
+type TNoteContent = {
+  updated_at: string
+  abstract: string
+}
+
+type TNote = {
+  tags: TNoteTag[]
+  content: TNoteContent
+  id: number
+  slug: string
+
+}
+
+type TNoteRst = {
+  notes: TNote[]
+  pin_notes: TNote[]
+  has_more: boolean
+}
+
 interface IDocsOfBook {
   data: TDocItem[]
 }
 
-export { ILoginResponse, ICookies, TBookItem, TDocItem, TBookStackItem, IBookStack, IDocsOfBook }
+export { ILoginResponse, ICookies, TBookItem, TDocItem, TBookStackItem, IBookStack, IDocsOfBook, TNoteRst }

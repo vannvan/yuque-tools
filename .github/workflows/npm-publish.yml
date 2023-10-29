@@ -37,3 +37,26 @@ jobs:
       - run: pnpm publish -r --dry-run
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_PUBLISH_WORKFLOW}}
+
+
+
+  build:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        node-version: [15]
+    steps:
+    - uses: actions/checkout@v3
+    - uses: pnpm/action-setup@v2
+      with:
+        version: 8
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'pnpm'
+        registry-url: https://registry.npmjs.org/
+    - name: Install dependencies
+      run: pnpm install
+      env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_PUBLISH_WORKFLOW}}

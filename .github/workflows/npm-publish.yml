@@ -40,7 +40,7 @@ jobs:
 
 
 
-  build:
+  publish-task:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
@@ -60,5 +60,7 @@ jobs:
       run: pnpm install 
     - name: Build 
       run: pnpm run tsc
+    - name: Publish
+      run: pnpm publish -r --dry-run
       env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_PUBLISH_WORKFLOW}}

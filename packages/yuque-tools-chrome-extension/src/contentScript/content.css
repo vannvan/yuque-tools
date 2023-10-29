@@ -1,0 +1,114 @@
+#YuqueToolsTagManage {
+  /* background: #f00; */
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.yuque-tools-default-button {
+  border-radius: 4px;
+  padding: 0px 12px;
+  color: #fff;
+  cursor: pointer;
+  border: none;
+  height: 32px;
+  box-sizing: content-box;
+  background: #eff0f0;
+  color: #000;
+}
+.yuque-tools-primary-button {
+  background: rgb(0, 185, 107);
+  border-radius: 4px;
+  padding: 0px 12px;
+  color: #fff;
+  cursor: pointer;
+  border: none;
+  height: 32px;
+  box-sizing: content-box;
+}
+
+.yuque-tools-tag-manage {
+  margin-left: auto;
+}
+
+.yuque-tools-doc-tag-list {
+  display: flex;
+}
+.yuque-tools-tag-item {
+  background: #eff0f0;
+  color: #000;
+  padding: 2px 8px;
+  height: 24px;
+  line-height: 20px;
+  font-size: 12px;
+  border-radius: 4px;
+  margin-right: 16px;
+  user-select: none;
+}
+.yuque-tools-tag-item svg {
+  cursor: pointer;
+}
+
+.yuque-tools-add-icon {
+  cursor: pointer;
+  position: relative;
+}
+
+.yuque-tools-tag-edit-wrap {
+  width: 200px;
+  max-height: 600px;
+  overflow: auto;
+  background: #fff;
+  box-shadow: 0 0px 6px #ccc;
+  position: absolute;
+  padding: 12px;
+  z-index: 1000000 !important;
+}
+.yuque-tools-tag-new {
+  display: flex;
+  align-items: center;
+}
+.yuque-tools-tag-new input {
+  margin-right: 12px;
+  width: 150px;
+  height: 24px;
+  padding-left: 6px;
+  background: #f4f5f5;
+  border: none;
+  outline: none;
+  font-size: 12px;
+}
+
+.yuque-tools-handle-add-tag {
+  cursor: pointer;
+}
+.yuque-tools-all-tag-item {
+  height: 24px;
+  background: #ecf0f1;
+  margin-top: 6px;
+  padding-left: 6px;
+  padding-right: 6px;
+  box-sizing: border-box;
+  cursor: pointer;
+  user-select: none;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+}
+.yuque-tools-tab-set-icon {
+  margin-left: auto;
+  color: #57606f;
+}
+.yuque-tools-all-tag-item-highlight {
+  background: rgb(0, 185, 107, 0.5);
+}
+
+.yuque-tag-edit-action-wrap {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+.yuque-tag-edit-save {
+  margin-left: 12px;
+}

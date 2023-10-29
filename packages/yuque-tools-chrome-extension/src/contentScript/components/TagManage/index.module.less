@@ -1,0 +1,113 @@
+.button {
+  border-radius: 4px;
+  padding: 0px 12px;
+  color: #ffffff;
+  cursor: pointer;
+  border: none;
+  height: 32px;
+  box-sizing: content-box;
+  background: #eff0f0;
+  color: #000000;
+}
+
+.content {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  flex: 1;
+  // background: #ccc;
+  .doc-tag-wrap {
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    .item {
+      border-radius: 8px;
+      background: #eff0f0;
+      color: #000000;
+      margin-right: 12px;
+      padding: 2px 8px;
+      user-select: none;
+    }
+    .to-be-edit-wrap {
+      position: relative;
+      .add-icon {
+        cursor: pointer;
+        font-size: 14px;
+      }
+
+      .to-be-edit-outer-content {
+        position: absolute;
+        top: 8px;
+        left: -12px;
+        padding: 20px;
+        width: fit-content;
+        height: fit-content;
+        .to-be-edit-inner-content {
+          overflow-y: auto;
+          background: #ffffff;
+          box-shadow: 0 0 6px #cccccc;
+          width: 200px;
+        }
+        .close-icon-wrap {
+          position: absolute;
+          top: 11px;
+          right: 11px;
+          background: #ffffff;
+          box-shadow: 0 0 3px #6a7274;
+          height: 22px;
+          width: 22px;
+          font-size: 14px;
+          border-radius: 11px;
+          text-align: center;
+          cursor: pointer;
+          color: #e74c3c;
+        }
+        .tag-edit-input {
+          padding-left: 6px;
+          border: none;
+          background: rgba(244, 245, 245, 1);
+          color: #000000;
+          outline: none;
+          font-size: 12px;
+          width: 150px;
+        }
+        .all-tag-list-content {
+          max-height: 200px;
+          overflow: auto;
+          padding: 0 12px 12px 12px;
+          &::-webkit-scrollbar {
+            width: 4px !important;
+            height: 4px !important;
+            padding-right: 2px;
+            background-color: #f1f2f6 !important;
+          }
+
+          &::-webkit-scrollbar-thumb {
+            background: #7f8c8d !important;
+            border-radius: 4px !important;
+          }
+        }
+        .tag-item {
+          margin-bottom: 8px;
+          padding: 0 6px;
+          background: #ecf0f1;
+          color: #000000;
+          &:last-child {
+            margin-bottom: 0;
+          }
+          &.tag-item-active {
+            color: #ffffff;
+            background: rgb(0, 185, 107, 0.5);
+          }
+        }
+      }
+    }
+  }
+  .tag-manage-link-button {
+    &:extend(.button);
+    margin-left: auto;
+    background: rgb(0, 185, 107);
+    color: #ffffff;
+    line-height: 32px;
+  }
+}

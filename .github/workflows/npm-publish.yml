@@ -26,7 +26,7 @@ jobs:
     # needs: install
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checklsout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: 16
@@ -34,5 +34,6 @@ jobs:
       - run: npm i
       - run: npm run tsc
       - run: npm publish
+        working-directory: ./yuque-tools-cli
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_PUBLISH_WORKFLOW}}

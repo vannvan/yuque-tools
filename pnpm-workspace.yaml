@@ -1,0 +1,6 @@
+packages:
+  - 'packages/**'
+  - 'test/**'
+  # exclude
+  - '!**/__test__/**'
+  - '!**/example/**'

@@ -7,7 +7,7 @@ dist/
 docs/
 build/
 yuque.config.json
-pnpm-lock.yaml
+# pnpm-lock.yaml
 
 storage/
 

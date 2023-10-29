@@ -12,7 +12,6 @@ on:
   push:
     branches:
       - npm
-      - dev
 jobs:
   # install:
   #   runs-on: ubuntu-latest
@@ -61,6 +60,7 @@ jobs:
     - name: Build 
       run: pnpm run tsc
     - name: Publish
-      run: pnpm publish -r --dry-run
+      # run: pnpm publish -r --dry-run
+      run: pnpm publish -r
       env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_PUBLISH_WORKFLOW}}

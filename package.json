@@ -9,5 +9,8 @@
   },
   "keywords": [],
   "author": "vannvan",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "pnpm": "^8.10.0"
+  }
 }

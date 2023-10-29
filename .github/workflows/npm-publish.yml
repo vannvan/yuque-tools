@@ -23,20 +23,20 @@ jobs:
   #         node-version: 16
   #     - run: npm i
 
-  publish-npm:
-    # needs: install
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: pnpm/action-setup@v2
-        with:
-          node-version: 16
-          registry-url: https://registry.npmjs.org/
-      - run: pnpm install
-      - run: pnpm run tsc
-      - run: pnpm publish -r --dry-run
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_PUBLISH_WORKFLOW}}
+  # publish-npm:
+  #   # needs: install
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: pnpm/action-setup@v2
+  #       with:
+  #         node-version: 16
+  #         registry-url: https://registry.npmjs.org/
+  #     - run: pnpm install
+  #     - run: pnpm run tsc
+  #     - run: pnpm publish -r --dry-run
+  #       env:
+  #         NODE_AUTH_TOKEN: ${{secrets.NPM_PUBLISH_WORKFLOW}}
 
 
 

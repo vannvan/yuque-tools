@@ -57,7 +57,8 @@ jobs:
         cache: 'pnpm'
         registry-url: https://registry.npmjs.org/
     - name: Install dependencies
-    - run: pnpm install 
-    - run: pnpm run tsc
+      run: pnpm install 
+    - name: Build 
+      run: pnpm run tsc
       env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_PUBLISH_WORKFLOW}}

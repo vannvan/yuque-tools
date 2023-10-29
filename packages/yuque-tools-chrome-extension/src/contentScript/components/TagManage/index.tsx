@@ -94,7 +94,7 @@ const TagManage = () => {
       axios.get(origin.current + '/api/tags?docId=' + docId).then((res) => {
         // console.log(`${docId}的标签`, res.data.data)
         resolve(res.data.data)
-      }),
+      })
     )
   }
 
@@ -109,7 +109,7 @@ const TagManage = () => {
           // console.log('tagGroup', tagGroup)
           resolve(tagGroup)
         }
-      }),
+      })
     )
   }
 
@@ -214,13 +214,6 @@ const TagManage = () => {
 
   useEffect(() => {
     console.log('yuque-tools-extension TagManage is running~')
-    // axios
-    //   .get(
-    //     `https://www.yuque.com/vannvan/xfpgmm/gof2ekyg0hl2a59z/markdown?attachment=true&latexcode=false&anchor=false&linebreak=true`,
-    //   )
-    //   .then((res) => {
-    //     console.log(res)
-    //   })
   }, [])
 
   const isDocIncludeThisTag = (title: string) => {

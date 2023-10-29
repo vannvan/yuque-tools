@@ -29,12 +29,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
+      - uses: pnpm/action-setup@v2
         with:
           node-version: 16
           registry-url: https://registry.npmjs.org/
-      - run: npm i
-      - run: npx pnpm run tsc
-      - run: npx pnpm publish -r --dry-run
-        working-directory: ./yuque-tools-cli
+      - run: pnpm install
+      - run: pnpm run tsc
+      - run: pnpm publish -r --dry-run
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_PUBLISH_WORKFLOW}}

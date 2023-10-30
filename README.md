@@ -29,7 +29,7 @@
 
 ## 功能
 
-### 更好的文章标签
+### 更好用的文章标签
 
 ![](https://p.ipic.vip/miv63r.gif)
 
@@ -44,11 +44,10 @@
 ### 浏览器插件-TODO
 
 - [ ] 网页端批量导出Markdown
-- [ ] 官方不够走心的功能
+- [ ] 一些可以改进的功能
 
 ## 关于
 
 以上工具均产生于个人实际需求，旨在更好的利用一个知识管理工具，欢迎提供更好的idea和贡献代码，如有帮助到您，欢迎点个鼓励的⭐️
 
-[反馈意见](https://github.com/vannvan/yuque-tools/issues) |
-[更新记录及计划](https://github.com/vannvan/yuque-tools/blob/main/CHANGELOG.md)
+[反馈意见](https://github.com/vannvan/yuque-tools/issues) | [CLI工具更新记录](https://github.com/vannvan/yuque-tools/blob/main/packages/yuque-tools-cli/CHANGELOG.md) | [浏览器插件更新记录](https://github.com/vannvan/yuque-tools/blob/main/packages/yuque-tools-chrome-extension/CHANGELOG.md)

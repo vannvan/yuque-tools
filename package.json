@@ -2,12 +2,10 @@
   "name": "yuque-tools",
   "version": "1.0.0",
   "private": true,
-  "description": "",
-  "main": "index.js",
+  "description": "🧰 玩转语雀-朴实无华的语雀工具集合，语雀知识库批量导出工具(无需Token)｜浏览器插件助手",
   "scripts": {
     "tsc": "pnpm --filter=yuque-tools run tsc"
   },
-  "keywords": [],
   "author": "vannvan",
   "license": "MIT",
   "devDependencies": {

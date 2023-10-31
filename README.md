@@ -6,7 +6,7 @@
 ![](https://badgen.net/npm/v/yuque-tools)
 ![](https://badgen.net/npm/node/next)
 
-[🎉可执行程序版v1.0.0——无需Node环境](https://github.com/vannvan/yuque-tools/releases)
+[🎉可执行程序版v1.0.0(无需Node.js环境)](https://github.com/vannvan/yuque-tools/releases)
 
 ### 样例
 
@@ -17,7 +17,7 @@
 - 个人知识库
 - 空间(团队)知识库
 - 协作知识库
-- 小记
+- 小记 (由[jialuohu](https://github.com/jialuohu)提供)
 
 > 自 2.1.0 版本开始，交互式列表中 👤 前缀表示个人知识库，其它则为 👥
 

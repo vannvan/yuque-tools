@@ -4,7 +4,7 @@
 ![](https://badgen.net/npm/v/yuque-tools)
 ![](https://badgen.net/npm/node/next)
 
-[🎉可执行程序版v1.0.0——无需Node环境](https://github.com/vannvan/yuque-tools/releases)
+[🎉可执行程序版(无需Node环境，下载即用)](https://github.com/vannvan/rust-explore/releases)
 
 ## 样例
 
@@ -19,7 +19,7 @@
 
 > 自 2.1.0 版本开始，交互式列表中 👤 前缀表示个人知识库，其它则为 👥
 
-[了解实现过程-与其它工具有什么不一样](https://github.com/vannvan/yuque-tools/blob/main/ABOUT.md)
+[了解实现过程-与其它工具有什么不一样](https://github.com/vannvan/yuque-tools/blob/main/packages/yuque-tools-cli/ABOUT.md)
 
 ## 使用方式
 
@@ -140,6 +140,4 @@ pull -> 登录 -> 交互式选择知识库(命令行参数完整不会进入交�
 ## Issues
 
 [反馈意见](https://github.com/vannvan/yuque-tools/issues) |
-[更新记录及计划](https://github.com/vannvan/yuque-tools/blob/main/CHANGELOG.md)
-
-欢迎提供更好的意见，如果有帮助欢迎点个鼓励的⭐️
+[更新记录及计划](https://github.com/vannvan/yuque-tools/blob/main/packages/yuque-tools-cli/CHANGELOG.md)

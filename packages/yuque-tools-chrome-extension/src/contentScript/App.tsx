@@ -13,9 +13,10 @@
 import { useEffect } from 'react'
 import './App.less'
 import TagManage from './components/TagManage'
+import GlobalFloatButton from './components/GlobalFloatButton'
 
 interface App {
-  toolType: 'tagManage'
+  toolType: 'tagManage' | 'globalButton'
 }
 
 const App = (props: App) => {
@@ -27,7 +28,12 @@ const App = (props: App) => {
     //
   }, [])
 
-  return <>{toolType == 'tagManage' && <TagManage />}</>
+  return (
+    <>
+      {toolType == 'tagManage' && <TagManage />}
+      {toolType == 'globalButton' && <GlobalFloatButton />}
+    </>
+  )
 }
 
 export default App

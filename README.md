@@ -1,12 +1,13 @@
 # 朴实无华的语雀工具集合
 
 ## 知识库批量导出CLI工具
+⚠️ 因语雀登录机制调整，此工具暂不能使用(11.20)
 
 ![](https://badgen.net/npm/dm/yuque-tools)
 ![](https://badgen.net/npm/v/yuque-tools)
 ![](https://badgen.net/npm/node/next)
 
-[🎉可执行程序版(无需Node环境，下载即用)](https://github.com/vannvan/rust-explore/releases)
+[🎉可执行程序版(无需Node环境，下载即用)](https://github.com/vannvan/rust-explore/releases)  
 
 ### 样例
 

@@ -8,7 +8,8 @@ export const config = {
   q70sevcmc8SsBNoaMQtyF/gETPBSsyWv3ccBJFrzZ5hxFdlVUfg6tXARtEI8rbIH
   su6TBkVjk+n1Pw/ihQIDAQAB
   -----END PUBLIC KEY-----`,
-
+  userAgent:
+    'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/20G81 YuqueMobileApp/1.0.2 (AppBuild/650 Device/Phone Locale/zh-cn Theme/light YuqueType/public)',
   /**
    * local expiration time
    */

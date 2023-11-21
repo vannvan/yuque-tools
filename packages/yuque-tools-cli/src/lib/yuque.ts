@@ -19,7 +19,6 @@ const loginYuque = async (accountInfo: Ytool.App.IAccountInfo) => {
     Log.error('账号信息不完整')
     process.exit(0)
   }
-
   const loginInfo = {
     login: userName,
     password: encrypt(password),
@@ -27,9 +26,10 @@ const loginYuque = async (accountInfo: Ytool.App.IAccountInfo) => {
   }
   Log.info('开始登录语雀')
   try {
-    const { data } = await post<ILoginResponse>(YUQUE_API.yuqueLoginApi, loginInfo, {
+    const { data } = await post<ILoginResponse>(YUQUE_API.mobileLoginApi, loginInfo, {
       Referer: CONFIG.host + YUQUE_API.yuqueReferer,
       origin: CONFIG.host,
+      'user-agent': CONFIG.userAgent,
     })
 
     if (data.ok) {

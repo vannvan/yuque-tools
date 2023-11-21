@@ -22,17 +22,45 @@ jobs:
   #         node-version: 16
   #     - run: npm i
 
-  publish-npm:
-    # needs: install
-    runs-on: ubuntu-latest
+  # publish-npm:
+  #   # needs: install
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: pnpm/action-setup@v2
+  #       with:
+  #         node-version: 16
+  #         registry-url: https://registry.npmjs.org/
+  #     - run: pnpm install
+  #     - run: pnpm run tsc
+  #     - run: pnpm publish -r --dry-run
+  #       env:
+  #         NODE_AUTH_TOKEN: ${{secrets.NPM_PUBLISH_WORKFLOW}}
+
+
+
+  publish-task:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        node-version: [18]
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          registry-url: https://registry.npmjs.org/
-      - run: npm i
-      - run: npm run tsc
-      - run: npm publish
-        env:
+    - uses: actions/checkout@v3
+    - uses: pnpm/action-setup@v2
+      with:
+        version: 8
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'pnpm'
+        registry-url: https://registry.npmjs.org/
+    - name: Install dependencies
+      run: pnpm install 
+    - name: Build 
+      run: pnpm run tsc
+    - name: Publish
+      # run: pnpm publish -r --dry-run
+      run: pnpm publish -r
+      env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_PUBLISH_WORKFLOW}}

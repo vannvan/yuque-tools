@@ -12,6 +12,10 @@ const YUQUE_API = {
     return '/api/accounts/login'
   },
 
+  get mobileLoginApi() {
+    return '/api/mobile_app/accounts/login?language=zh-cn'
+  },
+
   /**
    * 个人知识库列表
    */

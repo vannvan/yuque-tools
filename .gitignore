@@ -1,13 +1,15 @@
 .DS_Store
 node_modules
-/dist
+dist/
 /bak
 /directories
 .vscode/
-/docs/*
+docs/
+build/
 yuque.config.json
-pnpm-lock.yaml
+# pnpm-lock.yaml
 
+storage/
 
 # local env files
 .env.local

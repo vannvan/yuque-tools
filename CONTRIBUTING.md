@@ -38,6 +38,10 @@
 - 推荐使用prettier进行代码格式化
 - 推荐使用es-lint完成基本的语法校验
 
+## PR
+
+开发时请从`dev`分支拉取代码，合并也往`dev`分支合即可。
+
 ## 参考文档
 
 - [pnpm中文文档](https://www.pnpm.cn/installation)

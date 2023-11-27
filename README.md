@@ -12,19 +12,20 @@
 
 [![example.gif](https://www.z4a.net/images/2023/05/01/example.gif)](https://www.z4a.net/image/VmUHiO)
 
-### 支持
+### 已支持功能
 
 - 个人知识库
 - 空间(团队)知识库
 - 协作知识库
 - 小记 (由[jialuohu](https://github.com/jialuohu)提供)
-- 团队资源批量导出[见](https://github.com/vannvan/rust-explore/releases)
+- 团队资源批量导出(仅可执行程序版支持)[下载地址](https://github.com/vannvan/rust-explore/releases) |
+[查看源码](https://github.com/vannvan/rust-explore/tree/main/yuque-tools)
 
 > 自 2.1.0 版本开始，交互式列表中 👤 前缀表示个人知识库，其它则为 👥
 
 ### 使用说明
 
-[使用说明-传送门](https://github.com/vannvan/yuque-tools/blob/main/packages/yuque-tools-cli/README.md#使用方式)
+[使用文档-传送门](https://github.com/vannvan/yuque-tools/blob/main/packages/yuque-tools-cli/README.md#使用方式)
 
 ## 浏览器插件
 

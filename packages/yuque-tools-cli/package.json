@@ -2,7 +2,7 @@
   "name": "yuque-tools",
   "version": "2.2.1",
   "private": false,
-  "description": "语雀知识库内容批量导出和二次处理工具",
+  "description": "语雀知识库内容+资源批量导出和二次处理工具",
   "keywords": [
     "yuque",
     "yuque export",

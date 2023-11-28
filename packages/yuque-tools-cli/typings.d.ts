@@ -33,7 +33,7 @@ declare namespace Ytool {
       /**
        * 是否只导出小记
        */
-      only_note: boolean
+      onlyNote: boolean
     }
 
     type TCLIContext = {
@@ -67,7 +67,7 @@ declare namespace Ytool {
     /**
      * 用户的知识库配置
      */
-    type TKnowledgeConfig = Pick<Cli.TCLI_ARGS, 'linebreak' | 'skipDoc' | 'tocRange' | 'only_note'>
+    type TKnowledgeConfig = Pick<Cli.TCLI_ARGS, 'linebreak' | 'skipDoc' | 'tocRange' | 'onlyNote'>
 
     /**
      * 用户本地配置

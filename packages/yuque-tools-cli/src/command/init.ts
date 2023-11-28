@@ -17,7 +17,7 @@ export default class Init implements Ytool.Cli.ICommand {
       skipDoc: true,
       output: './docs',
       linebreak: false,
-      only_note: false,
+      onlyNote: false,
     }
 
     writeFileSync(CONFIG.localConfig, JSON.stringify(configTemplate, null, 2))

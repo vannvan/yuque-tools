@@ -31,7 +31,7 @@ class YuqueTools implements Ytool.App.IYuqueTools {
       tocRange: [],
       skipDoc: undefined,
       linebreak: undefined,
-      only_note: false,
+      onlyNote: false,
     }
     this.knowledgeBaseType = 'personally'
     this.userSelectedDoc = []
@@ -96,7 +96,7 @@ class YuqueTools implements Ytool.App.IYuqueTools {
       args.tocRange && Log.info(`知识库: ${args.tocRange}`, 2)
       args.tocRange && Log.info(`是否跳过本地文件: ${args.skipDoc ? 'true' : 'false'}`, 2)
       args.linebreak && Log.info(`是否保持换行: ${args.linebreak ? 'true' : 'false'}`, 2)
-      args.only_note && Log.info('本次只导出小记～～')
+      args.onlyNote && Log.info('本次只导出小记～～')
     }
 
     // exit docs dir?
@@ -108,7 +108,6 @@ class YuqueTools implements Ytool.App.IYuqueTools {
     if (!docExit) {
       await F.mkdir(path.resolve(CONFIG.outputDir))
       await F.mkdir(path.resolve(CONFIG.metaDir))
-    } else {
     }
     if (this.exitMetaDir()) {
       const cookie = getLocalCookies()
@@ -158,10 +157,10 @@ class YuqueTools implements Ytool.App.IYuqueTools {
    * @returns
    */
   private async ask() {
-    const { only_note } = this.knowledgeConfig
+    const { onlyNote } = this.knowledgeConfig
 
     //只导出小记
-    if (only_note) {
+    if (onlyNote) {
       await getAllNotes()
       return
     }

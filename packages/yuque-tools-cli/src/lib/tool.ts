@@ -313,13 +313,17 @@ export const delayedDownloadDoc = async (app: Ytool.App.IYuqueTools, bookList: a
 
   // console.log('targetTocList',targetTocList);
 
+  Log.info(
+    `共${MAX}个文档需要导出，预计需要${Math.ceil((MAX * CONFIG.duration) / 1000)}秒，等耐心等待~\n`
+  )
+
   let timer = setInterval(async () => {
     if (index === MAX) {
       reportContent += `---- \n ## 生成时间${new Date()}`
       const reportFilePath = CONFIG.outputDir + `/导出报告.md`
       F.touch2(reportFilePath, reportContent)
       spinner.stop()
-      Log.success(`导出文档任务结束,共导出${index}个文档`)
+      Log.success(`导出文档任务结束！`)
       clearInterval(timer)
       process.exit(0)
     }
@@ -327,7 +331,7 @@ export const delayedDownloadDoc = async (app: Ytool.App.IYuqueTools, bookList: a
     const { pslug, user, url, title, fullPath } = targetTocList[index] || {}
 
     const repos = [user, pslug, url].join('/')
-    spinner.text = `正在导出[${title}-${repos}]`
+    spinner.text = `【${index}/${MAX}】正在导出 ${fullPath}`
     try {
       const content: string = await getMarkdownContent('/' + repos, linebreak)
       if (content) {
@@ -335,10 +339,11 @@ export const delayedDownloadDoc = async (app: Ytool.App.IYuqueTools, bookList: a
         // 是否已存在
         const isExit = await F.isExit(fileDir)
         if (skipDoc && isExit) {
-          spinner.text = `本次跳过[${title}-${repos}]`
+          spinner.text = `【${index}/${MAX}】本次跳过 ${fullPath}`
           reportContent += `- 🌈[${title}] 本次跳过 文件路径${fileDir} \n`
         } else {
           F.touch2(fileDir, content)
+          spinner.text = `【${index}/${MAX}】导出成功 ${fullPath}`
           reportContent += `- 🌈[${title}] 导出完成 文件路径${fileDir} \n`
         }
       } else {
@@ -350,17 +355,15 @@ export const delayedDownloadDoc = async (app: Ytool.App.IYuqueTools, bookList: a
 
     index++
   }, CONFIG.duration)
-
-
 }
 
 /**
-* 获取所有小记
-*/
+ * 获取所有小记
+ */
 export const getAllNotes = async () => {
   var turndownService = new TurndownService()
-  let count = -1;
-  const limit = 50; // 你想要的每次请求的笔记数量
+  let count = -1
+  const limit = 50 // 你想要的每次请求的笔记数量
 
   let index = 0
 
@@ -388,7 +391,7 @@ export const getAllNotes = async () => {
     try {
       count += 1
       const offset = count * limit
-      const { list, hasMore } = await getNotes(offset, limit);
+      const { list, hasMore } = await getNotes(offset, limit)
       has_more = hasMore
       for (const item of list) {
         const { content, slug, tags } = item
@@ -404,9 +407,9 @@ export const getAllNotes = async () => {
             spinner.text = `本次跳过[${title}]`
             reportContent += `- 🌈[${title}] 本次跳过 文件路径${fileDir} \n`
           } else {
-            const tagsString = tags.map(tag => `#${tag}`).join(" ");
+            const tagsString = tags.map((tag) => `#${tag}`).join(' ')
             // console.log(tagsString);
-            markdown = tagsString + "\n" + markdown
+            markdown = tagsString + '\n' + markdown
             F.touch2(fileDir, markdown)
             reportContent += `- 🌈[${title}] 导出完成 文件路径${fileDir} \n`
           }
@@ -418,6 +421,5 @@ export const getAllNotes = async () => {
     } catch (error) {
       reportContent += `- ❌导出失败 \n`
     }
-
   }, 1000)
 }

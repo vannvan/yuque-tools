@@ -57,8 +57,7 @@
     "rimraf": "^5.0.1",
     "terminal-link": "^3.0.0",
     "tslib": "^2.5.0",
-    "turndown": "^7.1.2",
-    "typescript": "^5.0.3"
+    "turndown": "^7.1.2"
   },
   "devDependencies": {
     "@artus/tsconfig": "^1.0.1",

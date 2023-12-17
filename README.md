@@ -27,32 +27,11 @@
 
 [使用文档-传送门](https://github.com/vannvan/yuque-tools/blob/main/packages/yuque-tools-cli/README.md#使用方式)
 
-## 浏览器插件
-
-## 功能
-
-### 更好用的文章标签
-
-![](https://p.ipic.vip/miv63r.gif)
-
-#### Why?
-
-现状⬇️及[一个悲惨的故事](https://www.yuque.com/yuque/thyzgp/icl7ey)
-
-![](https://p.ipic.vip/te8gij.gif)
-
-<!-- > [如何使用标签-语雀官方说明](https://www.yuque.com/yuque/thyzgp/icl7ey) -->
-
-### 浏览器插件-TODO
-
-- [ ] 网页端批量导出Markdown
-- [ ] 一些可以改进的功能(`Maybe`)
-
 ## 关于
 
 以上工具均产生于个人实际需求，旨在更好的利用一个知识管理工具，欢迎提供更好的idea或参与共创，如有帮助到您，欢迎点个鼓励的⭐️  
 
 另：此工具自开发以来未接收任何资金打赏或以此盈利(**将来也不会**)，仅作交流和分享，如侵则删。
 
-[反馈意见](https://github.com/vannvan/yuque-tools/issues) | [CLI工具更新记录](https://github.com/vannvan/yuque-tools/blob/main/packages/yuque-tools-cli/CHANGELOG.md) | [浏览器插件更新记录](https://github.com/vannvan/yuque-tools/blob/main/packages/yuque-tools-chrome-extension/CHANGELOG.md)
-｜[参与bug修复或工具扩展](CONTRIBUTING.md)
+[Q&A](https://github.com/vannvan/yuque-tools/issues/15) | [CLI工具更新记录](https://github.com/vannvan/yuque-tools/blob/main/packages/yuque-tools-cli/CHANGELOG.md) | [浏览器插件更新记录](https://github.com/vannvan/yuque-tools/blob/main/packages/yuque-tools-chrome-extension/CHANGELOG.md)
+｜[加一些代码？](CONTRIBUTING.md)

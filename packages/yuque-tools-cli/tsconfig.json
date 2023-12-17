@@ -12,7 +12,8 @@
     "declaration": false,
     "importHelpers": true,
     "esModuleInterop": true,
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "removeComments": true
   },
 
   "include": ["./src/**/*", "./sdk.d.ts", "typings.d.ts"]

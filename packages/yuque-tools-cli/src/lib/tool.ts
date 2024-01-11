@@ -123,6 +123,16 @@ export const delayedGetDocCommands = (
   }
   const spinner = ora('开始获取文档数据\n').start()
 
+  // 某个可访问的知识库
+  // bookList.push({
+  //   slug: ',
+  //   name: '',
+  //   user: '',
+  //   id: '',
+  //   docs: [],
+  //   type: 'collab',
+  // })
+
   const promises = bookList.map((item) => {
     const { slug, user } = item
     return crawlYuqueBookPage(`/${user}/${slug}`)

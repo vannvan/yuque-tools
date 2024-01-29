@@ -9,6 +9,45 @@ const getHost = async () => {
   return host || CONFIG.host
 }
 
+const withBodyParamsRequest = <T>(
+  url: string,
+  method: 'post' | 'put',
+  params: any,
+  header?: object
+): Promise<{ data: T }> => {
+  return new Promise(async (resolve, reject) => {
+    //  登录接口统一使用yuque域名
+    const config = {
+      url: (/login/.test(url) ? CONFIG.host : await getHost()) + url,
+      method: method,
+      data: params,
+      headers: Object.assign(header || {}, {
+        'content-type': 'application/json',
+        'x-requested-with': 'XMLHttpRequest',
+        cookie: getLocalCookies(),
+      }),
+    }
+    axios(config)
+      .then((res) => {
+        if (res.headers['set-cookie']) {
+          const cookieContent = setJSONString({
+            expired: Date.now(),
+            data: res.headers['set-cookie'],
+          })
+          F.touch2(CONFIG.cookieFile, cookieContent)
+        }
+        resolve(res.data)
+      })
+      .catch((error) => {
+        Log.error(error.code, {
+          title: `${method.toUpperCase()}请求出错`,
+          body: `${error},${config.url}`,
+        })
+        reject(error.code)
+      })
+  })
+}
+
 export const get = <T>(url: string): Promise<{ data: T }> => {
   const cookie = getLocalCookies()?.data
 
@@ -32,39 +71,16 @@ export const get = <T>(url: string): Promise<{ data: T }> => {
         resolve(res.data)
       })
       .catch((error) => {
-        Log.error(error.code, { title: 'GET请求报错', body: `${error},${config.url}` })
+        Log.error(error.code, { title: 'GET请求出错', body: `${error},${config.url}` })
         reject(error.code)
       })
   })
 }
 
 export const post = <T>(url: string, params: any, header?: object): Promise<{ data: T }> => {
-  return new Promise(async (resolve, reject) => {
-    //  登录接口统一使用yuque域名
-    const config = {
-      url: (/login/.test(url) ? CONFIG.host : await getHost()) + url,
-      method: 'post',
-      data: params,
-      headers: Object.assign(header || {}, {
-        'content-type': 'application/json',
-        'x-requested-with': 'XMLHttpRequest',
-        cookie: getLocalCookies(),
-      }),
-    }
-    axios(config)
-      .then((res) => {
-        if (res.headers['set-cookie']) {
-          const cookieContent = setJSONString({
-            expired: Date.now(),
-            data: res.headers['set-cookie'],
-          })
-          F.touch2(CONFIG.cookieFile, cookieContent)
-        }
-        resolve(res.data)
-      })
-      .catch((error) => {
-        Log.error(error.code, { title: 'POST请求报错', body: `${error},${config.url}` })
-        reject(error.code)
-      })
-  })
+  return withBodyParamsRequest(url, 'post', params, header)
+}
+
+export const put = <T>(url: string, params: any, header?: object): Promise<{ data: T }> => {
+  return withBodyParamsRequest(url, 'put', params, header)
 }

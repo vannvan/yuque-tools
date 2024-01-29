@@ -245,6 +245,7 @@ class YuqueTools implements Ytool.App.IYuqueTools {
     setTimeout(async () => {
       const bookList = await getBookStacks(this.ctx)
       // console.log(`共有${bookList.length}个知识库`)
+      // 将booklist再加工，补充改book下的文档列表
       delayedGetDocCommands(this.ctx, bookList, async (_bookList) => {
         const content = setJSONString({ booksInfo: _bookList, expired: Date.now() + 3600000 })
         await F.touch2(CONFIG.bookInfoFile, content)

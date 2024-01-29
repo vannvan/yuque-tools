@@ -110,7 +110,7 @@ export const getLocalCookies = () => {
  * @param duration
  * @param finishCallBack
  */
-export const delayedGetDocCommands = (
+export const delayedGetDocCommands = async (
   app: Ytool.App.IYuqueTools,
   bookList: any[],
   finishCallBack: (booklist: any) => void
@@ -123,19 +123,9 @@ export const delayedGetDocCommands = (
   }
   const spinner = ora('开始获取文档数据\n').start()
 
-  // 某个可访问的知识库
-  // bookList.push({
-  //   slug: ',
-  //   name: '',
-  //   user: '',
-  //   id: '',
-  //   docs: [],
-  //   type: 'collab',
-  // })
-
   const promises = bookList.map((item) => {
     const { slug, user } = item
-    return crawlYuqueBookPage(`/${user}/${slug}`)
+    return crawlYuqueBookPage(`/${user}/${slug}`) || {}
   })
 
   /**
@@ -146,7 +136,8 @@ export const delayedGetDocCommands = (
       spinner.stop()
       Log.success('文档数据获取完成')
       bookList.map((_item, index) => {
-        bookList[index].docs = (res[index] as any).value
+        const bookInfo = (res[index] as any).value.book || {}
+        bookList[index].docs = bookInfo.toc || []
       })
       typeof finishCallBack === 'function' && finishCallBack(bookList)
     })
@@ -313,6 +304,7 @@ export const delayedDownloadDoc = async (app: Ytool.App.IYuqueTools, bookList: a
 
   if (targetTocList.length === 0) {
     Log.warn('当前知识库下暂无文档')
+    process.exit(0)
   }
 
   const MAX = targetTocList.length

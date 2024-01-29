@@ -141,8 +141,7 @@ const crawlYuqueBookPage = (repos: string): Promise<{ value: any }[]> => {
           // don't do anything
         })
         try {
-          const { book } = window.appData || {}
-          resolve(book?.toc)
+          resolve(window.appData)
         } catch (error) {
           Log.error(`知识库${repos}页面数据爬取失败`)
           reject([])

@@ -8,31 +8,42 @@ import { crawlYuqueBookPage } from '../lib/yuque.js'
 import { encrypt } from '../lib/dev/encrypt.js'
 import YUQUE_API from '../lib/apis.js'
 import { TBookItem } from '../lib/type.js'
-import { writeFileSync } from 'fs'
+import chalk from 'chalk'
 
 type TBookItemNew = Array<
   Omit<TBookItem, 'user'> & { homePage: string; user: string; password?: string }
 >
 
-export default class Get implements Ytool.Cli.ICommand {
-  public name = 'get'
-  public description = `下载知识库文档\n用法: 仅支持配置文件，ytool get init初始化配置`
+export default class Down implements Ytool.Cli.ICommand {
+  public name = 'down'
+  public description = `导出任意知识库文档\n用法: ${chalk.cyan('ytool down [ask]')}`
   ctx: Ytool.Cli.TCLIContext
   constructor(ctx: Ytool.Cli.TCLIContext) {
     this.ctx = ctx
   }
 
   async action(args: string[]) {
-    if (args.includes('init')) {
-      this.initConfig()
-      process.exit(0)
+    if (args.includes('ask')) {
+      this.inquiryBooks()
+      return
     }
+
     const { books } = await getLocalUserConfig()
 
     if (!books || books.length === 0) {
       Log.warn('知识库信息无效')
       process.exit(0)
+    } else {
+      this.handleDownload(books)
     }
+  }
+
+  private async inquiryBooks() {
+    console.log('询问')
+  }
+
+  private async handleDownload(books: any[]) {
+    const { linebreak, skipDoc } = await getLocalUserConfig()
 
     const docExit = await F.isExit(path.resolve(CONFIG.outputDir))
 
@@ -100,7 +111,7 @@ export default class Get implements Ytool.Cli.ICommand {
       })
 
       const content = setJSONString({ booksInfo: validBookList, expired: Date.now() + 3600000 })
-      // console.log(validBookList)
+
       F.touch2(CONFIG.bookInfoFile, content)
 
       const tocRange = validBookList.map((item) => item.name)
@@ -110,29 +121,13 @@ export default class Get implements Ytool.Cli.ICommand {
       delayedDownloadDoc(
         {
           knowledgeConfig: {
-            tocRange: tocRange,
-            skipDoc: true,
-            linebreak: true,
+            tocRange,
+            skipDoc,
+            linebreak,
           },
         } as any,
         validBookList
       )
     })
-  }
-
-  initConfig() {
-    const configExample = {
-      books: [
-        {
-          homePage: 'https://www.yuque.com/vannvan/iuo8nq',
-          password: 'oudn', // 针对需要访问密码的知识库
-        },
-        {
-          homePage: 'https://www.yuque.com/vannvan/dd67e4?# 《test-book》',
-        },
-      ],
-    }
-    writeFileSync(CONFIG.localConfig, JSON.stringify(configExample, null, 2))
-    Log.success(`配置初始化完成，${CONFIG.localConfig}`)
   }
 }

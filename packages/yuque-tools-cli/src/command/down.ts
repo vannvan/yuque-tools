@@ -9,6 +9,7 @@ import { encrypt } from '../lib/dev/encrypt.js'
 import YUQUE_API from '../lib/apis.js'
 import { TBookItem } from '../lib/type.js'
 import chalk from 'chalk'
+import inquirer from 'inquirer'
 
 type TBookItemNew = Array<
   Omit<TBookItem, 'user'> & { homePage: string; user: string; password?: string }
@@ -39,7 +40,27 @@ export default class Down implements Ytool.Cli.ICommand {
   }
 
   private async inquiryBooks() {
-    console.log('询问')
+    inquirer
+      .prompt([
+        {
+          type: 'input',
+          name: 'bookLink',
+          message: `请输入知识库链接，如需要密码请用#分隔，多个知识库请用+分隔如:\n ${chalk.cyan(
+            'http://xxx.yuque.com/xxx/yyy#密码+http://xxx.yuque.com/xxx/zzz\n'
+          )}`,
+        },
+      ])
+      .then((answer) => {
+        const { bookLink } = answer
+        const books = bookLink.split('+').map((item) => {
+          const [homePage, password] = item.split('#')
+          return {
+            homePage,
+            password,
+          }
+        })
+        this.handleDownload(books)
+      })
   }
 
   private async handleDownload(books: any[]) {

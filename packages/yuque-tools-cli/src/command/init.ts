@@ -19,7 +19,7 @@ export default class Init implements Ytool.Cli.ICommand {
           name: 'type',
           choices: [
             {
-              name: '适用于pull命令，导出个人/写作/团队知识库，需要账号',
+              name: '适用于pull命令，导出个人/协作/团队知识库，需要账号',
               value: 'pull',
             },
             {

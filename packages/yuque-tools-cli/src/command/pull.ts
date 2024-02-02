@@ -1,7 +1,10 @@
+import chalk from 'chalk'
+
 export default class Init implements Ytool.Cli.ICommand {
   public name = 'pull'
-  public description =
-    '获取语雀知识库资源\n用法: yuque-tools pull [userName] [password] [skip|lb|note] [tocRange]'
+  public description = `获取语雀知识库资源\n用法: ${chalk.cyan(
+    'ytool pull [userName] [password] [skip|lb|note] [tocRange]'
+  )}`
   ctx: Ytool.Cli.TCLIContext
   constructor(ctx: Ytool.Cli.TCLIContext) {
     this.ctx = ctx

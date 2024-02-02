@@ -1,15 +1,15 @@
+import chalk from 'chalk'
+import inquirer from 'inquirer'
+import path from 'path'
 import { delayedDownloadDoc, getLocalUserConfig, setJSONString } from '../lib/tool.js'
 import { Log } from '../lib/dev/log.js'
 import F from '../lib/dev/file.js'
 import { config as CONFIG } from '../core/config.js'
 import { put } from '../lib/request.js'
-import path from 'path'
 import { crawlYuqueBookPage } from '../lib/yuque.js'
 import { encrypt } from '../lib/dev/encrypt.js'
 import YUQUE_API from '../lib/apis.js'
 import { TBookItem } from '../lib/type.js'
-import chalk from 'chalk'
-import inquirer from 'inquirer'
 
 type TBookItemNew = Array<
   Omit<TBookItem, 'user'> & { homePage: string; user: string; password?: string }
@@ -17,7 +17,7 @@ type TBookItemNew = Array<
 
 export default class Down implements Ytool.Cli.ICommand {
   public name = 'down'
-  public description = `导出任意知识库文档\n用法: ${chalk.cyan('ytool down [ask]')}`
+  public description = `导出任意知识库文档，请勿滥用！！！\n用法: ${chalk.cyan('ytool down [ask]')}`
   ctx: Ytool.Cli.TCLIContext
   constructor(ctx: Ytool.Cli.TCLIContext) {
     this.ctx = ctx
@@ -45,26 +45,50 @@ export default class Down implements Ytool.Cli.ICommand {
         {
           type: 'input',
           name: 'bookLink',
-          message: `请输入知识库链接，如需要密码请用#分隔，多个知识库请用+分隔如:\n ${chalk.cyan(
-            'http://xxx.yuque.com/xxx/yyy#密码+http://xxx.yuque.com/xxx/zzz\n'
+          message: `请输入知识库链接，如需要密码请用#分隔，多个知识库请用 , 分隔如:\n ${chalk.cyan(
+            'http://xxx.yuque.com/xxx/yyy#abcd,http://xxx.yuque.com/xxx/zzz\n'
           )}`,
+        },
+        {
+          type: 'confirm',
+          name: 'skipDoc',
+          message: '是否跳过已存在文档',
+          default: true,
+        },
+        {
+          type: 'confirm',
+          name: 'linebreak',
+          message: '是否保持语雀换行标识',
+          default: true,
         },
       ])
       .then((answer) => {
-        const { bookLink } = answer
-        const books = bookLink.split('+').map((item) => {
+        const { bookLink, skipDoc, linebreak } = answer
+        const books = bookLink.split(',').map((item: string) => {
           const [homePage, password] = item.split('#')
           return {
             homePage,
             password,
           }
         })
-        this.handleDownload(books)
+        this.handleDownload(books, {
+          skipDoc,
+          linebreak,
+        })
       })
   }
 
-  private async handleDownload(books: any[]) {
-    const { linebreak, skipDoc } = await getLocalUserConfig()
+  private async handleDownload(
+    books: {
+      homePage: string
+      password?: string
+    }[],
+    options?: {
+      skipDoc?: boolean
+      linebreak?: boolean
+    }
+  ) {
+    const { linebreak, skipDoc } = options || (await getLocalUserConfig())
 
     const docExit = await F.isExit(path.resolve(CONFIG.outputDir))
 
@@ -80,7 +104,10 @@ export default class Down implements Ytool.Cli.ICommand {
 
     F.touch2(CONFIG.cookieFile, cookieContent)
 
-    const validBookList: TBookItemNew = books.filter((item) => item.homePage) as TBookItemNew
+    // homePage需要匹配https://www.yuque.com域名
+    const validBookList: TBookItemNew = books.filter(
+      (item) => item.homePage && item.homePage.startsWith('https://www.yuque.com')
+    ) as TBookItemNew
 
     const promises = validBookList.map(async (item) => {
       const matchs = item.homePage.split('/')
@@ -98,7 +125,7 @@ export default class Down implements Ytool.Cli.ICommand {
       if (matchCondition && matchCondition.page == 'verify') {
         try {
           const setNewCookies = await put(
-            `/api/books/${matchCondition.needVerifyTargetId}/verify`,
+            YUQUE_API.yuqueBookPasswordVerify(matchCondition.needVerifyTargetId),
             {
               password: encrypt(item.password),
             },
@@ -114,7 +141,7 @@ export default class Down implements Ytool.Cli.ICommand {
             return []
           }
         } catch (error) {
-          Log.warn(`知识库【${item.homePage}】数据获取失败，请确认密码或cookies是否正确`)
+          Log.warn(`知识库【${item.homePage}】数据获取失败，请确认密码是否正确`)
           return []
         }
       } else {

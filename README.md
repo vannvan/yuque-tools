@@ -6,7 +6,7 @@
 ![](https://badgen.net/npm/v/yuque-tools)
 ![](https://badgen.net/npm/node/next)
 
-[🎉可执行程序版(无需任何环境环境，下载即用)](https://github.com/vannvan/rust-explore/releases)  
+[🎉可执行程序版(无需任何环境，下载即用)](https://github.com/vannvan/rust-explore/releases)  
 
 ### 样例
 

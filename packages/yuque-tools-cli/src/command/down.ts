@@ -15,6 +15,11 @@ type TBookItemNew = Array<
   Omit<TBookItem, 'user'> & { homePage: string; user: string; password?: string }
 >
 
+/**
+ * 两种方式
+ * 1. 通过ytool down ask 进入交互式模式，按照要求输入目标知识库首页地址
+ * 2. 通过ytool down，需要通过ytool init 初始化配置，填写相关的信息
+ */
 export default class Down implements Ytool.Cli.ICommand {
   public name = 'down'
   public description = `导出任意知识库文档，请勿滥用！！！\n用法: ${chalk.cyan('ytool down [ask]')}`
@@ -104,9 +109,9 @@ export default class Down implements Ytool.Cli.ICommand {
 
     F.touch2(CONFIG.cookieFile, cookieContent)
 
-    // homePage需要匹配https://www.yuque.com域名
+    // homePage需要匹配 https://www.yuque.com域名
     const validBookList: TBookItemNew = books.filter(
-      (item) => item.homePage && item.homePage.startsWith('https://www.yuque.com')
+      (item) => item.homePage && item.homePage.startsWith(CONFIG.host)
     ) as TBookItemNew
 
     const promises = validBookList.map(async (item) => {

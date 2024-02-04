@@ -6,7 +6,7 @@
 ![](https://badgen.net/npm/v/yuque-tools)
 ![](https://badgen.net/npm/node/next)
 
-[🎉可执行程序版(无需Node环境，下载即用)](https://github.com/vannvan/rust-explore/releases)  
+[🎉可执行程序版(无需任何环境环境，下载即用)](https://github.com/vannvan/rust-explore/releases)  
 
 ### 样例
 
@@ -20,7 +20,7 @@
 - 小记 (由[jialuohu](https://github.com/jialuohu)提供)
 - 团队资源批量导出(仅可执行程序版支持)[下载地址](https://github.com/vannvan/rust-explore/releases) |
 [查看源码](https://github.com/vannvan/rust-explore/tree/main/yuque-tools)
-- 彩蛋🥚-[使用方法见代码](https://github.com/vannvan/yuque-tools/blob/main/packages/yuque-tools-cli/src/command/down.ts#L20)，文档就不写了
+- 彩蛋🥚-[使用方法见👉](https://github.com/vannvan/yuque-tools/blob/main/packages/yuque-tools-cli/src/command/down.ts#L20)，文档就不写了
 
 > 自 2.1.0 版本开始，交互式列表中 👤 前缀表示个人知识库，其它则为 👥
 

@@ -30,7 +30,7 @@ export const Log = {
     }
   },
   info: (text: string, indent?: number) => {
-    indent ? log(chalk.white(' '.repeat(indent) + text)) : log(chalk.white(text))
+    indent ? log(chalk.white(' '.repeat(indent) + text)) : log(chalk.cyan(text))
   },
   success: (text: string) => log(chalk.green(text)),
   warn: (text: string) => log(chalk.yellow(text)),

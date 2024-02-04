@@ -1,6 +1,6 @@
 {
   "name": "yuque-tools",
-  "version": "2.2.2",
+  "version": "2.3.2",
   "private": false,
   "description": "语雀知识库内容+资源批量导出和二次处理工具",
   "keywords": [
@@ -57,8 +57,7 @@
     "rimraf": "^5.0.1",
     "terminal-link": "^3.0.0",
     "tslib": "^2.5.0",
-    "turndown": "^7.1.2",
-    "typescript": "^5.0.3"
+    "turndown": "^7.1.2"
   },
   "devDependencies": {
     "@artus/tsconfig": "^1.0.1",

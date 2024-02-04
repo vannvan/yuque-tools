@@ -47,6 +47,15 @@ const YUQUE_API = {
   },
 
   /**
+   * 知识库验证
+   * @param bookId
+   * @returns
+   */
+  yuqueBookPasswordVerify(bookId: string) {
+    return `/api/books/${bookId}/verify`
+  },
+
+  /**
    * 导出md
    * @param repos
    * @param linebreak 是否保持换行

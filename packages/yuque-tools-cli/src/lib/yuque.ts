@@ -120,7 +120,7 @@ const getMarkdownContent = async (repos: string, linebreak: boolean): Promise<st
   if (markdownContent) {
     return markdownContent as unknown as string
   } else {
-    Log.error(`导出{${repos}}知识库文档失败`)
+    Log.error(`获取{${repos}}知识库内容失败\n`)
     return ''
   }
 }
@@ -141,8 +141,7 @@ const crawlYuqueBookPage = (repos: string): Promise<{ value: any }[]> => {
           // don't do anything
         })
         try {
-          const { book } = window.appData || {}
-          resolve(book?.toc)
+          resolve(window.appData)
         } catch (error) {
           Log.error(`知识库${repos}页面数据爬取失败`)
           reject([])

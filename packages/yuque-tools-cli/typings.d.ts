@@ -76,6 +76,10 @@ declare namespace Ytool {
       Cli.TCLI_ARGS & {
         output?: string
         host?: string
+        books?: {
+          homePage: string // 知识库首页
+          password?: string // 知识库密码
+        }[]
       }
     >
 

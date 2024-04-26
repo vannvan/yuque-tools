@@ -49,6 +49,7 @@ export default class Init implements Ytool.Cli.ICommand {
       output: './docs',
       linebreak: false,
       onlyNote: false,
+      latexcode: false,
     }
 
     writeFileSync(CONFIG.localConfig, JSON.stringify(configTemplate, null, 2))
@@ -62,10 +63,10 @@ export default class Init implements Ytool.Cli.ICommand {
       books: [
         {
           homePage: 'https://www.yuque.com/xxx/yyy',
-          password: 'oudn', // 针对需要访问密码的知识库
+          password: 'abcd', // 针对需要访问密码的知识库
         },
         {
-          homePage: 'https://www.yuque.com/vannvan/dd67e4?# 《test-book》',
+          homePage: 'https://www.yuque.com/aaa/bbb',
         },
       ],
     }

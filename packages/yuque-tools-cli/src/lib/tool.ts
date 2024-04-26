@@ -155,6 +155,7 @@ export const inquireBooks = async (): Promise<
       tocList: string[]
       skipDoc: boolean
       linebreak: boolean
+      latexcode: boolean
     }
   | undefined
 > => {
@@ -181,20 +182,28 @@ export const inquireBooks = async (): Promise<
           {
             type: 'confirm',
             message: '是否跳过本地相同文件',
-            name: 'skpDoc',
+            name: 'skipDoc',
           },
           {
             type: 'confirm',
             message: '是否保持语雀换行(会有<br/>标签)',
             name: 'linebreak',
           },
+          {
+            type: 'confirm',
+            message: 'Latex代码是否保留',
+            name: 'latexcode',
+          },
         ])
         .then(async (answer) => {
-          resolve({
-            tocList: answer.tocList,
-            skipDoc: answer.skpDoc,
-            linebreak: answer.linebreak,
-          })
+          resolve(answer)
+          // const { tocList, skipDoc, linebreak, latexcode } = answer
+          // resolve({
+          //   tocList,
+          //   skipDoc,
+          //   linebreak,
+          //   latexcode,
+          // })
         })
     })
   } else {
@@ -279,7 +288,7 @@ export const delayedDownloadDoc = async (app: Ytool.App.IYuqueTools, bookList: a
     process.exit(0)
   }
 
-  const { tocRange, skipDoc, linebreak } = app.knowledgeConfig
+  const { tocRange, skipDoc, linebreak, latexcode } = app.knowledgeConfig
   const newInfo = bookList.map((item) => {
     // 创建知识库目录
     F.mkdir(CONFIG.outputDir + '/' + item.name)
@@ -335,7 +344,7 @@ export const delayedDownloadDoc = async (app: Ytool.App.IYuqueTools, bookList: a
     const repos = [user, pslug, url].join('/')
     spinner.text = `【${index}/${MAX}】正在导出 ${fullPath}`
     try {
-      const content: string = await getMarkdownContent('/' + repos, linebreak)
+      const content: string = await getMarkdownContent('/' + repos, linebreak, latexcode)
       if (content) {
         const fileDir = CONFIG.outputDir + '/' + fullPath + '.md'
         // 是否已存在
@@ -349,10 +358,10 @@ export const delayedDownloadDoc = async (app: Ytool.App.IYuqueTools, bookList: a
           reportContent += `- 🌈[${title}] 导出完成 文件路径${fileDir} \n`
         }
       } else {
-        reportContent += `- ❌[${title}] 导出失败  \n`
+        reportContent += `- ❌[${title}] 导出失败，非Markdown类型文档  \n`
       }
     } catch (error) {
-      reportContent += `- ❌[${title}] 导出失败 \n`
+      reportContent += `- ❌[${title}] 导出失败，非Markdown类型文档 \n`
     }
 
     index++

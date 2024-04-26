@@ -113,10 +113,15 @@ const getDocsOfBooks = async (bookId: string): Promise<any> => {
  * 导出md文件
  * @param repos 文档路径
  * @param linebreak 是否保留换行
+ * @param latexcode 是否保留latex
  * @returns md内容
  */
-const getMarkdownContent = async (repos: string, linebreak: boolean): Promise<string> => {
-  const markdownContent = await get(YUQUE_API.yuqueExportMarkdown(repos, linebreak))
+const getMarkdownContent = async (
+  repos: string,
+  linebreak: boolean,
+  latexcode: boolean
+): Promise<string> => {
+  const markdownContent = await get(YUQUE_API.yuqueExportMarkdown(repos, linebreak, latexcode))
   if (markdownContent) {
     return markdownContent as unknown as string
   } else {

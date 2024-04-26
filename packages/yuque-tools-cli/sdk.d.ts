@@ -23,6 +23,10 @@ type TCLI_ARGS = {
    * is keep yuque linebreak
    */
   linebreak?: boolean
+  /**
+   * latexType true->导出 LaTeX 公式为 Markdown 语法 false->导出 LaTeX 公式图片
+   */
+  latexcode?: boolean
 }
 
 type Ytool = {

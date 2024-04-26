@@ -32,6 +32,7 @@ class YuqueTools implements Ytool.App.IYuqueTools {
       skipDoc: undefined,
       linebreak: undefined,
       onlyNote: false,
+      latexcode: false,
     }
     this.knowledgeBaseType = 'personally'
     this.userSelectedDoc = []
@@ -96,6 +97,8 @@ class YuqueTools implements Ytool.App.IYuqueTools {
       args.tocRange && Log.info(`知识库: ${args.tocRange}`, 2)
       args.tocRange && Log.info(`是否跳过本地文件: ${args.skipDoc ? 'true' : 'false'}`, 2)
       args.linebreak && Log.info(`是否保持换行: ${args.linebreak ? 'true' : 'false'}`, 2)
+      args.latexcode &&
+        Log.info(`是否导出 LaTeX 公式为 Markdown 语法: ${args.latexcode ? 'true' : 'false'}`, 2)
       args.onlyNote && Log.info('本次只导出小记～～')
     }
 
@@ -227,12 +230,13 @@ class YuqueTools implements Ytool.App.IYuqueTools {
       }
     } else {
       // 如果上面都没有，那就从询问环节取
-      const { tocList: userTocRange, skipDoc, linebreak } = await inquireBooks()
+      const { tocList: userTocRange, skipDoc, linebreak, latexcode } = await inquireBooks()
       this.userSelectedDoc = userTocRange
       this.knowledgeConfig = {
         ...this.knowledgeConfig,
         skipDoc,
         linebreak,
+        latexcode,
       }
     }
     return this.userSelectedDoc

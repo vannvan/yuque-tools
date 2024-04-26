@@ -1,11 +1,11 @@
 # 更新记录
 
-## 最新版本 v2.3.2
+## 最新版本 v2.3.3
 
 ## 目前已支持的知识库结构
 
 测试知识库链接
-<https://www.yuque.com/vannvan/dd67e4>
+<https://www.yuque.com/vannvan/dd67e4>  
 ![](https://p.ipic.vip/iqak6t.png)
 <!-- 以上知识库会生成如下目录：   -->
 <!-- ![](https://p.ipic.vip/gt8pjs.png)   -->
@@ -19,6 +19,12 @@
 - [x] 语雀换行可选，因为对于`<br/>`标签有些平台认有些平台不认
 - [x] 支持空间级别的知识库导出
 - [ ] 支持团队资源导出
+
+## v2.3.3
+
+- 支持Latex语法可配置，即⬇️  
+
+<img width="639" alt="image" src="https://github.com/vannvan/yuque-tools/assets/43501134/208091b7-8089-49cd-abfe-076ee26aa814">
 
 ## v2.2.1
 

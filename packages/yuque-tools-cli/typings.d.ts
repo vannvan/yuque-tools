@@ -34,6 +34,10 @@ declare namespace Ytool {
        * 是否只导出小记
        */
       onlyNote: boolean
+      /**
+       * 是否导出 LaTeX 公式
+       */
+      latexcode: boolean
     }
 
     type TCLIContext = {
@@ -67,7 +71,10 @@ declare namespace Ytool {
     /**
      * 用户的知识库配置
      */
-    type TKnowledgeConfig = Pick<Cli.TCLI_ARGS, 'linebreak' | 'skipDoc' | 'tocRange' | 'onlyNote'>
+    type TKnowledgeConfig = Pick<
+      Cli.TCLI_ARGS,
+      'linebreak' | 'skipDoc' | 'tocRange' | 'onlyNote' | 'latexcode'
+    >
 
     /**
      * 用户本地配置
@@ -80,6 +87,7 @@ declare namespace Ytool {
           homePage: string // 知识库首页
           password?: string // 知识库密码
         }[]
+        cookies?: string
       }
     >
 

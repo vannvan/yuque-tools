@@ -109,6 +109,31 @@ const getDocsOfBooks = async (bookId: string): Promise<any> => {
   }
 }
 
+type DocDetails = {
+  content_updated_at: string
+  updated_at: string
+};
+
+const getDocsOfSlugAndBook = async (slug: string, bookId: string): Promise<{ data?: DocDetails }> => {
+  const url = await YUQUE_API.yuqueDocsOfSlugAndBook(slug, bookId)
+  return get<DocDetails>(url)
+      .then((res) => {
+        if (!res || !res.data) {
+          return {data: undefined}
+        }
+        const item = res.data;
+        const docDetails: DocDetails = {
+          content_updated_at: item.content_updated_at,
+          updated_at: item.updated_at
+        };
+        return {data: docDetails}
+      })
+      .catch((error) => {
+        Log.error(`获取{${slug}?book_id=${bookId}}知识库文档详情失败`, error)
+        throw error
+      })
+}
+
 /**
  * 导出md文件
  * @param repos 文档路径
@@ -196,6 +221,7 @@ export {
   loginYuque,
   getBookStacks,
   getDocsOfBooks,
+  getDocsOfSlugAndBook,
   getMarkdownContent,
   crawlYuqueBookPage,
   getNotes,

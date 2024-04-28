@@ -33,6 +33,8 @@ class YuqueTools implements Ytool.App.IYuqueTools {
       linebreak: undefined,
       onlyNote: false,
       latexcode: false,
+      isUpdate: undefined,
+      time: undefined,
     }
     this.knowledgeBaseType = 'personally'
     this.userSelectedDoc = []
@@ -253,6 +255,7 @@ class YuqueTools implements Ytool.App.IYuqueTools {
       delayedGetDocCommands(this.ctx, bookList, async (_bookList) => {
         const content = setJSONString({ booksInfo: _bookList, expired: Date.now() + 3600000 })
         await F.touch2(CONFIG.bookInfoFile, content)
+        Log.info('生成成功！！！！！')
         this.ask()
       })
     }, 300)

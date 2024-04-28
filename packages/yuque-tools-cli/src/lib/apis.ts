@@ -47,6 +47,27 @@ const YUQUE_API = {
   },
 
   /**
+   * 知识库下的文档详情
+   * https://www.yuque.com/api/docs/abcd?book_id=123456
+   * @param slug/id 文档Id
+   * @param bookId 知识库Id
+   * @returns
+   */
+  yuqueDocsOfSlugAndBook(slug: string ,bookId: string) {
+    return `/api/docs/${slug}?book_id=${bookId}`
+  },
+
+  /**
+   * 知识库下的文档的评论详情集合
+   * https://www.yuque.com/api/comments/floor?commentable_type=Doc&commentable_id=123456
+   * @param id 文档Id
+   * @returns
+   */
+  yuqueCommentsOfFloor(id: string) {
+    return `/api/comments/floor?commentable_type=Doc&commentable_id=${id}`
+  },
+
+  /**
    * 知识库验证
    * @param bookId
    * @returns

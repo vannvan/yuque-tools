@@ -6,7 +6,8 @@
 ![](https://badgen.net/npm/v/yuque-tools)
 ![](https://badgen.net/npm/node/next)
 
-[🎉可执行程序版(无需任何环境，下载即用)](https://github.com/vannvan/rust-explore/releases)  
+- [🎉 可执行程序版(无需任何环境，下载即用)](https://github.com/vannvan/rust-explore/releases)  
+- [🚀 Node.js版 使用方式直达](https://github.com/vannvan/yuque-tools/tree/main/packages/yuque-tools-cli#%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F)
 
 ### 样例
 
@@ -18,7 +19,7 @@
 - 空间(团队)知识库
 - 协作知识库
 - 小记 (由[jialuohu](https://github.com/jialuohu)提供)
-- 团队资源批量导出(仅可执行程序版支持)[下载地址](https://github.com/vannvan/rust-explore/releases) |
+- 团队资源批量导出(<font color="yellow">仅可执行程序版支持</font>)[下载地址](https://github.com/vannvan/rust-explore/releases) |
 [查看源码](https://github.com/vannvan/rust-explore/tree/main/yuque-tools)
 - 彩蛋🥚-[使用方法见👉](https://github.com/vannvan/yuque-tools/blob/main/packages/yuque-tools-cli/src/command/down.ts#L20)，文档就不写了
 

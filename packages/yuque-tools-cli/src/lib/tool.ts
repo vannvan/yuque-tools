@@ -4,9 +4,10 @@ import F from './dev/file.js'
 import { config as CONFIG } from '../core/config.js'
 import { ICookies } from './type.js'
 import ora from 'ora'
-import {crawlYuqueBookPage, getMarkdownContent, getDocsOfSlugAndBook, getNotes} from './yuque.js'
+import { crawlYuqueBookPage, getMarkdownContent, getDocsOfSlugAndBook, getNotes } from './yuque.js'
 import path from 'path'
 import { Log } from './dev/log.js'
+import isNil from 'lodash.isnil'
 
 /**
  * 设置过期时间
@@ -115,7 +116,9 @@ export const delayedGetDocCommands = async (
   bookList: any[],
   finishCallBack: (booklist: any) => void
 ) => {
-  const isPersonally = app.knowledgeBaseType === 'personally'
+  // const isPersonally = app.knowledgeBaseType === 'personally'
+
+  const { isUpdate, time } = app.knowledgeConfig
 
   if (!bookList || !bookList.length) {
     Log.error('知识库数据有误')
@@ -145,32 +148,34 @@ export const delayedGetDocCommands = async (
         const url = doc.url
         const id = bookList[bookIndex].id
         if (url && id) {
-          const fetchDocDetailsPromise = (getDocsOfSlugAndBook(url, id))
-              .then((docData) => {
-                if (docData && typeof docData.data === 'object' && !Array.isArray(docData.data)) {
-                  const dataFields = docData.data
-                  for (const [key, value] of Object.entries(dataFields)) {
-                    doc[key] = value
-                  }
-                } else {
-                  console.error(`文档详情获取失败[${url}?book_id=${id}]`, docData)
+          const fetchDocDetailsPromise = getDocsOfSlugAndBook(url, id)
+            .then((docData) => {
+              if (docData && typeof docData.data === 'object' && !Array.isArray(docData.data)) {
+                const dataFields = docData.data
+                for (const [key, value] of Object.entries(dataFields)) {
+                  doc[key] = value
                 }
-              })
-              .catch((error) => {
-                console.error(`文档详情获取失败[${url}?book_id=${id}]`, error)
-              });
+              } else {
+                console.error(`文档详情获取失败[${url}?book_id=${id}]`, docData)
+              }
+            })
+            .catch((error) => {
+              console.error(`文档详情获取失败[${url}?book_id=${id}]`, error)
+            })
 
-          docDetailsPromises.push(fetchDocDetailsPromise);
+          docDetailsPromises.push(fetchDocDetailsPromise)
         }
-      });
-    });
+      })
+    })
 
-    await Promise.allSettled(docDetailsPromises);
+    // 只有需要依据时间更新的时候，才需要获取文档详情，否则数据量大会特别慢
+    const isNeedGetDocDetail = !isNil(isUpdate) && !isNil(time)
+    isNeedGetDocDetail && (await Promise.allSettled(docDetailsPromises))
     spinner.stop()
     Log.success('文档数据获取完成')
     typeof finishCallBack === 'function' && finishCallBack(bookList)
-  } catch(error)  {
-    Log.error(error, {title: '知识库数据获取报错', body: error})
+  } catch (error) {
+    Log.error(error, { title: '知识库数据获取报错', body: error })
   }
 }
 
@@ -316,7 +321,7 @@ export const delayedDownloadDoc = async (app: Ytool.App.IYuqueTools, bookList: a
     process.exit(0)
   }
 
-  const { tocRange, skipDoc, linebreak ,latexcode, isUpdate, time} = app.knowledgeConfig
+  const { tocRange, skipDoc, linebreak, latexcode, isUpdate, time } = app.knowledgeConfig
 
   const newInfo = bookList.map((item) => {
     // 创建知识库目录
@@ -368,8 +373,8 @@ export const delayedDownloadDoc = async (app: Ytool.App.IYuqueTools, bookList: a
       process.exit(0)
     }
 
-    const { pslug, user, url, title, fullPath,
-      updated_at, content_updated_at } = targetTocList[index] || {}
+    const { pslug, user, url, title, fullPath, updated_at, content_updated_at } =
+      targetTocList[index] || {}
 
     const repos = [user, pslug, url].join('/')
     spinner.text = `【${index}/${MAX}】正在导出 ${fullPath}`
@@ -380,18 +385,22 @@ export const delayedDownloadDoc = async (app: Ytool.App.IYuqueTools, bookList: a
         // 是否已存在
         const isExit = await F.isExit(fileDir)
         if (isExit) {
-          if (isUpdate && time && (updated_at || content_updated_at)
-              && (new Date(updated_at).getTime() >= new Date(time).getTime()
-                  || new Date(content_updated_at).getTime() >= new Date(time).getTime())) {
-            F.touch2(fileDir, content);
-            spinner.text = `【${index}/${MAX}】更新成功 ${fullPath}`;
-            reportContent += `- 🌈[${title}] 更新成功 文件路径${fileDir} \n`;
+          if (
+            isUpdate &&
+            time &&
+            (updated_at || content_updated_at) &&
+            (new Date(updated_at).getTime() >= new Date(time).getTime() ||
+              new Date(content_updated_at).getTime() >= new Date(time).getTime())
+          ) {
+            F.touch2(fileDir, content)
+            spinner.text = `【${index}/${MAX}】更新成功 ${fullPath}`
+            reportContent += `- 🌈[${title}] 更新成功 文件路径${fileDir} \n`
           } else if (skipDoc) {
-            spinner.text = `【${index}/${MAX}】本次跳过 ${fullPath}`;
-            reportContent += `- 🌈[${title}] 本次跳过 文件路径${fileDir} \n`;
+            spinner.text = `【${index}/${MAX}】本次跳过 ${fullPath}`
+            reportContent += `- 🌈[${title}] 本次跳过 文件路径${fileDir} \n`
           } else {
-            spinner.text = `【${index}/${MAX}】本次更新时间【${updated_at}】小于指定时间 ${fullPath}`;
-            reportContent += `- 🌈[${title}] 本次更新或跳过时间【${updated_at}】小于指定时间 文件路径${fileDir} \n`;
+            spinner.text = `【${index}/${MAX}】本次更新时间【${updated_at}】小于指定时间 ${fullPath}`
+            reportContent += `- 🌈[${title}] 本次更新或跳过时间【${updated_at}】小于指定时间 文件路径${fileDir} \n`
           }
         } else {
           F.touch2(fileDir, content)

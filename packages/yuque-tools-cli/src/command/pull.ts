@@ -14,7 +14,7 @@ export default class Init implements Ytool.Cli.ICommand {
     const cmd = new Command.default(this.ctx)
     if (args.length >= 2) {
       // 认为前两位是账号信息
-      const [userName, password,time, ...rest] = args
+      const [userName, password, time, ...rest] = args
       const tocRange = rest.length
         ? rest.filter((item: string) => !/skip|lb|note|lc|isUpdate/.test(item))
         : []
@@ -28,7 +28,7 @@ export default class Init implements Ytool.Cli.ICommand {
         onlyNote: rest.includes('note'),
         latexcode: rest.includes('lc'),
         isUpdate: rest.includes('isUpdate'),
-        time
+        time,
       }
       cmd.init(targetArgs)
     } else {

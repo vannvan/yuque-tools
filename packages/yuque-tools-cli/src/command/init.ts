@@ -50,6 +50,8 @@ export default class Init implements Ytool.Cli.ICommand {
       linebreak: false,
       onlyNote: false,
       latexcode: false,
+      isUpdate: false,
+      time: '',
     }
 
     writeFileSync(CONFIG.localConfig, JSON.stringify(configTemplate, null, 2))

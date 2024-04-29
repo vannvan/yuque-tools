@@ -38,6 +38,14 @@ declare namespace Ytool {
        * 是否导出 LaTeX 公式
        */
       latexcode: boolean
+      /**
+       * 是否根据指定时间 更新覆盖
+       */
+      isUpdate: boolean
+      /**
+       * 指定的更新时间
+       */
+      time: string
     }
 
     type TCLIContext = {
@@ -73,7 +81,7 @@ declare namespace Ytool {
      */
     type TKnowledgeConfig = Pick<
       Cli.TCLI_ARGS,
-      'linebreak' | 'skipDoc' | 'tocRange' | 'onlyNote' | 'latexcode'
+      'linebreak' | 'skipDoc' | 'tocRange' | 'onlyNote' | 'latexcode'| 'isUpdate' | 'time'
     >
 
     /**
@@ -88,6 +96,8 @@ declare namespace Ytool {
           password?: string // 知识库密码
         }[]
         cookies?: string
+        isUpdate: boolean  //是否根据指定时间 更新覆盖
+        time: string  //指定的更新时间
       }
     >
 

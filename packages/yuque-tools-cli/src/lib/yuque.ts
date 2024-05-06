@@ -97,13 +97,14 @@ const getCollabBooks = async (): Promise<TBookItem[]> => {
 const getDocsOfBooks = async (bookId: string): Promise<any> => {
   const { data } = await get<TDocItem[]>(YUQUE_API.yuqueDocsOfBook(bookId))
   if (data) {
-    const list = data.map((item) => {
-      return {
-        slug: item.slug,
-        name: item.title,
-      }
-    })
-    return list
+    // const list = data.map((item) => {
+    //   return {
+    //     slug: item.slug,
+    //     name: item.title,
+    //   }
+    // })
+    // return list
+    return data
   } else {
     Log.error(`获取{${bookId}}知识库文档失败`)
   }
@@ -112,26 +113,29 @@ const getDocsOfBooks = async (bookId: string): Promise<any> => {
 type DocDetails = {
   content_updated_at: string
   updated_at: string
-};
+}
 
-const getDocsOfSlugAndBook = async (slug: string, bookId: string): Promise<{ data?: DocDetails }> => {
+const getDocsOfSlugAndBook = async (
+  slug: string,
+  bookId: string
+): Promise<{ data?: DocDetails }> => {
   const url = await YUQUE_API.yuqueDocsOfSlugAndBook(slug, bookId)
   return get<DocDetails>(url)
-      .then((res) => {
-        if (!res || !res.data) {
-          return {data: undefined}
-        }
-        const item = res.data;
-        const docDetails: DocDetails = {
-          content_updated_at: item.content_updated_at,
-          updated_at: item.updated_at
-        };
-        return {data: docDetails}
-      })
-      .catch((error) => {
-        Log.error(`获取{${slug}?book_id=${bookId}}知识库文档详情失败`, error)
-        throw error
-      })
+    .then((res) => {
+      if (!res || !res.data) {
+        return { data: undefined }
+      }
+      const item = res.data
+      const docDetails: DocDetails = {
+        content_updated_at: item.content_updated_at,
+        updated_at: item.updated_at,
+      }
+      return { data: docDetails }
+    })
+    .catch((error) => {
+      Log.error(`获取{${slug}?book_id=${bookId}}知识库文档详情失败`, error)
+      throw error
+    })
 }
 
 /**

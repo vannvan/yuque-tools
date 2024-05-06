@@ -4,7 +4,7 @@ import F from './dev/file.js'
 import { config as CONFIG } from '../core/config.js'
 import { ICookies } from './type.js'
 import ora from 'ora'
-import { crawlYuqueBookPage, getMarkdownContent, getDocsOfSlugAndBook, getNotes } from './yuque.js'
+import { crawlYuqueBookPage, getMarkdownContent, getNotes, getDocsOfBooks } from './yuque.js'
 import path from 'path'
 import { Log } from './dev/log.js'
 import isNil from 'lodash.isnil'
@@ -106,6 +106,18 @@ export const getLocalCookies = () => {
 }
 
 /**
+ * 通过接口获取知识库下所有文档的基础信息
+ * @param bookList
+ */
+const getAndSetDocDetail = async (bookList: any): Promise<{ bookId: string; docs: any }[]> => {
+  const promises = bookList.map(async (item: { id: string }) => ({
+    bookId: item.id,
+    docs: await getDocsOfBooks(item.id),
+  }))
+  return Promise.all(promises)
+}
+
+/**
  * 获取知识库下的文档任务 api方式或爬取方式
  * @param bookList
  * @param duration
@@ -141,36 +153,24 @@ export const delayedGetDocCommands = async (
       bookList[bookIndex].docs = bookInfo.toc || []
     })
 
-    // 对于每个文档对象，检查 url 和 id 字段，并发起详情查询
-    const docDetailsPromises: Promise<void>[] = []
-    bookList.forEach((book, bookIndex) => {
-      book.docs.forEach((doc) => {
-        const url = doc.url
-        const id = bookList[bookIndex].id
-        if (url && id) {
-          const fetchDocDetailsPromise = getDocsOfSlugAndBook(url, id)
-            .then((docData) => {
-              if (docData && typeof docData.data === 'object' && !Array.isArray(docData.data)) {
-                const dataFields = docData.data
-                for (const [key, value] of Object.entries(dataFields)) {
-                  doc[key] = value
-                }
-              } else {
-                console.error(`文档详情获取失败[${url}?book_id=${id}]`, docData)
-              }
-            })
-            .catch((error) => {
-              console.error(`文档详情获取失败[${url}?book_id=${id}]`, error)
-            })
+    const isNeedGetDocDetail = !isNil(isUpdate) && !isNil(time)
 
-          docDetailsPromises.push(fetchDocDetailsPromise)
+    if (isNeedGetDocDetail) {
+      const allBooksBaseInfo = await getAndSetDocDetail(bookList)
+      bookList.forEach(async (item: { id: string }, bookIndex: string | number) => {
+        const matchBook = allBooksBaseInfo.find((_item: any) => _item.bookId === item.id)
+        if (matchBook) {
+          bookList[bookIndex].docs.forEach((doc: { [x: string]: any; url: any }) => {
+            const { docs } = matchBook
+            const matchDoc = docs.find((_doc: { slug: any }) => _doc.slug === doc.url)
+            if (matchDoc) {
+              doc['content_updated_at'] = matchDoc.content_updated_at
+              doc['updated_at'] = matchDoc.updated_at
+            }
+          })
         }
       })
-    })
-
-    // 只有需要依据时间更新的时候，才需要获取文档详情，否则数据量大会特别慢
-    const isNeedGetDocDetail = !isNil(isUpdate) && !isNil(time)
-    isNeedGetDocDetail && (await Promise.allSettled(docDetailsPromises))
+    }
     spinner.stop()
     Log.success('文档数据获取完成')
     typeof finishCallBack === 'function' && finishCallBack(bookList)
@@ -468,7 +468,7 @@ export const getAllNotes = async () => {
             spinner.text = `本次跳过[${title}]`
             reportContent += `- 🌈[${title}] 本次跳过 文件路径${fileDir} \n`
           } else {
-            const tagsString = tags.map((tag) => `#${tag}`).join(' ')
+            const tagsString = tags.map((tag: any) => `#${tag}`).join(' ')
             // console.log(tagsString);
             markdown = tagsString + '\n' + markdown
             F.touch2(fileDir, markdown)

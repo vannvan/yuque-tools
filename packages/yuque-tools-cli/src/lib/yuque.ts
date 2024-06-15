@@ -33,7 +33,7 @@ const loginYuque = async (accountInfo: Ytool.App.IAccountInfo) => {
     })
 
     if (data.ok) {
-      const userInfoContent = setJSONString({ ...data.user, expired: setExpireTime() })
+      const userInfoContent = setJSONString({ ...data.me, expired: setExpireTime() })
       await F.touch2(CONFIG.userInfoFile, userInfoContent)
       Log.success('语雀登录成功')
       return 'ok'

@@ -1,7 +1,7 @@
 interface ILoginResponse {
   ok: boolean
   goto: string
-  user: {
+  me: {
     id: string
     login: string
     name: string
@@ -56,7 +56,6 @@ type TNote = {
   content: TNoteContent
   id: number
   slug: string
-
 }
 
 type TNoteRst = {
@@ -69,4 +68,13 @@ interface IDocsOfBook {
   data: TDocItem[]
 }
 
-export { ILoginResponse, ICookies, TBookItem, TDocItem, TBookStackItem, IBookStack, IDocsOfBook, TNoteRst }
+export {
+  ILoginResponse,
+  ICookies,
+  TBookItem,
+  TDocItem,
+  TBookStackItem,
+  IBookStack,
+  IDocsOfBook,
+  TNoteRst,
+}

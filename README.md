@@ -6,12 +6,17 @@
 ![](https://badgen.net/npm/v/yuque-tools)
 ![](https://badgen.net/npm/node/next)
 
-- [🎉 可执行程序版(无需任何环境，下载即用)](https://github.com/vannvan/rust-explore/releases)  
-- [🚀 Node.js版 使用方式直达](https://github.com/vannvan/yuque-tools/tree/main/packages/yuque-tools-cli#%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F)
+- [🎉 可执行程序-命令行版(无需任何环境，下载即用)](https://github.com/vannvan/rust-explore/releases)  
+- [🚀 Node.js环境-命令行版 使用方式直达](https://github.com/vannvan/yuque-tools/tree/main/packages/yuque-tools-cli#%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F)
+- [图形化界面软件请移步 yuque-tools-gui ⏬](https://github.com/vannvan/rust-explore/releases)
 
-### 样例
+![gui](https://github.com/vannvan/rust-explore/blob/main/assets/yuque-tools-gui-eg.png?raw=true)
 
-[![example.gif](https://www.z4a.net/images/2023/05/01/example.gif)](https://www.z4a.net/image/VmUHiO)
+<!-- ### 样例 -->
+
+<!-- [![example.gif](https://www.z4a.net/images/2023/05/01/example.gif)](https://www.z4a.net/image/VmUHiO) -->
+
+
 
 ### 已支持功能
 
